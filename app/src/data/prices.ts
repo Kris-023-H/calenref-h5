@@ -40,16 +40,17 @@ export const SKU_LEFT: Record<Sku, number> = {
 };
 
 /**
- * Creem 产品 ID（在 Creem Dashboard → Products 创建后填入）。
+ * Creem 产品 ID（Creem Dashboard → Products，已按 PRD §4.1 价格建好）。
  *
- * 一 SKU 一产品，四个产品都用 USD 计价。占位符以 `REPLACE_WITH_` 开头，
- * 服务端（worker/index.ts）遇到占位符会直接拒绝下单，避免把用户送去死链。
+ * 一 SKU 一产品，四个产品都用 USD 计价、billing_type=onetime、税含在价内
+ * （tax_mode=inclusive）。改价要两边同步：这里只管展示，实收以 Creem 产品价为准。
+ * 占位符以 `REPLACE_WITH_` 开头，服务端遇到占位符会直接拒绝下单，避免死链。
  */
 export const CREEM_PRODUCTS: Record<Sku, string> = {
-  once: 'REPLACE_WITH_CREEM_PRODUCT_ONCE',
-  ai10: 'REPLACE_WITH_CREEM_PRODUCT_AI10',
-  pair: 'REPLACE_WITH_CREEM_PRODUCT_PAIR',
-  year: 'REPLACE_WITH_CREEM_PRODUCT_YEAR',
+  once: 'prod_6rNtAr8IAgemsoMq0ItQjl', // $6.9 单次完整报告
+  ai10: 'prod_5cl5Lk2oBXjz2MpGhSvmGu', // $4.9 十次白话解读
+  pair: 'prod_3YM2m6ekl6Sq5oYllrHmHj', // $11.9 双人合参
+  year: 'prod_5NW3nkBRZuEuTix2rLOzac', // $39.9 全年不限次
 };
 
 /** 产品 ID 是否仍是占位符（未在 Dashboard 创建） */
