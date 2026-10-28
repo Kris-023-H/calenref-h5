@@ -4,39 +4,41 @@
  *   parsePaymentReturn（success / cancel / 坏 sku / 缺参 / 无 pay）；
  *   parseShareUrl（lang / ref / k 的缺省与非法值，PRD §6.2 落地优先级）；
  *   PRICE_TABLE / SKU_LEFT 与 PRD §4.1 逐值一致（验收 #5）；
- *   buildCheckoutUrl 对占位链接的契约（pay-screen 依赖其返回 '' 走 linkFail 兜底）。
+ *   createCheckout 对下单失败的契约（pay-screen 依赖其返回 '' 走 linkFail 兜底）。
  */
-import 'fake-indexeddb/auto'; // stripe.ts 传递依赖 license.repo → backend → idb，确保可导入
-import { describe, expect, it } from 'vitest';
-import { parsePaymentReturn, buildCheckoutUrl } from '../../src/services/pay/stripe';
+import 'fake-indexeddb/auto'; // creem.ts 传递依赖 license.repo → backend → idb，确保可导入
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { parsePaymentReturn, createCheckout } from '../../src/services/pay/creem';
 import { parseShareUrl } from '../../src/services/share';
 import { PRICE_TABLE, SKU_LEFT, CURRENCIES, SKUS } from '../../src/data/prices';
 
+afterEach(() => vi.unstubAllGlobals());
+
 describe('parsePaymentReturn — 支付回跳解析', () => {
-  it('success 且带合法 sku 与 session_id', () => {
-    expect(parsePaymentReturn('?pay=success&sku=ai10&session_id=cs_123')).toEqual({
+  it('success 且带合法 sku 与 ref', () => {
+    expect(parsePaymentReturn('?pay=success&sku=ai10&ref=zj_123')).toEqual({
       status: 'success',
       sku: 'ai10',
-      sessionId: 'cs_123',
+      ref: 'zj_123',
     });
   });
 
   it('success 但 sku 非法 → sku 置 undefined（不落账）', () => {
-    const r = parsePaymentReturn('?pay=success&sku=badsku&session_id=cs_1');
+    const r = parsePaymentReturn('?pay=success&sku=badsku&ref=zj_1');
     expect(r?.status).toBe('success');
     expect(r?.sku).toBeUndefined();
   });
 
-  it('success 无 session_id → sessionId undefined', () => {
+  it('success 无 ref → ref undefined（后续核验会直接拒绝）', () => {
     const r = parsePaymentReturn('?pay=success&sku=once');
-    expect(r).toEqual({ status: 'success', sku: 'once', sessionId: undefined });
+    expect(r).toEqual({ status: 'success', sku: 'once', ref: undefined });
   });
 
   it('cancel 回跳', () => {
     expect(parsePaymentReturn('?pay=cancel')).toEqual({
       status: 'cancel',
       sku: undefined,
-      sessionId: undefined,
+      ref: undefined,
     });
   });
 
@@ -74,18 +76,15 @@ describe('parseShareUrl — 分享落地参数（PRD §6.2）', () => {
 });
 
 describe('PRICE_TABLE / SKU_LEFT — 与 PRD §4.1 逐值一致', () => {
-  it('四 SKU × 五币种价格精确匹配', () => {
+  it('四 SKU 价格精确匹配（USD 单币种）', () => {
+    // Creem 只支持 USD/EUR 且单产品单币种，故收敛为 USD 一列。
     expect(PRICE_TABLE).toEqual({
-      CNY: { once: 29, ai10: 19, pair: 49, year: 199 },
       USD: { once: 6.9, ai10: 4.9, pair: 11.9, year: 39.9 },
-      SGD: { once: 9.9, ai10: 6.9, pair: 15.9, year: 52.9 },
-      MYR: { once: 32.9, ai10: 21.9, pair: 54.9, year: 169.9 },
-      THB: { once: 249, ai10: 169, pair: 429, year: 1399 },
     });
   });
 
-  it('币种与 SKU 集合齐全（五币种 / 四档）', () => {
-    expect([...CURRENCIES].sort()).toEqual(['CNY', 'MYR', 'SGD', 'THB', 'USD']);
+  it('币种与 SKU 集合齐全（单币种 / 四档）', () => {
+    expect([...CURRENCIES]).toEqual(['USD']);
     expect([...SKUS].sort()).toEqual(['ai10', 'once', 'pair', 'year']);
   });
 
@@ -94,15 +93,34 @@ describe('PRICE_TABLE / SKU_LEFT — 与 PRD §4.1 逐值一致', () => {
   });
 });
 
-describe('buildCheckoutUrl — 占位链接契约', () => {
-  it('占位 Payment Link 不可用时返回空串（pay-screen 据此提示 linkFail，不应抛错）', () => {
-    // 现网 PAYMENT_LINKS 均为 REPLACE_WITH_STRIPE_LINK_* 占位（上线前替换）。
-    // pay-screen buy() 写法为：const url = buildCheckoutUrl(...); if(!url){ toast(linkFail); return; }
-    // 即约定「链接不可用 → 返回 ''」。若实现抛错，则该兜底失效、按钮点击无响应。
-    let url: string | undefined;
-    expect(() => {
-      url = buildCheckoutUrl({ sku: 'once', currency: 'CNY', lang: 'zh', clientRef: 'x' });
-    }).not.toThrow();
-    expect(url).toBe('');
+describe('createCheckout — 下单失败一律返回空串', () => {
+  const params = { sku: 'once' as const, lang: 'zh', clientRef: 'x' };
+
+  it('Worker 非 2xx → 空串', async () => {
+    vi.stubGlobal('fetch', async () => ({ ok: false, json: async () => ({}) }) as Response);
+    await expect(createCheckout(params)).resolves.toBe('');
+  });
+
+  it('网络异常 → 空串（不抛错）', async () => {
+    vi.stubGlobal('fetch', async () => {
+      throw new Error('offline');
+    });
+    await expect(createCheckout(params)).resolves.toBe('');
+  });
+
+  it('返回非 https 地址 → 空串（防 javascript: 之类伪协议）', async () => {
+    vi.stubGlobal(
+      'fetch',
+      async () => ({ ok: true, json: async () => ({ url: 'javascript:alert(1)' }) }) as Response,
+    );
+    await expect(createCheckout(params)).resolves.toBe('');
+  });
+
+  it('正常返回 https 结账地址 → 原样透出', async () => {
+    vi.stubGlobal(
+      'fetch',
+      async () => ({ ok: true, json: async () => ({ url: 'https://creem.io/checkout/chk_1' }) }) as Response,
+    );
+    await expect(createCheckout(params)).resolves.toBe('https://creem.io/checkout/chk_1');
   });
 });

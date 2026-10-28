@@ -1,6 +1,6 @@
 /**
- * screens/pay-screen.tsx — 解锁页：四 SKU × 五币种 + Stripe Payment Link 直跳 + 离线兑换码。
- * 双路径（主理人拍板）：(a) Payment Link 直跳，回跳由 App 解析写本机凭证；
+ * screens/pay-screen.tsx — 解锁页：四 SKU（USD）+ Creem 结账 + 离线兑换码。
+ * 双路径（主理人拍板）：(a) 经 Worker 建 Creem checkout 后跳转，回跳由 App 核验落账；
  * (b) 兑换码离线 HMAC 校验（services/pay/redeem.ts）。
  */
 
@@ -9,7 +9,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { CURRENCIES, formatPrice, SKUS, type Sku, type Currency } from '../data/prices';
-import { buildCheckoutUrl } from '../services/pay/stripe';
+import { createCheckout } from '../services/pay/creem';
 import { redeemCode } from '../services/pay/redeem';
 import { licenseRepo } from '../db/repos/license.repo';
 import { analytics, EVENTS } from '../services/analytics';
@@ -53,7 +53,8 @@ export function PayScreen(): JSX.Element {
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const clientRef = `zj-${Date.now().toString(36)}`;
+  // 固定一次的客户端标识：每次渲染重算会让同一笔订单的 clientRef 前后不一致
+  const [clientRef] = useState(() => `zj-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`);
 
   // 页面曝光（与点击购买的 report_buy 区分：前者是到达，后者是意图）
   useEffect(() => {
@@ -62,15 +63,26 @@ export function PayScreen(): JSX.Element {
   }, []);
 
   const buy = (): void => {
-    const url = buildCheckoutUrl({ sku, currency, lang, clientRef });
-    if (!url) {
-      showToast(t('pay.linkFail', lang));
-      return;
-    }
-    // 关键事件 ③：点击购买（跳转前上报，避免被新标签页打断）
-    if (analytics.isEnabled()) analytics.track(EVENTS.reportBuy, { sku, currency });
-    showToast(t('pay.linkOpening', lang));
-    window.open(url, '_blank', 'noopener');
+    if (busy) return;
+    // 下单要等 Worker 调 Creem 建单，是异步的。而 window.open 一旦离开用户手势的
+    // 同步上下文就会被浏览器拦截，所以先同步开一个空白窗，拿到地址后再导航进去。
+    // 注意不能用 noopener 特性——它会让 window.open 返回 null，就没法回填地址了。
+    const win = window.open('about:blank', '_blank');
+    if (win) win.opener = null;
+    setBusy(true);
+
+    void createCheckout({ sku, lang, clientRef }).then((url) => {
+      setBusy(false);
+      if (!url) {
+        win?.close();
+        showToast(t('pay.linkFail', lang));
+        return;
+      }
+      // 关键事件 ③：点击购买（跳转前上报，避免被新标签页打断）
+      if (analytics.isEnabled()) analytics.track(EVENTS.reportBuy, { sku, currency });
+      if (win) win.location.href = url;
+      else window.location.href = url; // 弹窗被拦截时降级为当前页跳转
+    });
   };
 
   const redeem = (): void => {
@@ -125,9 +137,12 @@ export function PayScreen(): JSX.Element {
         </div>
       </div>
 
-      <div style={{ marginBottom: 12 }}>
-        <Seg options={CURRENCIES.map((c) => ({ value: c, label: t(`cur.${c}` as 'cur.CNY', lang) }))} value={currency} onChange={(c: Currency) => void setCurrency(c)} />
-      </div>
+      {/* 币种只剩 USD：单选项的分段控件没有意义，直接不渲染；将来加 EUR 会自动出现 */}
+      {CURRENCIES.length > 1 && (
+        <div style={{ marginBottom: 12 }}>
+          <Seg options={CURRENCIES.map((c) => ({ value: c, label: t(`cur.${c}` as 'cur.CNY', lang) }))} value={currency} onChange={(c: Currency) => void setCurrency(c)} />
+        </div>
+      )}
 
       {SKUS.map((k) => (
         <div key={k} className={`plan${sku === k ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => setSku(k)} onKeyDown={(e) => e.key === 'Enter' && setSku(k)}>

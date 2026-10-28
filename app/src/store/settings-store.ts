@@ -6,6 +6,8 @@
 import { create } from 'zustand';
 import type { Lang } from '../engine/types';
 import type { CalPref } from '../i18n/format';
+import type { Currency } from '../data/prices';
+import { CURRENCIES } from '../data/prices';
 import { settingsRepo } from '../db/repos/settings.repo';
 import { detectLang, type MsgKey } from '../i18n';
 import { t as translate } from '../i18n/format';
@@ -13,11 +15,20 @@ import { detectTz } from '../services/timezone';
 import { analytics } from '../services/analytics';
 import { EVENTS } from '../services/analytics';
 
+/**
+ * 把持久化里读到的币种收敛到当前支持列表。
+ * 老版本存过 CNY / SGD / MYR / THB，Creem 不支持这些币种，读到就落回 USD，
+ * 否则价格表查不到值会渲染出 undefined。
+ */
+function normalizeCurrency(v: unknown): Currency {
+  return CURRENCIES.includes(v as Currency) ? (v as Currency) : 'USD';
+}
+
 export interface SettingsState {
   lang: Lang;
   cal: CalPref;
   tz: number;
-  currency: 'CNY' | 'USD' | 'SGD' | 'MYR' | 'THB';
+  currency: Currency;
   analyticsOn: boolean;
   onboarded: boolean;
   /** 是否已从 db 恢复（防首屏闪烁） */
@@ -37,7 +48,7 @@ export const useSettings = create<SettingsState>((set, get) => ({
   lang: 'zh',
   cal: 'greg',
   tz: 8,
-  currency: 'CNY',
+  currency: 'USD',
   analyticsOn: true,
   onboarded: false,
   hydrated: false,
@@ -49,7 +60,7 @@ export const useSettings = create<SettingsState>((set, get) => ({
       lang: rec.lang,
       cal: rec.cal,
       tz: rec.tz,
-      currency: rec.currency,
+      currency: normalizeCurrency(rec.currency),
       analyticsOn: rec.analytics,
       onboarded: rec.onboarded,
       hydrated: true,

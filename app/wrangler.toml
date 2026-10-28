@@ -1,4 +1,4 @@
-# Cloudflare Workers 部署配置（静态资源模式）
+# Cloudflare Workers 部署配置（静态资源 + 同源 API）
 #
 # 为什么需要这个文件：Workers 本身没有「构建输出目录」的概念，必须显式告诉
 # wrangler 把哪个目录作为静态资源上传。缺了 [assets]，部署上去的就是源码目录，
@@ -6,14 +6,29 @@
 #
 # name 必须与 Cloudflare 上已有的 Worker 名一致，否则 wrangler 会新建一个 Worker，
 # 域名也会变成新的。
-#
-# 若改用 Cloudflare Pages，此文件不参与构建（Pages 用控制台的 Build output directory）。
 
 name = "zeji-h5"
+# Worker 入口：只处理 /api/*（Creem 下单与核验），其余全部交给静态资源
+main = "./worker/index.ts"
 compatibility_date = "2026-10-01"
 
 [assets]
 # 相对本文件所在目录（仓库的 app/），即 vite build 的产物
 directory = "./dist"
+# 绑定给 Worker 用（env.ASSETS.fetch），否则 Worker 拿不到静态资源
+binding = "ASSETS"
 # 单页应用：未匹配到文件的路径回落到 index.html，保证深链与刷新可用
 not_found_handling = "single-page-application"
+# 关键：静态资源优先是默认行为，不写这行的话 /api/checkout 会先命中
+# not_found_handling 的 SPA 回退，直接返回 index.html，Worker 永远收不到请求。
+run_worker_first = ["/api/*"]
+
+[[kv_namespaces]]
+# 存 ref → checkoutId 与已付标记
+binding = "ORDERS"
+id = "c8c45809e3ab4817b1509bc94af2394b"
+
+[vars]
+# 生产：https://api.creem.io/v1
+# 测试：https://test-api.creem.io/v1（Creem 测试模式与生产数据完全隔离）
+CREEM_API_BASE = "https://api.creem.io/v1"

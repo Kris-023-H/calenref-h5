@@ -7,13 +7,29 @@
  * 依据 PRD §3.1 / §4.2 / §9 #4 #5 #6。
  */
 import 'fake-indexeddb/auto';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getBackend, setBackendForTests, STORES } from '../../src/db/backend';
 import { licenseRepo } from '../../src/db/repos/license.repo';
 import { quotaRepo } from '../../src/db/repos/quota.repo';
-import { applyPaymentReturn } from '../../src/services/pay/stripe';
+import { applyPaymentReturn } from '../../src/services/pay/creem';
 import { generateRedeemCode, redeemCode } from '../../src/services/pay/redeem';
 import { tzMonthKey } from '../../src/services/timezone';
+
+/**
+ * 模拟 Worker 的核验端点 /api/verify。
+ * paid 的键是 ref，值是该单对应的 sku（false 表示未付）。
+ */
+function mockVerify(paid: Record<string, string | false>): void {
+  vi.stubGlobal('fetch', async (input: string | URL) => {
+    const url = String(input);
+    const ref = new URL(url, 'https://example.test').searchParams.get('ref') ?? '';
+    const sku = paid[ref];
+    return {
+      ok: true,
+      json: async () => (sku ? { paid: true, sku } : { paid: false }),
+    } as Response;
+  });
+}
 
 async function clearAll(): Promise<void> {
   const b = await getBackend();
@@ -25,32 +41,51 @@ beforeEach(async () => {
   await clearAll();
 });
 
-describe('applyPaymentReturn — 回跳写凭证 + 防重放', () => {
-  it('success 且带 sku → 写本机凭证（左次按 SKU_LEFT）', async () => {
-    const wrote = await applyPaymentReturn({ status: 'success', sku: 'ai10', sessionId: 'cs_a' });
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.useRealTimers();
+});
+
+describe('applyPaymentReturn — 核验后写凭证 + 防重放', () => {
+  it('Worker 确认已付 → 写本机凭证（左次按 SKU_LEFT）', async () => {
+    mockVerify({ r_ai10: 'ai10' });
+    const wrote = await applyPaymentReturn({ status: 'success', sku: 'ai10', ref: 'r_ai10' });
     expect(wrote).toBe(true);
     const rows = await licenseRepo.list();
     expect(rows).toHaveLength(1);
     expect(rows[0].sku).toBe('ai10');
     expect(rows[0].left).toBe(10);
-    expect(rows[0].source).toBe('stripe');
+    expect(rows[0].source).toBe('creem');
   });
 
-  it('cancel → 不写凭证', async () => {
+  it('cancel → 不写凭证，也不发核验请求', async () => {
+    const spy = vi.fn();
+    vi.stubGlobal('fetch', spy);
     const wrote = await applyPaymentReturn({ status: 'cancel' });
     expect(wrote).toBe(false);
+    expect(spy).not.toHaveBeenCalled();
     expect(await licenseRepo.list()).toHaveLength(0);
   });
 
-  it('success 但无 sku → 不写', async () => {
-    const wrote = await applyPaymentReturn({ status: 'success', sessionId: 'cs_b' });
+  it('success 但无 ref → 不写（不再采信客户端传入的 sku）', async () => {
+    const wrote = await applyPaymentReturn({ status: 'success', sku: 'year' });
     expect(wrote).toBe(false);
     expect(await licenseRepo.list()).toHaveLength(0);
   });
 
-  it('同一 sessionId 重复回跳 → 防重放，只落一次', async () => {
-    expect(await applyPaymentReturn({ status: 'success', sku: 'year', sessionId: 'cs_dup' })).toBe(true);
-    expect(await applyPaymentReturn({ status: 'success', sku: 'year', sessionId: 'cs_dup' })).toBe(false);
+  it('Worker 回未付 → 不写凭证', async () => {
+    vi.useFakeTimers();
+    mockVerify({});
+    const p = applyPaymentReturn({ status: 'success', sku: 'once', ref: 'r_unpaid' });
+    await vi.advanceTimersByTimeAsync(8000);
+    expect(await p).toBe(false);
+    expect(await licenseRepo.list()).toHaveLength(0);
+  });
+
+  it('同一 ref 重复回跳 → 防重放，只落一次', async () => {
+    mockVerify({ r_dup: 'year' });
+    expect(await applyPaymentReturn({ status: 'success', sku: 'year', ref: 'r_dup' })).toBe(true);
+    expect(await applyPaymentReturn({ status: 'success', sku: 'year', ref: 'r_dup' })).toBe(false);
     expect(await licenseRepo.list()).toHaveLength(1);
   });
 });

@@ -185,11 +185,12 @@ describe('settingsRepo', () => {
     expect(def).toEqual(DEFAULT_SETTINGS);
     expect(await settingsRepo.exists()).toBe(false);
 
-    const saved = await settingsRepo.save({ lang: 'en', currency: 'SGD' });
+    // 币种已收敛为 USD 单币种（Creem 只支持 USD/EUR），此处只验证局部更新语义
+    const saved = await settingsRepo.save({ lang: 'en', currency: 'USD' });
     expect(saved.ok && saved.value.lang).toBe('en');
     expect(await settingsRepo.exists()).toBe(true);
     const after = await settingsRepo.get();
-    expect(after.currency).toBe('SGD');
+    expect(after.currency).toBe('USD');
     expect(after.cal).toBe('greg'); // 未传字段保持
   });
 });

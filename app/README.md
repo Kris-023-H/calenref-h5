@@ -4,7 +4,7 @@
 附三宗派对照、九章报告与可传的吉日课帖。**全部推演在本机完成，档案不离开设备；免登录。**
 
 - 技术栈：Vite 5 + React 18 + TypeScript（strict）+ 自研屏幕栈路由 + Zustand + IndexedDB（localStorage 降级）
-- 目标市场：中国大陆 / 港澳台 / 马来西亚 / 新加坡 / 泰国（简中 / 英文 / 繁中三语，五币种）
+- 目标市场：中国大陆 / 港澳台 / 马来西亚 / 新加坡 / 泰国（简中 / 英文 / 繁中三语，USD 计价）
 - 规则版本：`2026.10`（见 `src/engine/types.ts` `RULE_VERSION`）
 
 ---
@@ -25,7 +25,6 @@ npm run typecheck    # 仅类型检查（tsc --noEmit）
 | 变量 | 必填 | 说明 |
 | --- | --- | --- |
 | `VITE_AI_ENDPOINT` | 否 | AI 推理端点。配置后 `RemoteAiService` 生效；未配置时使用 `LocalTemplateAiService` 离线模板解读（默认，不出网） |
-| `VITE_STRIPE_VERIFY_URL` | 否 | Stripe 支付核验 Worker 地址（上线前部署项，见下）。未配置时支付回跳按 v1 口径直接写本机凭证 |
 | `VITE_REDEEM_KEY` | 否 | 兑换码离线 HMAC-SHA-256 密钥。默认 `zeji-redeem-dev-key`；生产经构建注入 |
 | `VITE_SHARE_HOST` | 否 | 分享落地页主机；空则用当前 `window.location.origin` |
 | `VITE_SITE_URL` | 上线必填 | 站点根地址。**canonical / OG / JSON-LD / robots.txt / sitemap.xml 的唯一来源**，换域名只改这一处。默认 `https://zeji.app` |
@@ -43,7 +42,7 @@ src/
                  site.ts（域名·邮箱·主体）· legal.ts（法务四页三语正文）
   i18n/          zh.ts 为唯一事实源；en / zh-Hant 由测试保障对齐
   db/            IndexedDB 仓库层（八实体）+ 备份导出导入
-  services/      AI 解读（缓存→配额→生成）/ Stripe / 兑换码 / 分享 / 埋点 / consent（Cookie 同意）
+  services/      AI 解读（缓存→配额→生成）/ Creem 支付 / 兑换码 / 分享 / 埋点 / consent（Cookie 同意）
   store/         app / settings / ui 三套 Zustand store
   router/        自研屏幕栈（push/pop/replace/switchTab/resetTo + 方向感知动画）
   screens/       22 屏（screen-router.tsx 注册，含 legal 法务屏）
@@ -160,20 +159,57 @@ curl -s -o /dev/null -w '%{http_code}\n' $B/og-1200x630.png
 GitHub Actions（`.github/workflows/ci.yml`）只做 CI（typecheck + test + build），
 **不负责部署**——部署由上面那条 `wrangler deploy` 完成。
 
+## 支付（Creem，Merchant of Record）
+
+通道是 **Creem**。它和 Stripe 不是一类东西：Stripe 只是收单，税费申报与拒付要自己扛；
+Creem 是记录商户，由它作为卖家承担各国税费与拒付。
+
+### 为什么必须有一个 Worker
+
+Creem **没有静态 Payment Link**——必须由服务端调 `POST /v1/checkouts` 现开一次性
+`checkout_url`。所以 `worker/index.ts` 与静态资源部署在同一个 Worker 里，前端用相对路径
+`/api/checkout` 调用，同源、无 CORS、API key 永不出现在客户端。
+
+```
+前端 POST /api/checkout {sku,lang,clientRef}
+  → Worker 调 Creem 建单，拿 { id: chk_xxx, checkout_url }
+  → KV 存 ref → { sku, checkoutId }
+  → 返回 checkout_url，前端跳转
+用户在 Creem 页付款
+  → 回跳 /?paid=1&sku=xxx&ref=zj_xxx
+  → 前端轮询 GET /api/verify?ref=zj_xxx
+  → Worker 用 checkoutId 查 Creem，status === 'completed' 才回 {paid:true}
+  → 前端据此写本机凭证（按 ref 幂等）
+```
+
+关键一点：**`?paid=1` 不可信**，任何人都能手敲。v1 走 Stripe 时这里是个已知缺口，
+现在把「写凭证」的决定权完全交给服务端核验结果。
+
+### 币种：只有 USD
+
+Creem 的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，没有多币种定价、也不做汇率换算。
+原先价格表的 CNY / SGD / MYR / THB 四列在 Creem 下无处落地，留着只会让页面标价与实付金额
+不一致（跨境场景退款争议的头号来源），故收敛为 USD 单币种：页面标 USD，买家在 Creem
+结账页看到按其所在地折算后的本币。要加 EUR 只需扩 `Currency` 联合类型并补一列价格。
+
+### 上线前要做的三件事
+
+1. **Creem Dashboard → Products** 建 4 个 USD 产品（once 6.9 / ai10 4.9 / pair 11.9 / year 39.9），
+   把 `product_id` 填进 `src/data/prices.ts` 的 `CREEM_PRODUCTS`。仍是 `REPLACE_WITH_` 占位时，
+   `/api/checkout` 会返回 503，页面提示「链接暂不可用」，不会把用户送去死链。
+2. **`wrangler secret put CREEM_API_KEY`**（不要写进 `.env`、不要提交仓库）。
+   测试环境同时把 `wrangler.toml` 的 `CREEM_API_BASE` 改成 `https://test-api.creem.io/v1`，
+   测试卡 `4111 1111 1111 1111` 可模拟成功付款。
+3. **KV 命名空间**：`wrangler kv namespace create ORDERS`，id 填进 `wrangler.toml`（已建好）。
+
 ## 上线前部署项（按优先级）
 
-1. **Stripe 支付核验 Worker（P0，安全）**
-   v1 口径：Payment Link 直跳 + 回跳参数（`?pay=success&sku&session_id`）在 `src/App.tsx`
-   经 `applyPaymentReturn` 写本机凭证（按 `sessionId` 防重放）。**该口径可被伪造回跳利用**，
-   上线前必须部署 Cloudflare Worker 核验 `session_id` 真实性（`.env` 配 `VITE_STRIPE_VERIFY_URL`），
-   客户端拿 Worker 签发的授权后再写凭证。价格表：`src/data/prices.ts` 的 `PAYMENT_LINKS`（占位模板，
-   上线前替换为真实 Payment Link）。
-2. **兑换码密钥**：`VITE_REDEEM_KEY` 随包分发可被提取后离线造码（README 与 `services/pay/redeem.ts`
+1. **兑换码密钥**：`VITE_REDEEM_KEY` 随包分发可被提取后离线造码（README 与 `services/pay/redeem.ts`
   均已声明）。权益价值低可接受；如要收紧，改服务端发码 + Worker 核验。
-3. **AI 端点（P1，可选）**：默认本地模板解读不出网；如需大模型解读，部署
+2. **AI 端点（P1，可选）**：默认本地模板解读不出网；如需大模型解读，部署
    `VITE_AI_ENDPOINT`（协议见 `src/services/ai/remote-ai.ts` 的 `AiService` 接口），
    并确保端点不接收可识别个人的信息（只传推演结果结构）。
-4. **节气数据源**：本机无 C++ 编译器，fixture 实际由 `lunar-python` 生成；CI 建议固定该来源。
+3. **节气数据源**：本机无 C++ 编译器，fixture 实际由 `lunar-python` 生成；CI 建议固定该来源。
 
 ## 已知边界（产品口径，非缺陷）
 
@@ -185,7 +221,7 @@ GitHub Actions（`.github/workflows/ci.yml`）只做 CI（typecheck + test + bui
 - 知库 24 篇：标题 / 导语 / 出处 / 时长齐全；长文正文已收录 3 篇（id 1–3，三语），
   其余篇目以「导语 + 出处 + 试排入口」呈现，正文按内容排期补齐（`KbArticle.body?: L10n`）。
 - 分享二维码为样式占位（`qrcode-generator` 已依赖，真实二维码渲染为 P1）；
-  支付隐私口径：卡号由 Stripe 处理，本机不接触。
+  支付隐私口径：卡号由 Creem 处理，本机不接触、不传输、不存储。
 
 ## 架构与合规
 

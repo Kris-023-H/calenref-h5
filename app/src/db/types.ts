@@ -4,6 +4,7 @@
  */
 
 import type { Person, ScanResult } from '../engine/types';
+import type { Currency } from '../data/prices';
 
 /** 当前 schema 版本（历史迁移见 db/idb.ts） */
 export const SCHEMA_VERSION = 5;
@@ -48,8 +49,8 @@ export interface LicenseRecord {
   /** 剩余次数（-1 不限） */
   left: number;
   boundAt: number;
-  /** 来源：离线兑换 / 支付回跳 */
-  source: 'redeem' | 'stripe';
+  /** 来源：离线兑换 / Creem 支付（'stripe' 为历史数据兼容，新写入不再产生） */
+  source: 'redeem' | 'creem' | 'stripe';
 }
 
 export interface QuotaRecord {
@@ -67,7 +68,8 @@ export interface SettingsRecord {
   lang: 'zh' | 'en' | 'zh-Hant';
   cal: 'greg' | 'gan' | 'buddha';
   tz: number;
-  currency: 'CNY' | 'USD' | 'SGD' | 'MYR' | 'THB';
+  /** 仅 USD（Creem 只支持 USD/EUR）；读取时由 settings-store 归一化旧值 */
+  currency: Currency;
   analytics: boolean;
   onboarded: boolean;
 }
@@ -107,7 +109,7 @@ export const DEFAULT_SETTINGS: SettingsRecord = {
   lang: 'zh',
   cal: 'greg',
   tz: 8,
-  currency: 'CNY',
+  currency: 'USD',
   analytics: true,
   onboarded: false,
 };
