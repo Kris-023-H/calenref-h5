@@ -21,12 +21,13 @@ export const SITE = {
   url: readSiteUrl(),
   nameZh: '择吉',
   nameEn: 'Zeji',
-  /** 客服邮箱：支付平台审核会实际发信验证，必须是可收信的真实邮箱 */
-  supportEmail: 'support@zeji.app',
-  /** 隐私事务专用邮箱（GDPR/PDPA 数据主体请求） */
-  privacyEmail: 'privacy@zeji.app',
-  /** 运营主体：须与支付平台注册主体一致 */
-  entity: 'Zeji Studio',
+  /** 客服邮箱：支付平台审核会实际发信验证，必须是可收信的真实邮箱。
+   *  域名到位后换成 support@<域名>，改这一处即可全局生效。 */
+  supportEmail: 'kris.188h@gmail.com',
+  /** 隐私事务邮箱（GDPR/PDPA 数据主体请求），暂与客服同址 */
+  privacyEmail: 'kris.188h@gmail.com',
+  /** 运营主体：须与支付平台（Creem）注册主体一致 */
+  entity: 'LuckyTimely',
   /** 准据法属地（首站新加坡，见出海增量 PRD §1） */
   jurisdiction: 'Singapore',
   /** 法务页生效日 */
