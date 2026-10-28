@@ -70,9 +70,7 @@ export function PeopleScreen(): JSX.Element {
         <h2 className="tt">
           {editing ? (tx('修改这一位', 'Edit this person', lang)) : tx('录入一位当事人', 'Add a person', lang)}
           <small>
-            {lang === 'en'
-              ? 'Birthplace and time decide true solar time; one hour off and the hour pillar is wrong.'
-              : '出生地与时刻决定真太阳时；时刻错一位，时柱即错。'}
+            {tx('出生地与时刻决定真太阳时；时刻错一位，时柱即错。', 'Birthplace and time decide true solar time; one hour off and the hour pillar is wrong.', lang)}
           </small>
         </h2>
 
@@ -120,7 +118,7 @@ export function PeopleScreen(): JSX.Element {
               <select className="input" value={form.birthCityId ?? ''} onChange={(e) => set({ birthCityId: e.target.value, manualLon: undefined, manualLat: undefined })}>
                 {CITIES.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c[(lang === 'en' ? 'en' : 'zh')]}（{c.lon >= 0 ? 'E' : 'W'} {Math.abs(c.lon).toFixed(2)}°）
+                    {tx(c.zh, c.en, lang)}（{c.lon >= 0 ? 'E' : 'W'} {Math.abs(c.lon).toFixed(2)}°）
                   </option>
                 ))}
               </select>
@@ -129,7 +127,7 @@ export function PeopleScreen(): JSX.Element {
           <div className={`tsnote${r.dst ? ' warn' : ''}`}>
             <Icon name="info" size={12} />
             <div>
-              {t('person.readingTrue', lang)}：{form.birthTime}（{city?.[(lang === 'en' ? 'en' : 'zh')] ?? ''}）→ <b>{r.trueTime}</b>
+              {t('person.readingTrue', lang)}：{form.birthTime}（{city ? tx(city.zh, city.en, lang) : ''}）→ <b>{r.trueTime}</b>
               {r.dst && (
                 <>
                   <br />
@@ -244,17 +242,15 @@ export function PeopleScreen(): JSX.Element {
       {selectFor && (
         <div className="whybar" style={{ marginBottom: 12 }}>
           <Icon name="info" size={13} />
-          <div>
-            {lang === 'en' ? (
-              <>
-                Choosing for <b>“{selectFor === 'b' ? 'second party' : 'subject'}”</b> — tap “use” to fill in.
-              </>
-            ) : (
-              <>
-                正在为<b>「{selectFor === 'b' ? '第二位' : '当事人'}」</b>选人，点「用此人」即填入。
-              </>
-            )}
-          </div>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: tx(
+                `正在为<b>「${selectFor === 'b' ? '第二位' : '当事人'}」</b>选人，点「用此人」即填入。`,
+                `Choosing for <b>“${selectFor === 'b' ? 'second party' : 'subject'}”</b> — tap “use” to fill in.`,
+                lang,
+              ),
+            }}
+          />
         </div>
       )}
 
@@ -311,7 +307,7 @@ export function PeopleScreen(): JSX.Element {
                   </div>
                   <div className="pa-m">
                     {p.sex === 'f' ? t('person.female', lang) : t('person.male', lang)} · {p.birthDate.replace(/-/g, '.')} {p.birthTime} ·{' '}
-                    {cityById(p.birthCityId)?.[(lang === 'en' ? 'en' : 'zh')] ?? birthGeo(p).cityName}
+                    {cityById(p.birthCityId) ? tx(cityById(p.birthCityId)!.zh, cityById(p.birthCityId)!.en, lang) : birthGeo(p).cityName}
                   </div>
                   <div className="pa-x">
                     <b>
@@ -355,21 +351,16 @@ export function PeopleScreen(): JSX.Element {
       <Btn block variant="gold" onClick={() => setForm({ ...BLANK })} style={{ marginTop: 4 }}>
         {t('person.add', lang)}
       </Btn>
-      <div className="pe-tip">
-        {lang === 'en' ? (
-          <>
-            Birth data stays in this browser; never uploaded.
-            <br />
-            Marriage and engagement need both parties.
-          </>
-        ) : (
-          <>
-            出生资料仅存于本机浏览器，不上传服务器。
-            <br />
-            嫁娶与订盟须录双方：以女命定行嫁月，以男命查日辰冲命。
-          </>
-        )}
-      </div>
+      <div
+        className="pe-tip"
+        dangerouslySetInnerHTML={{
+          __html: tx(
+            '出生资料仅存于本机浏览器，不上传服务器。<br>嫁娶与订盟须录双方：以女命定行嫁月，以男命查日辰冲命。',
+            'Birth data stays in this browser; never uploaded.<br>Marriage and engagement need both parties.',
+            lang,
+          ),
+        }}
+      />
       <Btn variant="ghost" block onClick={() => push('info')} style={{ marginTop: 10 }}>
         {t('nav.back', lang)} · {t('scan.setting', lang)}
       </Btn>

@@ -54,9 +54,7 @@ export function ArticleScreen(): JSX.Element {
             <>
               <p>{a.sub[loc]}</p>
               <p>
-                {lang === 'en'
-                  ? 'This article is part of the library of 24. After reading, verify the rule against a concrete day with the engine.'
-                  : '这篇文章是知库 24 篇之一。读完后，可用其中的规则去核对一个具体日子。'}
+                {tx('这篇文章是知库 24 篇之一。读完后，可用其中的规则去核对一个具体日子。', 'This article is part of the library of 24. After reading, verify the rule against a concrete day with the engine.', lang)}
               </p>
             </>
           )}
@@ -70,7 +68,7 @@ export function ArticleScreen(): JSX.Element {
           {tx('录四柱，排一课看看', 'Enter pillars, run a lesson', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
-          {lang === 'en' ? `90-day window · layer by layer · ~3s` : '90 天课期 · 逐层推演 · 约 3 秒'}
+          {tx('90 天课期 · 逐层推演 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}
         </div>
       </div>
 

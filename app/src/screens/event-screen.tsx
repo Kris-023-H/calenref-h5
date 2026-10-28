@@ -48,9 +48,7 @@ export function EventScreen(): JSX.Element {
       <h2 className="tt">
         {tx('所办何事？', 'What is the matter?', lang)}
         <small>
-          {lang === 'en'
-            ? 'The matter decides which lesson set applies. The same day suits opening but not marrying.'
-            : '用事决定取哪一套课格。同一个日课，宜开市不必宜嫁娶——这是择日学的基本前提。'}
+          {tx('用事决定取哪一套课格。同一个日课，宜开市不必宜嫁娶——这是择日学的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
         </small>
       </h2>
 

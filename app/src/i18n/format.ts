@@ -68,7 +68,7 @@ export function calPrefLabel(pref: CalPref, lang: Lang): string {
 
 /** 年份显示：公历 / 干支 / 佛历 */
 export function yearLabel(y: number, pref: CalPref, lang: Lang, ganText?: string): string {
-  if (pref === 'buddha') return `${lang === 'en' ? 'BE ' : '佛历 '}${y + 543}`;
+  if (pref === 'buddha') return `${tx('佛历 ', 'BE ', lang)}${y + 543}`;
   if (pref === 'gan' && ganText) return `${ganText}${lang === 'zh' || lang === 'zh-Hant' ? '年' : ''}`;
   return String(y);
 }
@@ -104,13 +104,13 @@ export function offsetMinText(n: number, lang: Lang): string {
   const sign = n > 0 ? '+' : n < 0 ? '−' : '';
   const abs = Math.abs(n);
   if (lang === 'en') return `${sign}${abs} min`;
-  return `${sign}${abs} 分钟`;
+  return `${sign}${abs} ${tx('分钟', 'min', lang)}`;
 }
 
-/** 字节数 → 可读大小 */
-export function bytesText(bytes: number, lang: Lang): string {
+/** 字节数 → 可读大小（KB/MB 单位三语同形，保留 lang 形参以便统一调用） */
+export function bytesText(bytes: number, _lang: Lang): string {
   const kb = bytes / 1024;
-  if (kb < 1024) return `${lang === 'en' ? `${Math.round(kb)} KB` : `${Math.round(kb)} KB`}`;
+  if (kb < 1024) return `${Math.round(kb)} KB`;
   const mb = kb / 1024;
-  return `${lang === 'en' ? `${mb.toFixed(1)} MB` : `${mb.toFixed(1)} MB`}`;
+  return `${mb.toFixed(1)} MB`;
 }

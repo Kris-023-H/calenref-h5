@@ -54,12 +54,8 @@ export function InfoScreen(): JSX.Element {
         {two ? (tx('双方四柱', 'Both pillars', lang)) : tx('当事人四柱', 'Subject pillars', lang)}
         <small>
           {two
-            ? lang === 'en'
-              ? 'Marriage reads the woman’s marry-month and checks the man’s clash — both required.'
-              : '嫁娶取课以女命定行嫁月、以男命查日辰冲命，两造皆须。'
-            : lang === 'en'
-              ? 'Birthplace corrects true solar time; one hour off and the hour pillar changes.'
-              : '出生地用于真太阳时校正；时刻错一位，时柱即错，四柱全变。'}
+            ? tx('嫁娶取课以女命定行嫁月、以男命查日辰冲命，两造皆须。', 'Marriage reads the woman’s marry-month and checks the man’s clash — both required.', lang)
+            : tx('出生地用于真太阳时校正；时刻错一位，时柱即错，四柱全变。', 'Birthplace corrects true solar time; one hour off and the hour pillar changes.', lang)}
         </small>
       </h2>
 
@@ -101,17 +97,16 @@ export function InfoScreen(): JSX.Element {
             </div>
           </div>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.7 }}>
-          {lang === 'en' ? (
-            <>
-              When on, the lesson runs in <b style={{ color: 'var(--ink-2)' }}>generic mode</b> and the report is flagged “hour unverified”.
-            </>
-          ) : (
-            <>
-              开启后按<b style={{ color: 'var(--ink-2)' }}>通用模式</b>取课，报告标注「时辰待核」。传统做法是 0–23 时双算取交集。
-            </>
-          )}
-        </div>
+        <div
+          style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.7 }}
+          dangerouslySetInnerHTML={{
+            __html: tx(
+              '开启后按<b style="color:var(--ink-2)">通用模式</b>取课，报告标注「时辰待核」。传统做法是 0–23 时双算取交集。',
+              'When on, the lesson runs in <b style="color:var(--ink-2)">generic mode</b> and the report is flagged “hour unverified”.',
+              lang,
+            ),
+          }}
+        />
       </div>
 
       <div className="pblock">
@@ -161,16 +156,10 @@ export function InfoScreen(): JSX.Element {
         <Seg options={schoolOptions} value={draft.school} onChange={(v) => setDraft({ school: v })} />
         <div style={{ fontSize: 10.5, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7 }}>
           {draft.school === 'xingjia'
-            ? lang === 'en'
-              ? 'Marry-month school: fix the months by the woman’s year branch first, then screen days.'
-              : '行嫁月派：先按女命年支定「哪几个月可办」，再筛日课。华人婚俗主流，嫁娶与订盟取此。'
+            ? tx('行嫁月派：先按女命年支定「哪几个月可办」，再筛日课。华人婚俗主流，嫁娶与订盟取此。', 'Marry-month school: fix the months by the woman’s year branch first, then screen days.', lang)
             : draft.school === 'bujiang'
-              ? lang === 'en'
-                ? 'Non-jiang school: takes yin-yang non-jiang days, lighter on the marry-month.'
-                : '不将日派：以阴阳不将日为主，不重行嫁月，适合不讲究女方月份的家庭。'
-              : lang === 'en'
-                ? 'Jianchu school: only the twelve officers and sha — best cross-cultural fit, common for business.'
-                : '建除派：只取建除十二值神与神煞，不取行嫁月，跨文化适用性最好，营生与工程类多用。'}
+              ? tx('不将日派：以阴阳不将日为主，不重行嫁月，适合不讲究女方月份的家庭。', 'Non-jiang school: takes yin-yang non-jiang days, lighter on the marry-month.', lang)
+              : tx('建除派：只取建除十二值神与神煞，不取行嫁月，跨文化适用性最好，营生与工程类多用。', 'Jianchu school: only the twelve officers and sha — best cross-cultural fit, common for business.', lang)}
         </div>
       </div>
 
@@ -182,12 +171,8 @@ export function InfoScreen(): JSX.Element {
               {tx('业态与坐向', 'Trade & facing', lang)}
               <small>
                 {hasWuxingLayer(draft.eventKey)
-                  ? lang === 'en'
-                    ? 'trade five-phase and facing are the second variable set'
-                    : '取业态五行与坐向，是营生课的第二组变量'
-                  : lang === 'en'
-                    ? 'facing matters; a clash with the mountain is a hard veto'
-                    : '重方位与山运，坐向冲山即为硬忌'}
+                  ? tx('取业态五行与坐向，是营生课的第二组变量', 'trade five-phase and facing are the second variable set', lang)
+                  : tx('重方位与山运，坐向冲山即为硬忌', 'facing matters; a clash with the mountain is a hard veto', lang)}
               </small>
             </div>
           </div>
@@ -248,35 +233,28 @@ export function InfoScreen(): JSX.Element {
 
       <div className="whybar" style={{ marginBottom: 10 }} role="button" tabIndex={0} onClick={() => setDraft({ generic: true })}>
         <Icon name="info" size={13} />
-        <div>
-          {lang === 'en' ? (
-            <>
-              <b>No pillars? Still works.</b> Run in generic mode — flagged, not tuned to your year pillar.
-            </>
-          ) : (
-            <>
-              <b>不填生辰也能看</b>　直接取通书口径排课，结果标注「通用模式」，不针对年命。
-            </>
-          )}
-        </div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: tx(
+              '<b>不填生辰也能看</b>　直接取通书口径排课，结果标注「通用模式」，不针对年命。',
+              '<b>No pillars? Still works.</b> Run in generic mode — flagged, not tuned to your year pillar.',
+              lang,
+            ),
+          }}
+        />
         <Icon name="right" size={11} className="ar" />
       </div>
 
-      <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 6, lineHeight: 1.7 }}>
-        {lang === 'en' ? (
-          <>
-            Pillar data is computed in this browser only, never uploaded.
-            <br />
-            Traditional folk reference; no guarantee of outcomes.
-          </>
-        ) : (
-          <>
-            四柱资料仅在本机浏览器内计算，不上传服务器。
-            <br />
-            传统民俗参考，不构成任何结果保证。
-          </>
-        )}
-      </div>
+      <div
+        style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 6, lineHeight: 1.7 }}
+        dangerouslySetInnerHTML={{
+          __html: tx(
+            '四柱资料仅在本机浏览器内计算，不上传服务器。<br>传统民俗参考，不构成任何结果保证。',
+            'Pillar data is computed in this browser only, never uploaded.<br>Traditional folk reference; no guarantee of outcomes.',
+            lang,
+          ),
+        }}
+      />
 
       <div className="ctabar">
         <Btn
@@ -356,19 +334,17 @@ function PersonSlot({
       </div>
       <div className="fld">
         <label>{t('person.birthCity', lang)}</label>
-        <input className="input" type="text" value={city ? `${lang === 'en' ? city.en : city.zh}（${city.lon}°E）` : person.birthCityId ?? ''} readOnly />
+        <input className="input" type="text" value={city ? `${tx(city.zh, city.en, lang)}（${city.lon}°E）` : person.birthCityId ?? ''} readOnly />
       </div>
       <div className={`tsnote${r.dst ? ' warn' : ''}`}>
         <Icon name="info" size={12} />
         <div>
-          {t('person.readingTrue', lang)}：{person.birthTime}（{city ? (lang === 'en' ? city.en : city.zh) : ''}）→ <b>{r.trueTime}</b>（
+          {t('person.readingTrue', lang)}：{person.birthTime}（{city ? tx(city.zh, city.en, lang) : ''}）→ <b>{r.trueTime}</b>（
           {offsetMinText(r.offsetMin, lang)}）
           {r.dst && (
             <>
               <br />
-              {lang === 'en'
-                ? 'China observed DST from Apr–Sep that year; the birth hour rolls back one hour or the hour pillar is wrong.'
-                : '该年 4–9 月实行夏令时，出生时刻须回拨 1 小时，否则时柱即错。'}
+              {tx('该年 4–9 月实行夏令时，出生时刻须回拨 1 小时，否则时柱即错。', 'China observed DST from Apr–Sep that year; the birth hour rolls back one hour or the hour pillar is wrong.', lang)}
             </>
           )}
         </div>

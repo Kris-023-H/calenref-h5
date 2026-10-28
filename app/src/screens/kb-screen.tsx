@@ -82,9 +82,7 @@ export function KbScreen(): JSX.Element {
           {tx('本课取用的典籍与行业专书', 'Books behind this lesson', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.7 }}>
-          {lang === 'en'
-            ? '10 general day-selection books, 15 trade manuals — every rule traceable to a title and chapter.'
-            : '择日总纲 10 部、行业专书 15 部。每条规则都可回溯到具体书目与卷次。'}
+          {tx('择日总纲 10 部、行业专书 15 部。每条规则都可回溯到具体书目与卷次。', '10 general day-selection books, 15 trade manuals — every rule traceable to a title and chapter.', lang)}
         </div>
       </div>
       <div style={{ height: 10 }} />

@@ -50,7 +50,7 @@ export function CompassIntro({
           <GuibiaoLogo size={44} tone="light" />
         </div>
       </div>
-      <div className="brand">择 吉</div>
+      <div className="brand">{tx('择 吉', 'ZEJI', lang)}</div>
       <div className="sub">{t('app.slogan', lang)}</div>
       <div className="line" />
       <div className="tap">{tx('轻触进入', 'Tap to enter', lang)}</div>

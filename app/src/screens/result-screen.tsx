@@ -328,9 +328,7 @@ function MonthCal({
           })}
         </div>
         <div className="tl-cap" style={{ marginTop: 8, fontSize: 9, color: 'var(--muted)' }}>
-          {lang === 'en'
-            ? 'Gold = highest lesson score, light gold = usable. Tap any day for layer detail.'
-            : '金色为课格最高，浅金为可用日。点开任意一天看逐层依据。'}
+          {tx('金色为课格最高，浅金为可用日。点开任意一天看逐层依据。', 'Gold = highest lesson score, light gold = usable. Tap any day for layer detail.', lang)}
         </div>
       </div>
       {monthOffset === 0 && (

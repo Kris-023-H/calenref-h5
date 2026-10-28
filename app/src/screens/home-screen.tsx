@@ -69,7 +69,8 @@ export function HomeScreen(): JSX.Element {
   const greeting = (): string => {
     const h = new Date().getHours();
     if (lang === 'en') return h < 11 ? 'Good morning' : h < 14 ? 'Good noon' : h < 19 ? 'Good afternoon' : 'Good evening';
-    return h < 11 ? '早上好' : h < 14 ? '午安' : h < 19 ? '下午好' : '晚上好';
+    const zhText = h < 11 ? '早上好' : h < 14 ? '午安' : h < 19 ? '下午好' : '晚上好';
+    return tx(zhText, '', lang);
   };
 
   const quick: Array<[string, string, string]> = [
@@ -138,17 +139,15 @@ export function HomeScreen(): JSX.Element {
 
       <div className="whybar" role="button" tabIndex={0} onClick={() => openSheet('why')} onKeyDown={(e) => e.key === 'Enter' && openSheet('why')}>
         <Icon name="info" size={13} />
-        <div>
-          {lang === 'en' ? (
-            <>
-              Above is the <b>general almanac reading</b> — same for everyone, <b>not tuned to your pillars</b>. Your lesson reads person · matter · day.
-            </>
-          ) : (
-            <>
-              以上为<b>通书宜忌</b>，按建除十二值神排，对所有人一致，<b>不针对你的年命</b>。你的课期要看人·事·日三元。
-            </>
-          )}
-        </div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: tx(
+              '以上为<b>通书宜忌</b>，按建除十二值神排，对所有人一致，<b>不针对你的年命</b>。你的课期要看人·事·日三元。',
+              'Above is the <b>general almanac reading</b> — same for everyone, <b>not tuned to your pillars</b>. Your lesson reads person · matter · day.',
+              lang,
+            ),
+          }}
+        />
         <Icon name="right" size={11} className="ar" />
       </div>
 

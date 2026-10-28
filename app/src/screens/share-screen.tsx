@@ -167,9 +167,7 @@ export function ShareScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 10.5, color: 'var(--muted)', textAlign: 'center', margin: '14px 0 10px', lineHeight: 1.8 }}>
-        {lang === 'en'
-          ? 'Whoever opens the link sees the same day — and can run their own lesson from it.'
-          : '收到链接的人看到同一日，也可由此起自己的一课。'}
+        {tx('收到链接的人看到同一日，也可由此起自己的一课。', 'Whoever opens the link sees the same day — and can run their own lesson from it.', lang)}
       </div>
       <Btn variant="ghost" block onClick={() => push('event')}>
         {t('event.start', lang)}

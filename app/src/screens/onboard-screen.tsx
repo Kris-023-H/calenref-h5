@@ -96,48 +96,32 @@ export function OnboardScreen(): JSX.Element {
 
   const steps: Array<{ h: string; p: string; n: string }> = [
     {
-      h: lang === 'en' ? 'The almanac answers\n"how is today"' : '通书给你的<br>是「这一天」',
+      h: tx('通书给你的<br>是「这一天」', 'The almanac answers\n"how is today"', lang),
       p:
-        lang === 'en'
-          ? 'Almanac yi/ji follow the twelve jianchu officers — the same for everyone. But your matter uses your own pillars.'
-          : '黄历上的宜忌，是按建除十二值神排的<b>通用口径</b>——同一天，对所有人都一样。可你要办的是你自己的事，用的是你自己的年命。',
+        tx('黄历上的宜忌，是按建除十二值神排的<b>通用口径</b>——同一天，对所有人都一样。可你要办的是你自己的事，用的是你自己的年命。', 'Almanac yi/ji follow the twelve jianchu officers — the same for everyone. But your matter uses your own pillars.', lang),
       n:
-        lang === 'en'
-          ? 'The almanac answers "how is today"; a day lesson answers "how is today for your matter".'
-          : '通书答「今天怎么样」，课格答「今天对你这件事怎么样」。两句都对，只是层级不同。',
+        tx('通书答「今天怎么样」，课格答「今天对你这件事怎么样」。两句都对，只是层级不同。', 'The almanac answers "how is today"; a day lesson answers "how is today for your matter".', lang),
     },
     {
       h: tx('三元定一课', 'Person + Matter + Day', lang),
       p:
-        lang === 'en'
-          ? 'First the person (pillars), then the matter (event & trade), and only then the day lesson. Without all three, even a "yellow dao" day is useless.'
-          : '择吉的本体是<b>人 · 事 · 日</b>三元：先看人（四柱年命），再看事（用事与业态），最后才落到日课。三层不合，日子再「黄道」也无用。',
+        tx('择吉的本体是<b>人 · 事 · 日</b>三元：先看人（四柱年命），再看事（用事与业态），最后才落到日课。三层不合，日子再「黄道」也无用。', 'First the person (pillars), then the matter (event & trade), and only then the day lesson. Without all three, even a "yellow dao" day is useless.', lang),
       n:
-        lang === 'en'
-          ? 'The same day suits opening a shop but not a wedding — the premise of day selection.'
-          : '同一日课，宜开市不必宜嫁娶——这是择日学的基本前提，也是通用黄历给不了的。',
+        tx('同一日课，宜开市不必宜嫁娶——这是择日学的基本前提，也是通用黄历给不了的。', 'The same day suits opening a shop but not a wedding — the premise of day selection.', lang),
     },
     {
-      h: lang === 'en' ? 'A lesson period,\nnot one word' : '交付的是课期，<br>不是一句吉凶',
+      h: tx('交付的是课期，<br>不是一句吉凶', 'A lesson period,\nnot one word', lang),
       p:
-        lang === 'en'
-          ? 'We issue a nine-chapter lesson report — every layer traceable — plus a shareable day card and a verifiable library.'
-          : '我们出具<b>课期报告</b>：九章结构，逐层给依据，每一层都可回溯。另有吉日课帖可传、知库可核。',
+        tx('我们出具<b>课期报告</b>：九章结构，逐层给依据，每一层都可回溯。另有吉日课帖可传、知库可核。', 'We issue a nine-chapter lesson report — every layer traceable — plus a shareable day card and a verifiable library.', lang),
       n:
-        lang === 'en'
-          ? '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.'
-          : '报告九章 · 课帖五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。',
+        tx('报告九章 · 课帖五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
     },
     {
       h: tx('先定你的业态', 'Pick your trade', lang),
       p:
-        lang === 'en'
-          ? 'Your trade decides the five-phase taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.'
-          : '业态决定五行取用与关键动作时点。做餐饮与做珠宝，同一个日子的课格不同。<b>可跳过</b>，之后在生辰页再选。',
+        tx('业态决定五行取用与关键动作时点。做餐饮与做珠宝，同一个日子的课格不同。<b>可跳过</b>，之后在生辰页再选。', 'Your trade decides the five-phase taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.', lang),
       n:
-        lang === 'en'
-          ? 'Trade affects business & engineering matters only. Marriage and moving-in read the marry-month and facing instead.'
-          : '业态只影响营生与工程类用事。嫁娶、入宅不看业态五行，看的是女命行嫁月与坐向。',
+        tx('业态只影响营生与工程类用事。嫁娶、入宅不看业态五行，看的是女命行嫁月与坐向。', 'Trade affects business & engineering matters only. Marriage and moving-in read the marry-month and facing instead.', lang),
     },
   ];
 

@@ -55,28 +55,44 @@ export function buildLocalReading(req: AiRequest): string[] {
   const sec1 =
     lang === 'en'
       ? `This reading answers one question: whether <b>${day.dayGZ.text} day (${jcText})</b> fits <b>${evName}</b> for the charts of ${peopleText(scan, 'en')}. Score ${day.score} — ${grade}. It does not predict how business will go; it only says whether the day fits this rule set.`
-      : `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}年命为约束的日课，结论是<b>${day.dayGZ.text}日可用</b>，课格评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`;
+      : tx(
+          `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}年命为约束的日课，结论是<b>${day.dayGZ.text}日可用</b>，课格评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`,
+          '',
+          lang,
+        );
 
   const sec2 =
     lang === 'en'
-      ? `${indName ? `“${indName}” belongs to ${industry ? WX_NAMES[industry.wuxing] : ''}; ` : ''}the day stem is ${day.dayGZ.text[0]}. ${wxLayer ? layerResultText(wxLayer, 'en') : 'This occasion does not take the industry five-phase layer.'} ${industry ? industry.note.en : ''}`
-      : `${indName ? `「${indName}」属${industry ? WX_NAMES[industry.wuxing] : ''}，` : ''}本日日干${day.dayGZ.text[0]}，${wxLayer ? layerResultText(wxLayer, lang) : '此用事不取业态五行层'}。${industry ? industry.note.zh : ''}`;
+      ? `${indName ? `"${indName}" belongs to ${industry ? WX_NAMES[industry.wuxing] : ''}; ` : ''}the day stem is ${day.dayGZ.text[0]}. ${wxLayer ? layerResultText(wxLayer, 'en') : 'This occasion does not take the industry five-phase layer.'} ${industry ? industry.note.en : ''}`
+      : tx(
+          `${indName ? `「${indName}」属${industry ? WX_NAMES[industry.wuxing] : ''}，` : ''}本日日干${day.dayGZ.text[0]}，${wxLayer ? layerResultText(wxLayer, lang) : '此用事不取业态五行层'}。${industry ? industry.note.zh : ''}`,
+          '',
+          lang,
+        );
 
   const sec3 =
     lang === 'en'
       ? bad.length
         ? `Secondary factors: <b>${bad.map((b) => `${layerName(b.key, 'en')} · ${layerResultText(b, 'en')}`).join('; ')}</b>. These are not reasons to move the date — the traditional remedy is to place the first key action inside an auspicious hour, keep the core step indoors, and do a dry run the day before.`
         : `All layers run clean — a rare day. Lock it in; do not let “wait and see” cost it.`
-      : bad.length
-        ? `次级因素有：<b>${bad.map((b) => `${layerName(b.key, lang)} · ${layerResultText(b, lang)}`).join('、')}</b>。这些不构成改期理由，传统做法是——把「${acts[0] ?? ''}」放在吉时内、在室内完成核心环节、并在前一日先做一次「预演」以应「先动后正」。`
-        : '七至八层皆顺，无次级瑕疵。这是少见的好日子，建议直接锁定，不要为了「再等等」错过。';
+      : tx(
+          bad.length
+            ? `次级因素有：<b>${bad.map((b) => `${layerName(b.key, lang)} · ${layerResultText(b, lang)}`).join('、')}</b>。这些不构成改期理由，传统做法是——把「${acts[0] ?? ''}」放在吉时内、在室内完成核心环节、并在前一日先做一次「预演」以应「先动后正」。`
+            : '七至八层皆顺，无次级瑕疵。这是少见的好日子，建议直接锁定，不要为了「再等等」错过。',
+          '',
+          lang,
+        );
 
-  const slots = HOUR_SLOTS.map((s) => (lang === 'en' ? s.en : s.zh));
+  const slots = HOUR_SLOTS.map((s) => tx(s.zh, s.en, lang));
   const actSeq = acts.map((a, i) => `${a}（${slots[i] ?? slots[slots.length - 1]}）`).join(' → ');
   const sec4 =
     lang === 'en'
       ? `Key actions in order: <b>${actSeq}</b>. First-choice hour: ${hourText(first, 'en')}; second choice: ${second ? hourText(second, 'en') : 'none'}. Keep the first week steady rather than heavy on spend — the usual opening rhythm, and just as important as the day itself.`
-      : `关键动作按此时序落：<b>${actSeq}</b>。首选吉时为 ${hourText(first, lang)}，次选 ${second ? hourText(second, lang) : '无'}。开市首周不做大额投入，以「稳客」为主——这是开业期的通行节奏，与日课无关，但同样重要。`;
+      : tx(
+          `关键动作按此时序落：<b>${actSeq}</b>。首选吉时为 ${hourText(first, lang)}，次选 ${second ? hourText(second, lang) : '无'}。开市首周不做大额投入，以「稳客」为主——这是开业期的通行节奏，与日课无关，但同样重要。`,
+          '',
+          lang,
+        );
 
   return [sec1, sec2, sec3, sec4];
 }

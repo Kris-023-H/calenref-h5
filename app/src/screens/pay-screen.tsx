@@ -129,9 +129,7 @@ export function PayScreen(): JSX.Element {
                 : t('ai.quotaLeft', lang, { n: quota.freeLeft })}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.6 }}>
-              {lang === 'en'
-                ? 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.'
-                : '免费额度：每月 3 次 AI 解读。课期筛选不限次，报告与解读须解锁。'}
+              {tx('免费额度：每月 3 次 AI 解读。课期筛选不限次，报告与解读须解锁。', 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.', lang)}
             </div>
           </div>
         </div>
@@ -158,16 +156,10 @@ export function PayScreen(): JSX.Element {
             <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
             <br />
             {k === 'year'
-              ? lang === 'en'
-                ? 'Unlimited matters · unlimited AI · full library · no card watermark'
-                : '所有用事不限次 · AI 解读无限 · 知库全解锁 · 课帖去印记'
+              ? tx('所有用事不限次 · AI 解读无限 · 知库全解锁 · 课帖去印记', 'Unlimited matters · unlimited AI · full library · no card watermark', lang)
               : k === 'ai10'
-                ? lang === 'en'
-                  ? 'Readings never expire; deduct as you go'
-                  : '次数不清零，随用随扣'
-                : lang === 'en'
-                  ? 'Nine chapters with per-layer basis, clash attribution, action hours'
-                  : '含逐层依据、日课四柱、出局归因、关键动作时点与神煞边界声明'}
+                ? tx('次数不清零，随用随扣', 'Readings never expire; deduct as you go', lang)
+                : tx('含逐层依据、日课四柱、出局归因、关键动作时点与神煞边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}
           </div>
         </div>
       ))}
@@ -198,7 +190,7 @@ export function PayScreen(): JSX.Element {
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {(lang === 'en'
             ? ['Cards', 'Apple / Google Pay', 'Alipay', 'WeChat Pay', 'Link', 'Bank redirect']
-            : ['信用卡', 'Apple / Google Pay', '支付宝', '微信支付', 'Link', '银行转账']
+            : ['信用卡', 'Apple / Google Pay', '支付宝', '微信支付', 'Link', '银行转账'].map((x) => tx(x, '', lang))
           ).map((x) => (
             <Chip key={x}>{x}</Chip>
           ))}
@@ -210,9 +202,7 @@ export function PayScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 14, lineHeight: 1.7 }}>
-        {lang === 'en'
-          ? 'Buying means you understand: this product engineers traditional day-selection rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.'
-          : '购买即表示你理解：本产品提供传统择日规则的工程化推演，不预测结果、不承诺吉凶、不涉及医疗与投资建议。'}
+        {tx('购买即表示你理解：本产品提供传统择日规则的工程化推演，不预测结果、不承诺吉凶、不涉及医疗与投资建议。', 'Buying means you understand: this product engineers traditional day-selection rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.', lang)}
       </div>
 
       <div className="ctabar">

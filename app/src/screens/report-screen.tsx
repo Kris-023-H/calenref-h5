@@ -292,9 +292,7 @@ export function ReportScreen(): JSX.Element {
           </div>
         ))}
         <div style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.75, marginTop: 9 }}>
-          {lang === 'en'
-            ? 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. Clash of day/person, month-break and mountain-clash are hard vetoes; score below threshold is relaxable.'
-            : '出局不等于「不吉」，是不合本课格的取用条件。日辰冲命、月破、冲山为硬性出局；课格评分不足为可放宽项。'}
+          {tx('出局不等于「不吉」，是不合本课格的取用条件。日辰冲命、月破、冲山为硬性出局；课格评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. Clash of day/person, month-break and mountain-clash are hard vetoes; score below threshold is relaxable.', lang)}
         </div>
       </div>
 
@@ -315,9 +313,7 @@ export function ReportScreen(): JSX.Element {
         })}
       </div>
       <div className="hint" style={{ fontSize: 10 }}>
-        {lang === 'en'
-          ? 'Action hours follow good hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.'
-          : '动作时点以吉时为准。若吉时与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的取用。'}
+        {tx('动作时点以吉时为准。若吉时与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的取用。', 'Action hours follow good hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.', lang)}
       </div>
 
       {/* 七 节奏 */}
@@ -383,9 +379,7 @@ export function ReportScreen(): JSX.Element {
       <SectionHead index="九" title={t('report.ch9', lang)} note={tx('边界声明', 'boundaries', lang)} />
       <div className="card flat">
         <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {lang === 'en'
-            ? 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, facing and mountain-clash to the Yingzao Fashi and the Luban Jing.'
-            : '本报告逐层给出取用依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与冲山依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。'}
+          {tx('本报告逐层给出取用依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与冲山依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。', 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, facing and mountain-clash to the Yingzao Fashi and the Luban Jing.', lang)}
         </div>
       </div>
 
@@ -399,9 +393,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 9.5, color: 'var(--muted)', lineHeight: 1.8, marginTop: 16, paddingTop: 12, borderTop: '1px dashed var(--line)' }}>
-        {lang === 'en'
-          ? 'Compiled per the Xieji Bianfang Shu and Xingli Kaoyuan, with trade references from the Yingzao Fashi and Tiangong Kaiwu. Traditional folk reference only — no guarantee of outcomes, no medical or investment advice.'
-          : '本报告依《协纪辨方书》《星历考原》取用次第，参《营造法式》《鲁班经匠家镜》《天工开物》等行业专书，属传统民俗参考，不构成任何结果保证，不涉及医疗与投资建议。'}
+        {tx('本报告依《协纪辨方书》《星历考原》取用次第，参《营造法式》《鲁班经匠家镜》《天工开物》等行业专书，属传统民俗参考，不构成任何结果保证，不涉及医疗与投资建议。', 'Compiled per the Xieji Bianfang Shu and Xingli Kaoyuan, with trade references from the Yingzao Fashi and Tiangong Kaiwu. Traditional folk reference only — no guarantee of outcomes, no medical or investment advice.', lang)}
         <br />
         {t('app.ruleVersion', lang)} {RULE_VERSION} ／ {tx('出具于 ', 'issued ', lang)}
         {new Date().getFullYear()}.{String(new Date().getMonth() + 1).padStart(2, '0')}.{String(new Date().getDate()).padStart(2, '0')}

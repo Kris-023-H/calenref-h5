@@ -14,6 +14,7 @@ import { fourPillarsOf } from '../engine/pillars';
 import { schoolReadings, schoolAdvice } from '../engine/schools';
 import { ZHI } from '../engine/calendar/sexagenary';
 import { SCORE_MIN } from '../engine/types';
+import type { Lang } from '../engine/types';
 import { t, hardReasonLong, isoDate, scoreLowText, termText, tx } from '../i18n';
 import { Ring, Btn, EmptyState } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
@@ -22,7 +23,13 @@ import { LayerRow, HourCell, SubShaCard } from '../components/layer-row';
 import { dottedDate, monthDay, weekdayShort, monthFullName } from './ui-helpers';
 import { useNav } from './types';
 
-const SCHOOL_NAMES: Record<'xingjia' | 'bujiang' | 'jianchu', string> = { xingjia: '行嫁月派', bujiang: '不将日派', jianchu: '建除派' };
+/** 三派名称：中文走 tx 以便繁体同步转换 */
+const SCHOOL_NAMES: Record<'xingjia' | 'bujiang' | 'jianchu', { zh: string; en: string }> = {
+  xingjia: { zh: '行嫁月派', en: 'Marry-month' },
+  bujiang: { zh: '不将日派', en: 'Bujiang day' },
+  jianchu: { zh: '建除派', en: 'Jianchu' },
+};
+const schoolName = (k: 'xingjia' | 'bujiang' | 'jianchu', lang: Lang): string => tx(SCHOOL_NAMES[k].zh, SCHOOL_NAMES[k].en, lang);
 
 export function DetailScreen(): JSX.Element {
   const lang = useSettings((s) => s.lang);
@@ -120,7 +127,7 @@ export function DetailScreen(): JSX.Element {
         <div className="rtab-row">
           <div>{t('common.score', lang)}</div>
           <div>
-            <b>{day.score}</b>　{lang === 'en' ? `≥94 supreme · ≥86 high · ≥80 usable` : '（≥94 上吉 · ≥86 中吉 · ≥80 可用）'}
+            <b>{day.score}</b>　{tx('（≥94 上吉 · ≥86 中吉 · ≥80 可用）', '≥94 supreme · ≥86 high · ≥80 usable', lang)}
           </div>
         </div>
       </div>
@@ -184,7 +191,7 @@ export function DetailScreen(): JSX.Element {
       <div className="schools">
         {readings3.map((r) => (
           <div key={r.school} className={`school${r.score === Math.max(...readings3.map((x) => x.score)) ? ' best' : ''}`}>
-            <em>{SCHOOL_NAMES[r.school]}</em>
+            <em>{schoolName(r.school, lang)}</em>
             <b>{r.score}</b>
             <span>{r.score >= SCORE_MIN ? (tx('过阈值', 'pass', lang)) : tx('未过', 'below', lang)}</span>
           </div>

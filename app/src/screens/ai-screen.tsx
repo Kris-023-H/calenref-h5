@@ -51,9 +51,7 @@ export function AiScreen(): JSX.Element {
       <h2 className="tt">
         {t('ai.title', lang)}
         <small>
-          {lang === 'en'
-            ? 'A reading does not recompute — it strings the computed layers into actionable prose for your trade and matter. Every line cites its rule.'
-            : '解读不是重新算一遍，是把已算出的八重依据，按你的业态与用事串成可执行的一段话。每条都引规则出处。'}
+          {tx('解读不是重新算一遍，是把已算出的八重依据，按你的业态与用事串成可执行的一段话。每条都引规则出处。', 'A reading does not recompute — it strings the computed layers into actionable prose for your trade and matter. Every line cites its rule.', lang)}
         </small>
       </h2>
 
@@ -97,9 +95,7 @@ export function AiScreen(): JSX.Element {
           mark="ai"
           title={tx('尚未生成解读', 'No reading yet', lang)}
           body={
-            lang === 'en'
-              ? 'Tap generate — the reading unfolds in four sections, each citing its rule source.'
-              : '点下方生成，AI 会按「结论口径 → 业态适配 → 风险与化解 → 执行建议」四段展开，每段引规则出处。'
+            tx('点下方生成，AI 会按「结论口径 → 业态适配 → 风险与化解 → 执行建议」四段展开，每段引规则出处。', 'Tap generate — the reading unfolds in four sections, each citing its rule source.', lang)
           }
           action={
             <Btn variant="gold" onClick={() => void generateAi()}>
@@ -110,21 +106,16 @@ export function AiScreen(): JSX.Element {
       ) : (
         <div className="aipay">
           <div className="ap-t">{tx('本月 3 次已用完', 'Monthly quota used up', lang)}</div>
-          <div className="ap-s">
-            {lang === 'en' ? (
-              <>
-                Readings count per use. Buy the 10-pack (never expires) or go yearly for unlimited.
-                <br />
-                Screening and per-layer basis stay free.
-              </>
-            ) : (
-              <>
-                AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。
-                <br />
-                课期筛选与逐层依据始终免费，不受影响。
-              </>
-            )}
-          </div>
+          <div
+            className="ap-s"
+            dangerouslySetInnerHTML={{
+              __html: tx(
+                'AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。<br>课期筛选与逐层依据始终免费，不受影响。',
+                'Readings count per use. Buy the 10-pack (never expires) or go yearly for unlimited.<br>Screening and per-layer basis stay free.',
+                lang,
+              ),
+            }}
+          />
           <Btn variant="gold" onClick={() => push('pay')}>
             {t('ai.upgrade', lang)}
           </Btn>
@@ -194,9 +185,7 @@ export function AiScreen(): JSX.Element {
             </button>
           </div>
           <div className="hint" style={{ fontSize: 10, marginTop: 10 }}>
-            {lang === 'en'
-              ? 'Follow-ups count 1 each. The AI answers only from this lesson’s computed basis — it introduces no new sha and predicts no business results.'
-              : '追问计 1 次。AI 只依据本课已算出的依据作答，不引入新神煞，也不预测经营结果。'}
+            {tx('追问计 1 次。AI 只依据本课已算出的依据作答，不引入新神煞，也不预测经营结果。', 'Follow-ups count 1 each. The AI answers only from this lesson’s computed basis — it introduces no new sha and predicts no business results.', lang)}
           </div>
         </>
       )}
@@ -222,28 +211,35 @@ function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
   const session = useApp.getState().session;
   const day = session?.result.usable[session.cursor] ?? session?.result.days[0];
   if (!day) return t('err.notFound', lang);
-  const zh = lang !== 'en';
   if (q.includes('属') || q.includes('冲') || q.includes('zodiac') || q.includes('clash')) {
-    return zh
-      ? `日支不冲当事人年支，这一重结论稳定；若出生时刻跨了时辰，时柱可能变，但年支不变。`
-      : 'The day branch does not clash the subject’s year branch — stable even if the birth hour shifted.';
+    return tx(
+      `日支不冲当事人年支，这一重结论稳定；若出生时刻跨了时辰，时柱可能变，但年支不变。`,
+      'The day branch does not clash the subject’s year branch — stable even if the birth hour shifted.',
+      lang,
+    );
   }
   if (q.includes('时辰') || q.includes('hour') || q.includes('时')) {
     const h = day.goodHours[0] ?? day.hours[0];
-    return zh
-      ? `只能选一个，就取 <b>${h.name}时（${h.range}）</b>——时支与日支成六合或三合，是本日最合的一刻。关键动作必须落在此刻之内。`
-      : `Take <b>${h.name}（${h.range}）</b> — the hour branch forms a harmony with the day branch.`;
+    return tx(
+      `只能选一个，就取 <b>${h.name}时（${h.range}）</b>——时支与日支成六合或三合，是本日最合的一刻。关键动作必须落在此刻之内。`,
+      `Take <b>${h.name}（${h.range}）</b> — the hour branch forms a harmony with the day branch.`,
+      lang,
+    );
   }
   if (q.includes('避') || q.includes('avoid') || q.includes('风险')) {
     const bad = day.layers.filter((l) => l.cls === 'warn' || l.cls === 'bad');
     if (bad.length === 0) {
-      return zh ? '本课无次级煞，唯一要注意的是「不要改时」。' : 'No secondary sha — just do not move the hour.';
+      return tx('本课无次级煞，唯一要注意的是「不要改时」。', 'No secondary sha — just do not move the hour.', lang);
     }
-    return zh
-      ? `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。制化之法是把关键动作移入吉时、核心环节在室内完成。`
-      : `Avoid: <b>${bad.map((b) => b.resultKey).join(', ')}</b>. Move key actions into good hours.`;
+    return tx(
+      `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。制化之法是把关键动作移入吉时、核心环节在室内完成。`,
+      `Avoid: <b>${bad.map((b) => b.resultKey).join(', ')}</b>. Move key actions into good hours.`,
+      lang,
+    );
   }
-  return zh
-    ? '本课的可核依据已在报告第二至六章列出。若不在八重课格之内，不会替你补一层。'
-    : 'Verifiable basis is listed in report chapters 2–6. Anything outside the eight layers is not invented.';
+  return tx(
+    '本课的可核依据已在报告第二至六章列出。若不在八重课格之内，不会替你补一层。',
+    'Verifiable basis is listed in report chapters 2–6. Anything outside the eight layers is not invented.',
+    lang,
+  );
 }

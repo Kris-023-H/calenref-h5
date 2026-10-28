@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import type { HourMark, LayerResult } from '../engine/types';
-import { layerName, layerResultText, hourRowText } from '../i18n';
+import { layerName, layerResultText, hourRowText, tx } from '../i18n';
 import type { Lang } from '../engine/types';
 import { Icon } from './icons';
 
@@ -71,8 +71,8 @@ export function SubShaCard({ layers, lang }: { layers: LayerResult[]; lang: Lang
   if (layers.length === 0) {
     return (
       <div className="card flat">
-        <div style={{ fontSize: 11.5, color: 'var(--jade)', fontWeight: 700 }}>此日无次级煞</div>
-        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>诸层皆顺，属少见的好课。</div>
+        <div style={{ fontSize: 11.5, color: 'var(--jade)', fontWeight: 700 }}>{tx('此日无次级煞', 'No secondary clash on this day', lang)}</div>
+        <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{tx('诸层皆顺，属少见的好课。', 'Every layer runs clean — a rare good reading.', lang)}</div>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export function SubShaCard({ layers, lang }: { layers: LayerResult[]; lang: Lang
           <b style={{ color: 'var(--verm)' }}>
             {layerName(l.key, lang)}·{layerResultText(l, lang)}
           </b>
-          　属可制化的次级煞，可把关键动作移入吉时化解。
+          　{tx('属可制化的次级煞，可把关键动作移入吉时化解。', 'A secondary clash that can be mitigated — move the key action into an auspicious hour.', lang)}
         </div>
       ))}
     </div>

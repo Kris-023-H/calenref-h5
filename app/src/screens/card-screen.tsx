@@ -85,9 +85,7 @@ export function CardScreen(): JSX.Element {
       </CardStage>
 
       <div style={{ fontSize: 10.5, color: 'var(--muted)', textAlign: 'center', margin: '10px 0 4px', lineHeight: 1.7 }}>
-        {lang === 'en'
-          ? '“Paper” for elders and formal occasions; “Lacquer” for social headers; “Teal” for SE Asia; “Ink” for study; “Vermilion” for celebrations.'
-          : '「宣纸」呈长辈与正式场合，「漆金」作社媒首图，「海风」面向东南亚，「水墨」宜书房茶室，「朱印」宜喜庆与开业。'}
+        {tx('「宣纸」呈长辈与正式场合，「漆金」作社媒首图，「海风」面向东南亚，「水墨」宜书房茶室，「朱印」宜喜庆与开业。', '“Paper” for elders and formal occasions; “Lacquer” for social headers; “Teal” for SE Asia; “Ink” for study; “Vermilion” for celebrations.', lang)}
       </div>
 
       <div className="sect">
