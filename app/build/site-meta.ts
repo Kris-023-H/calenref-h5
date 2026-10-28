@@ -2,13 +2,17 @@
  * build/site-meta.ts — 站点元信息构建插件。
  *
  * 三件事，都围绕「域名只有一个来源」：
- *   ① 把 index.html 里的 %SITE_URL% 换成真实站点地址（canonical / OG / JSON-LD 共用）；
+ *   ① 把 index.html 里的 __SITE_URL__ 换成真实站点地址（canonical / OG / JSON-LD 共用）；
  *   ② 构建时生成 robots.txt 与 sitemap.xml（单页应用也要有 sitemap，否则搜索平台
  *      无法确认站点存在）；
  *   ③ 开发服务器同样能访问这两个文件，便于上线前本地核对。
  *
- * 为什么不用 public/ 静态文件：那样域名会被写死在两处（index.html 与 public），
- * 换域名时必然漏改。这里统一读 VITE_SITE_URL。
+ * 域名来源优先级（从高到低）：
+ *   1. VITE_SITE_URL      — 显式指定，绑了自定义域名时用这个
+ *   2. CF_PAGES_URL       — Cloudflare Pages 构建环境自带，形如 https://xxx.pages.dev
+ *   3. .env 里的 VITE_SITE_URL
+ *   4. 内置兜底
+ * 有了第 2 条，接 Cloudflare Pages 时无需手工配任何域名变量，canonical 也不会漏。
  */
 
 import type { Plugin } from 'vite';
@@ -20,12 +24,18 @@ const FALLBACK_URL = 'https://zeji.app';
 /** 法务页深链（审核方与搜索平台都会点） */
 const LEGAL_SLUGS = ['privacy', 'terms', 'refund', 'cookie'];
 
+function normalize(url: string): string {
+  return url.trim().replace(/\/+$/, '');
+}
+
 function readSiteUrl(root: string): string {
-  if (process.env.VITE_SITE_URL) return process.env.VITE_SITE_URL.replace(/\/+$/, '');
+  if (process.env.VITE_SITE_URL) return normalize(process.env.VITE_SITE_URL);
+  // Cloudflare Pages 在构建容器里注入，生产为 https://<project>.pages.dev
+  if (process.env.CF_PAGES_URL) return normalize(process.env.CF_PAGES_URL);
   try {
     const env = readFileSync(join(root, '.env'), 'utf-8');
     const m = env.match(/^\s*VITE_SITE_URL\s*=\s*(.+)$/m);
-    if (m) return m[1].trim().replace(/^["']|["']$/g, '').replace(/\/+$/, '');
+    if (m) return normalize(m[1].replace(/^["']|["']$/g, ''));
   } catch {
     /* 无 .env，用默认值 */
   }
