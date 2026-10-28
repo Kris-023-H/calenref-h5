@@ -1,0 +1,716 @@
+/**
+ * styles/components.css — 共享组件样式（与原型 class 体系一致）。
+ * 颜色一律引用 tokens.css 变量；间距与圆角沿用原型数值。
+ */
+
+/* ---------- 通用排版 ---------- */
+.serif {
+  font-family: var(--serif);
+}
+
+.sec-title {
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sec-title::before {
+  content: '';
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--gold);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.ink-2 {
+  color: var(--ink-2);
+}
+
+.tiny {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.small {
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* ---------- 卡片 ---------- */
+.card {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.card + .card {
+  margin-top: 10px;
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 11px 18px;
+  transition:
+    transform 0.16s var(--ease),
+    opacity 0.16s var(--ease),
+    background 0.16s var(--ease);
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.btn-primary {
+  background: linear-gradient(160deg, var(--verm-2), var(--verm));
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgba(178, 58, 43, 0.65);
+}
+
+.btn-secondary {
+  background: var(--paper-2);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  padding: 8px 10px;
+}
+
+.btn-gold {
+  background: linear-gradient(160deg, var(--gold-2), var(--gold));
+  color: #fff;
+  box-shadow: 0 10px 22px -12px rgba(175, 137, 62, 0.6);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-fixed {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 13px;
+  font-size: 15px;
+  border-radius: 14px;
+}
+
+/* ---------- 分段控件 ---------- */
+.seg {
+  display: flex;
+  background: var(--paper-3);
+  border-radius: 11px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.seg button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 12.5px;
+  color: var(--muted);
+  padding: 7px 4px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.16s var(--ease);
+  white-space: nowrap;
+}
+
+.seg button.on {
+  background: var(--paper-2);
+  color: var(--ink);
+  font-weight: 700;
+  box-shadow:
+    0 2px 8px -2px rgba(40, 30, 15, 0.28),
+    0 0 0 1px rgba(175, 137, 62, 0.25);
+}
+
+/* ---------- 胶囊 ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1.5;
+  background: var(--paper-3);
+  color: #6e6450;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.chip-gold {
+  background: var(--gold-soft);
+  color: #7a5f1f;
+  border-color: rgba(175, 137, 62, 0.35);
+}
+
+.chip-jade {
+  background: var(--jade-soft);
+  color: var(--jade);
+  border-color: rgba(47, 107, 92, 0.25);
+}
+
+.chip-verm {
+  background: var(--verm-soft);
+  color: var(--verm);
+  border-color: rgba(178, 58, 43, 0.25);
+}
+
+/* ---------- 顶栏 ---------- */
+.appbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 12px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: linear-gradient(180deg, var(--paper) 78%, rgba(248, 244, 234, 0));
+}
+
+.appbar-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.appbar-act {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink-2);
+  transition: background 0.16s var(--ease);
+}
+
+.icon-btn:active {
+  background: var(--paper-3);
+}
+
+/* ---------- 底部抽屉 ---------- */
+.sheet-mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(25, 23, 16, 0.42);
+  z-index: 40;
+  animation: fadeIn 0.24s var(--ease) both;
+}
+
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 41;
+  background: var(--paper-2);
+  border-radius: 22px 22px 0 0;
+  padding: 8px 18px calc(18px + var(--safe-bottom));
+  max-height: 78%;
+  overflow-y: auto;
+  animation: sheetUp 0.36s var(--ease) both;
+  box-shadow: 0 -18px 40px -18px rgba(25, 23, 16, 0.35);
+}
+
+.sheet-grab {
+  width: 38px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--line);
+  margin: 4px auto 12px;
+}
+
+@keyframes sheetUp {
+  from {
+    transform: translateY(40%);
+    opacity: 0.6;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------- 表单 ---------- */
+.field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.field-label {
+  display: block;
+  font-size: 12px;
+  color: var(--ink-2);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  border-radius: 11px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--ink);
+  font-family: inherit;
+  transition: border 0.16s var(--ease);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+.input-err {
+  border-color: var(--verm);
+}
+
+.field-err {
+  font-size: 11px;
+  color: var(--verm);
+  margin-top: 4px;
+}
+
+/* ---------- 进度条 / 圆环 ---------- */
+.bar {
+  height: 4px;
+  border-radius: 4px;
+  background: var(--paper-3);
+  overflow: hidden;
+}
+
+.bar > i {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold-2), var(--gold));
+  transition: width 0.4s var(--ease);
+}
+
+/* ---------- 横滑分类 ---------- */
+.scrollx {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+  cursor: grab;
+}
+
+.scrollx::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollx.dragging {
+  cursor: grabbing;
+}
+
+/* ---------- 打字机光标 ---------- */
+.tw-caret {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  background: currentColor;
+  vertical-align: -0.15em;
+  animation: blink 1s step-end infinite;
+}
+
+/* ---------- 空态 ---------- */
+.empty {
+  text-align: center;
+  padding: 42px 20px;
+}
+
+.empty-mark {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 16px;
+  background: var(--paper-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+/* ---------- 工具 ---------- */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.divider {
+  height: 1px;
+  background: var(--line-2);
+  margin: 12px 0;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- tabbar（底部五 Tab，自原型 v3.5） ---------- */
+.tabbar {
+  flex: 0 0 auto;
+  height: 70px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-around;
+  background: rgba(254, 252, 247, 0.94);
+  backdrop-filter: blur(14px);
+  border-top: 1px solid var(--line-2);
+  padding: 9px 12px 0;
+  z-index: 40;
+}
+.tabbar button {
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  padding: 6px 8px 0;
+  flex: 1;
+  position: relative;
+}
+.tabbar svg {
+  width: 21px;
+  height: 21px;
+  stroke: #9a9282;
+  fill: none;
+  stroke-width: 1.6;
+  transition: 0.22s var(--ease);
+}
+.tabbar span {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: #9a9282;
+  transition: 0.22s;
+  font-weight: 600;
+}
+.tabbar button.on svg {
+  stroke: var(--ink);
+  transform: translateY(-1px);
+}
+.tabbar button.on span {
+  color: var(--ink);
+}
+.tabbar button.on::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--verm);
+  animation: dotIn 0.3s var(--ease-spring) both;
+}
+
+/* ============================================================
+   法务页（legal-screen）— 长文排版 + 页内 Tab + Cookie 横幅
+   长文用 serif 正文、1.85 行高，与报告正文口径一致。
+   ============================================================ */
+.legal-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 0 14px 10px 2px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.legal-tabs::-webkit-scrollbar {
+  display: none;
+}
+.legal-tab {
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+.legal-tab.on {
+  background: var(--lacquer);
+  border-color: var(--lacquer);
+  color: var(--on-lacquer);
+}
+.legal-doc {
+  padding: 16px 15px 18px;
+}
+.legal-h1 {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 5px;
+  letter-spacing: 0.01em;
+}
+.legal-meta {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+.legal-lead {
+  font-size: 12.5px;
+  line-height: 1.85;
+  color: var(--ink-2);
+  background: var(--gold-soft);
+  border-left: 2px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 11px;
+  margin: 0 0 16px;
+}
+.legal-sec {
+  margin-bottom: 16px;
+}
+.legal-sec h3 {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+  letter-spacing: 0.01em;
+}
+.legal-sec p {
+  font-size: 11.5px;
+  line-height: 1.9;
+  color: var(--ink-2);
+  margin: 0 0 7px;
+}
+.legal-sec ul {
+  margin: 4px 0 7px;
+  padding-left: 17px;
+}
+.legal-sec li {
+  font-size: 11.5px;
+  line-height: 1.85;
+  color: var(--ink-2);
+  margin-bottom: 5px;
+}
+.legal-sec li::marker {
+  color: var(--gold);
+}
+.legal-contact {
+  margin-top: 12px;
+}
+.legal-contact-h {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.legal-mail {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--teal-2);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--gold-2);
+  margin-bottom: 8px;
+}
+.legal-note {
+  font-size: 10.5px;
+  line-height: 1.8;
+  color: var(--muted);
+  margin: 0 0 6px;
+}
+.legal-disclaimer {
+  font-size: 10px;
+  line-height: 1.8;
+  color: var(--muted);
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+  margin: 12px 0 0;
+}
+
+/* ---------- 页脚法务链接（我的页） ---------- */
+.legal-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin-top: 10px;
+}
+.legal-links button {
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 10.5px;
+  color: var(--ink-2);
+  padding: 4px 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+.legal-links button:not(:last-child)::after {
+  content: "·";
+  color: var(--muted);
+  margin: 0 7px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* ---------- Cookie 同意横幅 ---------- */
+.cookie-bar {
+  /* 参与 app-shell 的 flex 布局（而非浮层）：横幅占位后内容区自动收缩，
+     不会永久盖住主按钮或底部导航 */
+  position: relative;
+  flex: 0 0 auto;
+  margin: 0 10px 10px;
+  background: var(--lacquer);
+  color: var(--on-lacquer);
+  border-radius: 14px;
+  padding: 13px 14px 12px;
+  box-shadow: 0 14px 34px rgba(25, 23, 16, 0.32);
+  animation: cookieIn 0.32s var(--ease) both;
+}
+@keyframes cookieIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.cookie-bar h4 {
+  font-size: 12.5px;
+  font-weight: 700;
+  margin: 0 0 5px;
+  color: var(--on-lacquer);
+}
+.cookie-bar p {
+  font-size: 10.5px;
+  line-height: 1.75;
+  color: var(--on-lacquer-2);
+  margin: 0 0 11px;
+}
+.cookie-acts {
+  display: flex;
+  gap: 8px;
+}
+.cookie-acts button {
+  flex: 1;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 9px 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.cookie-acts .ck-yes {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: #fff;
+}
+.cookie-acts .ck-no {
+  background: transparent;
+  border: 1px solid rgba(242, 234, 216, 0.34);
+  color: var(--on-lacquer);
+}
+.cookie-more {
+  display: block;
+  margin-top: 9px;
+  font-size: 10px;
+  color: var(--on-lacquer-2);
+  background: none;
+  border: 0;
+  padding: 0;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}

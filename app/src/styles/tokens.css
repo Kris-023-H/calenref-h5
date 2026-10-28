@@ -1,0 +1,56 @@
+/**
+ * styles/tokens.css — 设计变量（与高保真原型逐值一致）。
+ * 唯一色彩来源：组件与屏幕只允许引用本文件变量，禁止写死色值。
+ */
+
+:root {
+  /* 纸墨体系 */
+  --paper: #f8f4ea;
+  --paper-2: #fefcf7;
+  --paper-3: #f1eada;
+  --ink: #191710;
+  --ink-2: #413b2e;
+  --muted: #8a8373;
+  --line: #e5dcc7;
+  --line-2: #f1eadb;
+
+  /* 朱砂（主行动色） */
+  --verm: #b23a2b;
+  --verm-2: #c9563f;
+  --verm-soft: #faede8;
+
+  /* 金（仪式与评分） */
+  --gold: #af893e;
+  --gold-2: #d8bc78;
+  --gold-soft: #f8f0da;
+
+  /* 青（可用 / 通过） */
+  --jade: #2f6b5c;
+  --jade-soft: #eaf2ee;
+
+  /* 深青（工程 / 结构） */
+  --teal: #0f4b46;
+  --teal-2: #177a6e;
+
+  /* 橘（警示） */
+  --saffron: #ce8a2c;
+
+  /* 漆（深底） */
+  --lacquer: #22180f;
+
+  /* 漆面之上的文字色（深底卡片专用，禁在浅底使用） */
+  --on-lacquer: #f2ead8;
+  --on-lacquer-2: #b0a488;
+
+  /* 字体 */
+  --serif: 'Songti SC', 'Source Han Serif SC', 'Noto Serif SC', 'Noto Serif JP', 'Hiragino Mincho ProN', Georgia, serif;
+  --sans: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Noto Sans', sans-serif;
+
+  /* 动效曲线 */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.5, 1);
+
+  /* 安全区（由 AppShell 注入 env() 兜底） */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}

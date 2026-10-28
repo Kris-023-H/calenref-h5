@@ -1,0 +1,10 @@
+/**
+ * index.css — 样式总入口（层级：tokens → base → components → screens）。
+ * tokens 唯一定义设计变量；base 管外壳与动效；components 管共享组件；
+ * screens 管各屏原型 class（与 components 不重复）。
+ */
+
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/components.css';
+@import './styles/screens.css';

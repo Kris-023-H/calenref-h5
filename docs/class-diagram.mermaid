@@ -1,0 +1,211 @@
+%% 择吉 H5 出海 · 核心类图（提取自 架构设计_v1.md §3.5）
+%% 数据模型 + 引擎 + 服务 + 仓库层
+
+classDiagram
+  class CalDate {
+    +number y
+    +number m
+    +number d
+  }
+  class GZ {
+    +number gan
+    +number zhi
+    +number index
+    +string text
+  }
+  class Person {
+    +string id
+    +string name
+    +string sex
+    +string birthDate
+    +string birthTime
+    +string birthCityId
+    +number manualLon
+    +boolean dstAdjusted
+    +number createdAt
+  }
+  class Industry {
+    +string id
+    +TermKey name
+    +number wuxing
+    +TermKey[] acts
+    +string[] books
+  }
+  class EventDef {
+    +string key
+    +EventGroup group
+    +TermKey name
+    +TermKey[] acts
+    +number layers
+    +boolean twoPerson
+  }
+  class LayerResult {
+    +LayerKey key
+    +string resultKey
+    +Record params
+    +LayerCls cls
+    +number delta
+  }
+  class HourMark {
+    +number index
+    +string name
+    +string range
+    +string mark
+    +LayerCls cls
+  }
+  class DayResult {
+    +CalDate date
+    +GZ dayGZ
+    +number monthZhi
+    +string jianchu
+    +FourPillars pillars
+    +LayerResult[] layers
+    +number score
+    +Grade grade
+    +HardReason hard
+    +boolean eligible
+    +HourMark[] goodHours
+  }
+  class ScanInput {
+    +string eventKey
+    +Person[] people
+    +string industryId
+    +string sitKey
+    +CalDate startDate
+    +number span
+    +boolean generic
+    +string school
+  }
+  class ScanResult {
+    +ScanInput input
+    +DayResult[] days
+    +DayResult[] usable
+    +Record byReason
+    +string ruleVersion
+  }
+  class License {
+    +string code
+    +Sku sku
+    +number left
+    +string currency
+    +boolean migrated
+  }
+  class AiQuota {
+    +number freeLeft
+    +string monthKey
+    +number paidLeft
+  }
+  class Settings {
+    +Lang lang
+    +string tz
+    +string currency
+    +string[] cals
+  }
+
+  class SolarTerms {
+    +solarTermMoment(year, termIndex) CalDate
+    +termIndexOfDate(d) object
+  }
+  class SexagenaryCycle {
+    +dayGZ(d) GZ
+    +yearGZ(d) GZ
+    +monthGZ(gan, zhi) string
+    +hourGZ(gan, zhi) string
+  }
+  class TrueSolarTime {
+    +trueSolarTime(birth) object
+  }
+  class ScoringEngine {
+    +scoreLayers(d, people, ev, industry, sit) LayerResult[]
+    +computeScore(layers) number
+  }
+  class ScanEngine {
+    +runScan(input) ScanResult
+    +scanGeneric(input) ScanResult
+  }
+  class SchoolComparator {
+    +schoolReadings(day, school) SchoolReading[]
+    +schoolAdvice(readings) string
+  }
+
+  class I18nService {
+    +t(key, params) string
+    +term(key) string
+    +setLang(lang) void
+  }
+  class TimeZoneService {
+    +todayInTz(tz) CalDate
+    +toLocalReference(rangeBeijing, tz) string
+    +monthKey(tz) string
+  }
+  class AiService {
+    <<interface>>
+    +interpret(payload) AiReading
+  }
+  class RemoteAiService
+  class LocalTemplateAiService
+  class StripeService {
+    +buildCheckoutUrl(sku, currency) string
+    +parseReturn(params) object
+  }
+  class RedeemService {
+    +verifyCode(code) License
+  }
+  class BackupService {
+    +exportBackup() BackupV1
+    +importBackup(raw) object
+  }
+  class AnalyticsService {
+    +track(event, props) void
+  }
+
+  class Repository~T~ {
+    <<interface>>
+    +get(id) T
+    +save(entity) void
+    +list() T[]
+    +remove(id) void
+  }
+  class PersonRepository
+  class ScanRepository
+  class FavoriteRepository
+  class LicenseRepository
+  class QuotaRepository
+  class SettingsRepository
+  class AiCacheRepository
+  class AppStore {
+    +ScreenId current
+    +push(id) void
+    +pop() void
+  }
+
+  ScanEngine --> SolarTerms
+  ScanEngine --> SexagenaryCycle
+  ScanEngine --> ScoringEngine
+  ScanEngine --> SchoolComparator
+  ScoringEngine --> TrueSolarTime
+  ScoringEngine ..> LayerResult : produces
+  ScanResult *-- DayResult
+  DayResult *-- LayerResult
+  DayResult *-- HourMark
+  DayResult *-- GZ
+  ScanInput *-- Person
+  ScanResult *-- ScanInput
+  AiService <|.. RemoteAiService
+  AiService <|.. LocalTemplateAiService
+  AiService --> QuotaRepository
+  AiService --> AiCacheRepository
+  StripeService --> LicenseRepository
+  RedeemService --> LicenseRepository
+  BackupService --> PersonRepository
+  BackupService --> ScanRepository
+  BackupService --> LicenseRepository
+  Repository <|.. PersonRepository
+  Repository <|.. ScanRepository
+  Repository <|.. FavoriteRepository
+  Repository <|.. LicenseRepository
+  Repository <|.. QuotaRepository
+  Repository <|.. SettingsRepository
+  Repository <|.. AiCacheRepository
+  AppStore --> Repository
+  I18nService ..> GLOSSARY : reads

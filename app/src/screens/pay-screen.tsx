@@ -1,0 +1,213 @@
+/**
+ * screens/pay-screen.tsx — 解锁页：四 SKU × 五币种 + Stripe Payment Link 直跳 + 离线兑换码。
+ * 双路径（主理人拍板）：(a) Payment Link 直跳，回跳由 App 解析写本机凭证；
+ * (b) 兑换码离线 HMAC 校验（services/pay/redeem.ts）。
+ */
+
+import { useEffect, useState } from 'react';
+import { useSettings } from '../store/settings-store';
+import { useApp } from '../store/app-store';
+import { useUi } from '../store/ui-store';
+import { CURRENCIES, formatPrice, SKUS, type Sku, type Currency } from '../data/prices';
+import { buildCheckoutUrl } from '../services/pay/stripe';
+import { redeemCode } from '../services/pay/redeem';
+import { licenseRepo } from '../db/repos/license.repo';
+import { analytics, EVENTS } from '../services/analytics';
+import { t } from '../i18n';
+import { Btn, Chip, Seg, Ring } from '../components/basics';
+import { AppBar } from '../components/app-bar';
+import { Icon } from '../components/icons';
+import { useNav } from './types';
+import type { Lang } from '../engine/types';
+
+const SKU_DESC: Record<Lang, Record<Sku, string>> = {
+  zh: {
+    once: '一次完整九章报告',
+    ai10: '十次白话解读额度',
+    pair: '双方四柱合参一报',
+    year: '全年不限次报告',
+  },
+  en: {
+    once: 'One full nine-chapter report',
+    ai10: 'Ten plain-language readings',
+    pair: 'One report for both parties',
+    year: 'Unlimited reports all year',
+  },
+  'zh-Hant': {
+    once: '一次完整九章報告',
+    ai10: '十次白話解讀額度',
+    pair: '雙方四柱合參一報',
+    year: '全年不限次報告',
+  },
+};
+
+export function PayScreen(): JSX.Element {
+  const lang = useSettings((s) => s.lang);
+  const currency = useSettings((s) => s.currency);
+  const setCurrency = useSettings((s) => s.setCurrency);
+  const quota = useApp((s) => s.quota);
+  const refreshQuota = useApp((s) => s.refreshQuota);
+  const showToast = useUi((s) => s.showToast);
+  const { pop } = useNav();
+  const [sku, setSku] = useState<Sku>('once');
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const clientRef = `zj-${Date.now().toString(36)}`;
+
+  // 页面曝光（与点击购买的 report_buy 区分：前者是到达，后者是意图）
+  useEffect(() => {
+    if (analytics.isEnabled()) analytics.track(EVENTS.payView, { sku: 'entry' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 仅挂载时上报一次
+  }, []);
+
+  const buy = (): void => {
+    const url = buildCheckoutUrl({ sku, currency, lang, clientRef });
+    if (!url) {
+      showToast(t('pay.linkFail', lang));
+      return;
+    }
+    // 关键事件 ③：点击购买（跳转前上报，避免被新标签页打断）
+    if (analytics.isEnabled()) analytics.track(EVENTS.reportBuy, { sku, currency });
+    showToast(t('pay.linkOpening', lang));
+    window.open(url, '_blank', 'noopener');
+  };
+
+  const redeem = (): void => {
+    if (!code.trim()) {
+      showToast(t('pay.redeemEmpty', lang));
+      return;
+    }
+    setBusy(true);
+    void redeemCode(code).then(async (res) => {
+      setBusy(false);
+      if (!res.ok) {
+        showToast(t('pay.redeemFail', lang));
+        return;
+      }
+      if (analytics.isEnabled()) analytics.track(EVENTS.payRedeem, { sku: res.value.sku });
+      showToast(t('pay.redeemOk', lang));
+      setCode('');
+      await refreshQuota();
+    });
+  };
+
+  const restore = (): void => {
+    void licenseRepo.list().then((rows) => {
+      if (rows.length === 0) {
+        showToast(t('pay.restoreNone', lang));
+        return;
+      }
+      showToast(t('pay.restored', lang));
+      void refreshQuota();
+    });
+  };
+
+  return (
+    <div className="screen">
+      <AppBar title={t('pay.title', lang)} onBack={() => pop()} />
+
+      <div className="card lacquer" style={{ marginBottom: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <Ring value={quota.unlimited ? 100 : Math.round((quota.freeLeft / 3) * 100)} dark label={quota.unlimited ? '∞' : `${quota.freeLeft}/3`} />
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>
+              {quota.unlimited
+                ? t('pay.quotaUnlimited', lang)
+                : t('ai.quotaLeft', lang, { n: quota.freeLeft })}
+            </div>
+            <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.6 }}>
+              {lang === 'en'
+                ? 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.'
+                : '免费额度：每月 3 次 AI 解读。课期筛选不限次，报告与解读须解锁。'}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 12 }}>
+        <Seg options={CURRENCIES.map((c) => ({ value: c, label: t(`cur.${c}` as 'cur.CNY', lang) }))} value={currency} onChange={(c: Currency) => void setCurrency(c)} />
+      </div>
+
+      {SKUS.map((k) => (
+        <div key={k} className={`plan${sku === k ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => setSku(k)} onKeyDown={(e) => e.key === 'Enter' && setSku(k)}>
+          {k === 'ai10' && <div className="badge">{lang === 'en' ? 'NEW' : '新'}</div>}
+          <div className="pt">
+            <b>{t(`sku.${k}` as 'sku.once', lang)}</b>
+            <span className="pp">
+              {formatPrice(k, currency)}
+              <small>{k === 'year' ? ` / ${lang === 'en' ? 'yr' : '年'}` : k === 'ai10' ? ` / 10 ${lang === 'en' ? 'uses' : '次'}` : ` / ${lang === 'en' ? 'use' : '次'}`}</small>
+            </span>
+          </div>
+          <div className="pd">
+            <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
+            <br />
+            {k === 'year'
+              ? lang === 'en'
+                ? 'Unlimited matters · unlimited AI · full library · no card watermark'
+                : '所有用事不限次 · AI 解读无限 · 知库全解锁 · 课帖去印记'
+              : k === 'ai10'
+                ? lang === 'en'
+                  ? 'Readings never expire; deduct as you go'
+                  : '次数不清零，随用随扣'
+                : lang === 'en'
+                  ? 'Nine chapters with per-layer basis, clash attribution, action hours'
+                  : '含逐层依据、日课四柱、出局归因、关键动作时点与神煞边界声明'}
+          </div>
+        </div>
+      ))}
+
+      <div className="card flat" style={{ marginTop: 12 }}>
+        <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
+          {lang === 'en' ? 'Redeem code' : '兑换码'}
+        </div>
+        <div style={{ display: 'flex', gap: 7 }}>
+          <input
+            className="input grow"
+            type="text"
+            value={code}
+            placeholder={t('pay.redeemPh', lang)}
+            onChange={(e) => setCode(e.target.value)}
+          />
+          <Btn variant="gold" disabled={busy} onClick={redeem}>
+            {t('pay.redeemBtn', lang)}
+          </Btn>
+        </div>
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7 }}>{t('pay.offlineNote', lang)}</div>
+      </div>
+
+      <div className="card flat" style={{ marginTop: 10 }}>
+        <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
+          {lang === 'en' ? 'Payment methods' : '支付方式'}
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          {(lang === 'en'
+            ? ['Cards', 'Apple / Google Pay', 'Alipay', 'WeChat Pay', 'Link', 'Bank redirect']
+            : ['信用卡', 'Apple / Google Pay', '支付宝', '微信支付', 'Link', '银行转账']
+          ).map((x) => (
+            <Chip key={x}>{x}</Chip>
+          ))}
+        </div>
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7, display: 'flex', gap: 6 }}>
+          <Icon name="shield" size={12} />
+          {t('pay.privacy', lang)}
+        </div>
+      </div>
+
+      <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 14, lineHeight: 1.7 }}>
+        {lang === 'en'
+          ? 'Buying means you understand: this product engineers traditional day-selection rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.'
+          : '购买即表示你理解：本产品提供传统择日规则的工程化推演，不预测结果、不承诺吉凶、不涉及医疗与投资建议。'}
+      </div>
+
+      <div className="ctabar">
+        <Btn block variant="gold" onClick={buy}>
+          {t('pay.buy', lang)} · {formatPrice(sku, currency)}
+        </Btn>
+      </div>
+      <Btn variant="ghost" block onClick={restore} style={{ marginTop: 8 }}>
+        {t('pay.restore', lang)}
+      </Btn>
+    </div>
+  );
+}

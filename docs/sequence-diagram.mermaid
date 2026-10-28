@@ -1,0 +1,109 @@
+%% 择吉 H5 出海 · 关键路径时序图（提取自 架构设计_v1.md §4）
+%% ① 主流程：首启引导 → 选用事 → 录四柱 → 排课 → 结果 → 详情 → 课帖
+
+sequenceDiagram
+  actor U as 用户
+  participant S as Screen(React)
+  participant St as AppStore
+  participant E as ScanEngine
+  participant R as Repos(idb)
+  U->>S: 启动（Splash 罗盘 2.4s）
+  S->>R: settingsRepo.get() / 读 URL ?lang&ref
+  R-->>S: Settings（首次为空→默认简体+浏览器时区）
+  U->>S: 引导 4 步（第 4 步探测浏览器时区，可改）
+  S->>St: setDraft({eventKey, industryId, sitKey})
+  U->>S: 选用事（18 项四组）
+  U->>S: 录四柱（从档案选或新填 + 出生地/手动经纬度）
+  S->>E: readPerson(Person) → trueSolarTime + 四柱预览（实时）
+  E-->>S: 真太阳时/年柱/生肖（预览，不落库）
+  U->>S: 点「排课」
+  S->>St: commitDraft → ScanInput
+  S->>E: runScan(ScanInput)（90 天 × 8 重，<40ms）
+  E-->>S: ScanResult（days/usable/byReason）
+  S->>St: setScan(result)
+  S->>R: scanRepo.save(ScanRecord)
+  U->>S: 课期结果（可用日降序）
+  U->>S: 日详情（逐层依据 + 三宗派 + 吉时）
+  S->>St: 读 scan.usable[i]
+  U->>S: 课帖（五版式 + 3D 倾角）
+  S->>S: fourPillarsOf(day, hourIdx) → CardCanvas 渲染
+
+%% ② Stripe 购买回跳写凭证
+
+sequenceDiagram
+  actor U as 用户
+  participant P as PayScreen
+  participant PS as StripeService
+  participant W as VerifyWorker(§8-1)
+  participant LR as LicenseRepo
+  U->>P: 选 SKU + 币种 → 「立即解锁」
+  P->>PS: buildCheckoutUrl(sku, currency)
+  PS-->>U: location = Stripe Checkout/Payment Link
+  U->>PS: 支付成功，回跳 /?paid=1&session_id=xxx
+  P->>PS: parseReturn(params)
+  PS->>W: GET /verify?session_id=xxx
+  W->>W: retrieve session（Stripe API）→ 签发 HMAC license code
+  W-->>PS: {sku, currency, code}
+  PS->>LR: save(License{code, sku, left, boundAt})
+  LR-->>P: 写入成功
+  P->>P: 解锁态即时生效（报告全文 / AI 次数）
+  Note over P: 失败/取消回跳：重试 + 「输入兑换码」两个出路
+
+%% ③ 时区切换对「今日」与吉时标注的影响
+
+sequenceDiagram
+  actor U as 用户
+  participant L as LangScreen
+  participant SR as SettingsRepo
+  participant TZ as TimeZoneService
+  participant H as HomeScreen
+  participant D as DetailScreen
+  U->>L: 切换时区 America/Los_Angeles
+  L->>SR: save({tz})
+  L->>H: 通知设置变更
+  H->>TZ: todayInTz(tz) → CalDate（所选时区的今天）
+  H->>H: dayGZ(所选时区今日) → 通书宜忌重算
+  Note over H: 「今日」随所选时区变化；四柱/节气口径不变
+  U->>D: 打开某日详情
+  D->>TZ: toLocalReference('11–13', tz)
+  TZ-->>D: 「洛杉矶时间 20:00–22:00（前一日）」
+  Note over D: 吉时固定标注「东八区口径」，本地时刻仅信息性参考，不改判定
+
+%% ④ AI 解读配额与缓存
+
+sequenceDiagram
+  actor U as 用户
+  participant A as AiScreen
+  participant QR as QuotaRepo
+  participant TZ as TimeZoneService
+  participant CR as AiCacheRepo
+  participant AS as AiService
+  participant RA as RemoteAiService
+  participant LT as LocalTemplateAiService
+  U->>A: 点「生成解读」
+  A->>QR: get()
+  QR->>TZ: monthKey(tz)（所选时区自然月）
+  TZ-->>QR: 跨月 → freeLeft 重置为 3
+  QR-->>A: {freeLeft, paidLeft}
+  alt freeLeft<=0 且 paidLeft<=0
+    A->>A: 灰化 + 解锁主按钮（排课/结果/详情/报告不受影响）
+  else
+    A->>CR: get(scanId, ruleVersion, lang)
+    alt 缓存命中
+      CR-->>A: 直接渲染（不扣次数）
+    else
+      A->>AS: interpret(payload)
+      AS->>RA: fetch(endpoint, payload)
+      alt 端点可用
+        RA-->>AS: 四段结构（五硬边界校验）
+      else 离线/端点不可用
+        AS->>LT: 本地模板四段（原型文案库双语化）
+        LT-->>AS: 降级解读
+      end
+      AS->>CR: save(缓存)
+      AS->>QR: 扣 1 次（freeLeft 优先，再 paidLeft）
+      AS-->>A: AiReading
+    end
+    A->>A: TypeWriter 逐字渲染（3 字/14ms）
+  end
+  U->>A: 追问（同计 1 次，只依据本课已算依据）

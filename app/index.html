@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#F8F4EA" />
+
+  <!-- ---------- 基础 SEO ---------- -->
+  <title>择吉 · 人事日 — 为每一件大事挑一个对的日子</title>
+  <meta name="description" content="择吉是一款免登录的三元择日工具：通书告诉你「这一天怎么样」，择吉告诉你「这一天对你这件事怎么样」。按人事日三层推演，出生资料只留在你的设备上。" />
+  <meta name="keywords" content="择吉,择日,通书,黄历,四柱,八字,婚嫁择日,开业择日,搬家择日,Zeji,date selection" />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta name="author" content="Zeji Studio" />
+  <link rel="canonical" href="__SITE_URL__/" />
+
+  <!-- ---------- Open Graph ---------- -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="择吉 Zeji" />
+  <meta property="og:title" content="择吉 · 人事日 — 为每一件大事挑一个对的日子" />
+  <meta property="og:description" content="免登录的三元择日工具：按人事日三层推演，为婚嫁、开业、搬迁、动土挑一个对的日子。出生资料只留在你的设备上。" />
+  <meta property="og:url" content="__SITE_URL__/" />
+  <meta property="og:image" content="__SITE_URL__/og-1200x630.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="择吉 · 人事日 — 一事一议，因事择日" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:locale:alternate" content="zh_TW" />
+  <meta property="og:locale:alternate" content="en_US" />
+
+  <!-- ---------- Twitter Card ---------- -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="择吉 · 人事日 — 为每一件大事挑一个对的日子" />
+  <meta name="twitter:description" content="免登录的三元择日工具：按人事日三层推演，为婚嫁、开业、搬迁、动土挑一个对的日子。" />
+  <meta name="twitter:image" content="__SITE_URL__/og-1200x630.png" />
+  <meta name="twitter:image:alt" content="择吉 · 人事日" />
+
+  <!-- ---------- 结构化数据 ---------- -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "__SITE_URL__/#org",
+          "name": "Zeji Studio",
+          "alternateName": "择吉",
+          "url": "__SITE_URL__/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "__SITE_URL__/icons/icon-512.png",
+            "width": 512,
+            "height": 512
+          },
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "customer support",
+            "email": "support@zeji.app",
+            "availableLanguage": ["zh-CN", "zh-TW", "en"]
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "__SITE_URL__/#app",
+          "name": "择吉 Zeji",
+          "alternateName": "择吉 · 人事日",
+          "applicationCategory": "LifestyleApplication",
+          "applicationSubCategory": "Date selection",
+          "operatingSystem": "Web (iOS, Android, Desktop browsers)",
+          "url": "__SITE_URL__/",
+          "description": "免登录的三元择日工具。按人事日三层推演课格，为婚嫁、开业、搬迁、动土等用事挑日子；出生资料只留在本机。",
+          "inLanguage": ["zh-CN", "zh-TW", "en"],
+          "isAccessibleForFree": true,
+          "publisher": { "@id": "__SITE_URL__/#org" },
+          "offers": {
+            "@type": "Offer",
+            "price": "6.9",
+            "priceCurrency": "USD",
+            "description": "单次完整九章报告（按币种分别定价）"
+          },
+          "featureList": [
+            "三元择日：人事日三层课格推演",
+            "真太阳时校正与节气精算",
+            "三种宗派口径可选",
+            "中英双语与繁体中文",
+            "离线可用，免注册免登录"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "__SITE_URL__/#website",
+          "url": "__SITE_URL__/",
+          "name": "择吉 Zeji",
+          "inLanguage": "zh-CN",
+          "publisher": { "@id": "__SITE_URL__/#org" }
+        }
+      ]
+    }
+  </script>
+
+  <link rel="manifest" id="manifest-link" href="data:application/manifest+json,%7B%7D" />
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+  <style>
+    /* 首屏关键 CSS 内联：宣纸底 + 品牌字，保证 <1.2s 可交互（无 web 字体、无第三方请求） */
+    html,body{margin:0;padding:0;}
+    body{
+      background:radial-gradient(120% 80% at 50% -10%, #FBF7EE 0%, #EDE5D4 46%, #E3D9C5 100%);
+      color:#191710;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans",sans-serif;
+      font-size:14px;line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;
+    }
+    #root{min-height:100vh;}
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+# 统一换行符，避免 Windows / Linux 之间产生整文件 diff
+* text=auto eol=lf
+
+# 二进制资源
+*.png binary
+*.jpg binary
+*.ttf binary
+*.ttc binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+
+# 生成的快照类文件：不参与 diff 统计
+app/package-lock.json -diff

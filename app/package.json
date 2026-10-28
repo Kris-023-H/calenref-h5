@@ -1,0 +1,38 @@
+{
+  "name": "zeji-h5",
+  "private": true,
+  "version": "5.0.0",
+  "description": "择吉 · 人·事·日 三元择日 H5（出海版）— 免登录、本地优先、中英双语",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "gen:fixture": "python scripts/gen_solar_fixture.py",
+    "gen:icons": "node scripts/gen-icons.mjs",
+    "gen:og": "python scripts/gen-og.py"
+  },
+  "dependencies": {
+    "qrcode-generator": "^1.4.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "fake-indexeddb": "^5.0.2",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.10",
+    "typescript": "~5.5.4",
+    "vite": "^5.4.8",
+    "vite-plugin-pwa": "^0.20.5",
+    "vitest": "^2.0.5"
+  }
+}
