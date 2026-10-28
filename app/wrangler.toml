@@ -1,0 +1,19 @@
+# Cloudflare Workers 部署配置（静态资源模式）
+#
+# 为什么需要这个文件：Workers 本身没有「构建输出目录」的概念，必须显式告诉
+# wrangler 把哪个目录作为静态资源上传。缺了 [assets]，部署上去的就是源码目录，
+# 浏览器会去加载 /src/main.tsx（不存在）→ 白屏。
+#
+# name 必须与 Cloudflare 上已有的 Worker 名一致，否则 wrangler 会新建一个 Worker，
+# 域名也会变成新的。
+#
+# 若改用 Cloudflare Pages，此文件不参与构建（Pages 用控制台的 Build output directory）。
+
+name = "zeji-h5"
+compatibility_date = "2026-10-01"
+
+[assets]
+# 相对本文件所在目录（仓库的 app/），即 vite build 的产物
+directory = "./dist"
+# 单页应用：未匹配到文件的路径回落到 index.html，保证深链与刷新可用
+not_found_handling = "single-page-application"
