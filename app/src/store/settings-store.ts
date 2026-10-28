@@ -54,10 +54,13 @@ export const useSettings = create<SettingsState>((set, get) => ({
   hydrated: false,
 
   hydrate: async () => {
+    // 首次启动还没有设置记录：按浏览器语言探测，英文/繁体用户不该被塞一份简体界面。
+    const firstRun = !(await settingsRepo.exists());
     const rec = await settingsRepo.get();
     analytics.setEnabled(rec.analytics);
+    const lang = firstRun ? detectInitialLang() : rec.lang;
     set({
-      lang: rec.lang,
+      lang,
       cal: rec.cal,
       tz: rec.tz,
       currency: normalizeCurrency(rec.currency),
@@ -65,6 +68,8 @@ export const useSettings = create<SettingsState>((set, get) => ({
       onboarded: rec.onboarded,
       hydrated: true,
     });
+    // 探测结果落库：之后以用户显式选择为准，不再被浏览器语言覆盖。
+    if (firstRun) await settingsRepo.save({ lang });
   },
 
   setLang: async (lang) => {
