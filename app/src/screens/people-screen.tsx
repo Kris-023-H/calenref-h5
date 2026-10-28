@@ -12,7 +12,7 @@ import { dayGZ, monthGZ, yearGZ, ZODIAC, ZHI } from '../engine/calendar/sexagena
 import { termIndexOfDate } from '../engine/calendar/solar-terms';
 import { CITIES, cityById } from '../data/cities';
 import { newPersonId, validatePerson } from '../db/repos/person.repo';
-import { t } from '../i18n';
+import { t, tx } from '../i18n';
 import type { MsgKey } from '../i18n';
 import { Btn, Seg, Chip, EmptyState } from '../components/basics';
 import { AppBar } from '../components/app-bar';
@@ -68,7 +68,7 @@ export function PeopleScreen(): JSX.Element {
           actions={<Chip>{editing ? t('common.edit', lang) : t('common.add', lang)}</Chip>}
         />
         <h2 className="tt">
-          {editing ? (lang === 'en' ? 'Edit this person' : '修改这一位') : lang === 'en' ? 'Add a person' : '录入一位当事人'}
+          {editing ? (tx('修改这一位', 'Edit this person', lang)) : tx('录入一位当事人', 'Add a person', lang)}
           <small>
             {lang === 'en'
               ? 'Birthplace and time decide true solar time; one hour off and the hour pillar is wrong.'
@@ -78,14 +78,14 @@ export function PeopleScreen(): JSX.Element {
 
         <div className="pblock">
           <div className="ph">
-            <div className="pn">{editing ? (lang === 'en' ? 'E' : '改') : lang === 'en' ? 'N' : '新'}</div>
+            <div className="pn">{editing ? (tx('改', 'E', lang)) : tx('新', 'N', lang)}</div>
             <div className="pt">
-              {lang === 'en' ? 'Basics' : '基本资料'}
-              <small>{lang === 'en' ? 'stored on this device only' : '仅存本机'}</small>
+              {tx('基本资料', 'Basics', lang)}
+              <small>{tx('仅存本机', 'stored on this device only', lang)}</small>
             </div>
             <div className="pd">
               {r.zodiac}
-              {lang === 'en' ? ' year · true solar ' : '年 · 真太阳时 '}
+              {tx('年 · 真太阳时 ', ' year · true solar ', lang)}
               {r.trueTime}
             </div>
           </div>
@@ -120,7 +120,7 @@ export function PeopleScreen(): JSX.Element {
               <select className="input" value={form.birthCityId ?? ''} onChange={(e) => set({ birthCityId: e.target.value, manualLon: undefined, manualLat: undefined })}>
                 {CITIES.map((c) => (
                   <option key={c.id} value={c.id}>
-                    {c[lang === 'en' ? 'en' : 'zh']}（{c.lon >= 0 ? 'E' : 'W'} {Math.abs(c.lon).toFixed(2)}°）
+                    {c[(lang === 'en' ? 'en' : 'zh')]}（{c.lon >= 0 ? 'E' : 'W'} {Math.abs(c.lon).toFixed(2)}°）
                   </option>
                 ))}
               </select>
@@ -129,11 +129,11 @@ export function PeopleScreen(): JSX.Element {
           <div className={`tsnote${r.dst ? ' warn' : ''}`}>
             <Icon name="info" size={12} />
             <div>
-              {t('person.readingTrue', lang)}：{form.birthTime}（{city?.[lang === 'en' ? 'en' : 'zh'] ?? ''}）→ <b>{r.trueTime}</b>
+              {t('person.readingTrue', lang)}：{form.birthTime}（{city?.[(lang === 'en' ? 'en' : 'zh')] ?? ''}）→ <b>{r.trueTime}</b>
               {r.dst && (
                 <>
                   <br />
-                  {lang === 'en' ? 'China DST that year — the birth hour rolls back one hour.' : '该年 4–9 月实行夏令时，出生时刻须回拨 1 小时，否则时柱即错。'}
+                  {tx('该年 4–9 月实行夏令时，出生时刻须回拨 1 小时，否则时柱即错。', 'China DST that year — the birth hour rolls back one hour.', lang)}
                 </>
               )}
             </div>
@@ -159,7 +159,7 @@ export function PeopleScreen(): JSX.Element {
               <div>{t('detail.pillarMonth', lang)}</div>
               <div>
                 <b>{monthGZ(r.yearGZ.gan, mz)}</b>　{ZHI[mz]}
-                {lang === 'en' ? ' month' : '月建'}
+                {tx('月建', ' month', lang)}
               </div>
             </div>
             <div className="rtab-row">
@@ -172,7 +172,7 @@ export function PeopleScreen(): JSX.Element {
               <div>{t('detail.pillarHour', lang)}</div>
               <div>
                 <b>{hourGz(dg.gan, hz)}</b>　{ZHI[hz]}
-                {lang === 'en' ? ' hour' : '时'}（{r.trueTime}）
+                {tx('时', ' hour', lang)}（{r.trueTime}）
               </div>
             </div>
           </div>
@@ -190,11 +190,11 @@ export function PeopleScreen(): JSX.Element {
               void removePerson(form.id).then(() => {
                 setForm(null);
                 setConfirmDel(false);
-                showToast(lang === 'en' ? 'Deleted' : '已删除该档案');
+                showToast(tx('已删除该档案', 'Deleted', lang));
               });
             }}
           >
-            {confirmDel ? (lang === 'en' ? 'Tap again to confirm' : '再点一次确认删除') : t('common.delete', lang)}
+            {confirmDel ? (tx('再点一次确认删除', 'Tap again to confirm', lang)) : t('common.delete', lang)}
           </button>
         )}
 
@@ -218,11 +218,11 @@ export function PeopleScreen(): JSX.Element {
                 }
                 setForm(null);
                 setConfirmDel(false);
-                showToast(editing ? t('common.saved', lang) : lang === 'en' ? 'Saved to files' : '已存入档案');
+                showToast(editing ? t('common.saved', lang) : tx('已存入档案', 'Saved to files', lang));
               });
             }}
           >
-            {editing ? t('common.save', lang) : lang === 'en' ? 'Save to files' : '存入档案'}
+            {editing ? t('common.save', lang) : tx('存入档案', 'Save to files', lang)}
           </Btn>
         </div>
       </div>
@@ -239,7 +239,7 @@ export function PeopleScreen(): JSX.Element {
       />
       <h2 className="tt">
         {t('person.list', lang)}
-        <small>{lang === 'en' ? 'Enter pillars once; reuse them in every lesson.' : '四柱录一次，往后每起一课直接取用，不必重填。'}</small>
+        <small>{tx('四柱录一次，往后每起一课直接取用，不必重填。', 'Enter pillars once; reuse them in every lesson.', lang)}</small>
       </h2>
       {selectFor && (
         <div className="whybar" style={{ marginBottom: 12 }}>
@@ -261,20 +261,20 @@ export function PeopleScreen(): JSX.Element {
       <div className="pe-stat">
         <div>
           <b>{people.length}</b>
-          <span>{lang === 'en' ? 'files' : '已存档案'}</span>
+          <span>{tx('已存档案', 'files', lang)}</span>
         </div>
         <div>
           <b>{people.filter(inUse).length}</b>
-          <span>{lang === 'en' ? 'in this lesson' : '本课在用'}</span>
+          <span>{tx('本课在用', 'in this lesson', lang)}</span>
         </div>
         <div>
           <b>{people.filter((p) => p.sex === 'f').length}</b>
-          <span>{lang === 'en' ? 'female' : '女命 · 取月用'}</span>
+          <span>{tx('女命 · 取月用', 'female', lang)}</span>
         </div>
       </div>
 
       <div className="pe-head">
-        {lang === 'en' ? 'Files' : '档案列表'}
+        {tx('档案列表', 'Files', lang)}
         <i />
       </div>
 
@@ -285,7 +285,7 @@ export function PeopleScreen(): JSX.Element {
           body={t('person.emptyHint', lang)}
           action={
             <Btn variant="gold" onClick={() => setForm({ ...BLANK })}>
-              {lang === 'en' ? 'Add the first' : '录入第一位'}
+              {tx('录入第一位', 'Add the first', lang)}
             </Btn>
           }
         />
@@ -307,15 +307,15 @@ export function PeopleScreen(): JSX.Element {
                 <div className="pa-b">
                   <div className="pa-n">
                     {p.name || t('common.unknown', lang)}
-                    {use && <em>{lang === 'en' ? 'in use' : '本课在用'}</em>}
+                    {use && <em>{tx('本课在用', 'in use', lang)}</em>}
                   </div>
                   <div className="pa-m">
                     {p.sex === 'f' ? t('person.female', lang) : t('person.male', lang)} · {p.birthDate.replace(/-/g, '.')} {p.birthTime} ·{' '}
-                    {cityById(p.birthCityId)?.[lang === 'en' ? 'en' : 'zh'] ?? birthGeo(p).cityName}
+                    {cityById(p.birthCityId)?.[(lang === 'en' ? 'en' : 'zh')] ?? birthGeo(p).cityName}
                   </div>
                   <div className="pa-x">
                     <b>
-                      {lang === 'en' ? 'true solar ' : '真太阳时 '}
+                      {tx('真太阳时 ', 'true solar ', lang)}
                       {r.trueTime}
                     </b>{' '}
                     · {t('person.readingZodiac', lang)} {r.zodiac}
@@ -340,7 +340,7 @@ export function PeopleScreen(): JSX.Element {
                         pop();
                       }}
                     >
-                      {lang === 'en' ? 'Use' : '用此人'}
+                      {tx('用此人', 'Use', lang)}
                     </button>
                   ) : (
                     <Icon name="right" size={12} />

@@ -6,7 +6,7 @@ import { useSettings } from '../store/settings-store';
 import { useUi } from '../store/ui-store';
 import { KB_ARTICLES, KB_CATS } from '../data/kb';
 import { BOOKS } from '../data/books';
-import { t, termText } from '../i18n';
+import { t, termText, tx } from '../i18n';
 import { Chip } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -27,23 +27,23 @@ export function KbScreen(): JSX.Element {
         title={t('kb.title', lang)}
         actions={
           <>
-            <IconBtn name="book" label={lang === 'en' ? 'Books' : '典籍'} onClick={() => openSheet('books')} />
+            <IconBtn name="book" label={tx('典籍', 'Books', lang)} onClick={() => openSheet('books')} />
             <IconBtn name="grid" onClick={() => openSheet('guide')} />
           </>
         }
       />
       <h2 className="tt">
         {t('kb.title', lang)}
-        <small>{lang === 'en' ? 'Take lessons by trade; stand on books.' : '按业态取课，按典籍立据。十二类业态，每一篇都对应一部可核的出处。'}</small>
+        <small>{tx('按业态取课，按典籍立据。十二类业态，每一篇都对应一部可核的出处。', 'Take lessons by trade; stand on books.', lang)}</small>
       </h2>
 
       <div className="feat" role="button" tabIndex={0} onClick={() => push('article')}>
         <div className="fk">
-          {lang === 'en' ? 'FEATURED' : '本期主推'} ／ {termText(feat.category, lang)}
+          {tx('本期主推', 'FEATURED', lang)} ／ {termText(feat.category, lang)}
         </div>
         <div className="ft">{feat.title[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}</div>
         <div className="fs">
-          {t('kb.minutes', lang, { n: feat.minutes })} · {lang === 'en' ? 'traceable to every matter' : '对应：全部用事'}
+          {t('kb.minutes', lang, { n: feat.minutes })} · {tx('对应：全部用事', 'traceable to every matter', lang)}
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export function KbScreen(): JSX.Element {
                 {!a.translated && (
                   <>
                     <i />
-                    <span style={{ color: 'var(--gold)' }}>{lang === 'en' ? 'subscribers' : '订阅可读'}</span>
+                    <span style={{ color: 'var(--gold)' }}>{tx('订阅可读', 'subscribers', lang)}</span>
                   </>
                 )}
               </div>
@@ -75,11 +75,11 @@ export function KbScreen(): JSX.Element {
 
       <div className="card lacquer" style={{ marginTop: 16, cursor: 'pointer' }} role="button" tabIndex={0} onClick={() => openSheet('books')}>
         <div style={{ fontSize: 9, letterSpacing: '.2em', color: 'var(--gold-2)', fontWeight: 700, marginBottom: 7 }}>
-          {lang === 'en' ? 'REFERENCE BOOKS ／ ' : '取用典籍 ／ '}
-          {BOOKS.length} {lang === 'en' ? '' : '部'}
+          {tx('取用典籍 ／ ', 'REFERENCE BOOKS ／ ', lang)}
+          {BOOKS.length} {tx('部', '', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14, fontWeight: 700, marginBottom: 5 }}>
-          {lang === 'en' ? 'Books behind this lesson' : '本课取用的典籍与行业专书'}
+          {tx('本课取用的典籍与行业专书', 'Books behind this lesson', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.7 }}>
           {lang === 'en'

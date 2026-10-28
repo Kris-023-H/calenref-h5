@@ -10,7 +10,7 @@ import { KB_ARTICLES } from '../data/kb';
 import { dayGZ } from '../engine/calendar/sexagenary';
 import { dayOfWeek, parseDate } from '../engine/calendar/julian';
 import { jianchuOf } from '../engine/rules/jianchu';
-import { t, termText, jianchuName } from '../i18n';
+import { t, jianchuName, termText, tx } from '../i18n';
 import { buildShareUrl, copyText, systemShare } from '../services/share';
 import { Btn, Chip } from '../components/basics';
 import { AppBar } from '../components/app-bar';
@@ -76,7 +76,7 @@ export function ShareScreen(): JSX.Element {
                   <b>{t('kb.minutes', lang, { n: article.minutes })}</b>
                 </div>
                 <div className="gc-row">
-                  <span>{lang === 'en' ? 'Source' : '出处'}</span>
+                  <span>{tx('出处', 'Source', lang)}</span>
                   <b>{article.books[0]}</b>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export function ShareScreen(): JSX.Element {
                 <div className="gc-date serif">{dottedDate(date)}</div>
                 <div className="gc-gz">
                   {dg?.text}
-                  {lang === 'en' ? ' Day' : '日'} · {weekdayShort(dayOfWeek(date), lang)} · {monthDay(date, lang)}
+                  {tx('日', ' Day', lang)} · {weekdayShort(dayOfWeek(date), lang)} · {monthDay(date, lang)}
                 </div>
                 <div className="gc-rows">
                   <div className="gc-row">
@@ -95,7 +95,7 @@ export function ShareScreen(): JSX.Element {
                     <b>{jc ? jianchuName(jc.name, lang) : '—'}</b>
                   </div>
                   <div className="gc-row">
-                    <span>{lang === 'en' ? 'Received card' : '受帖'}</span>
+                    <span>{tx('受帖', 'Received card', lang)}</span>
                     <b>{t('share.qrHint', lang)}</b>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export function ShareScreen(): JSX.Element {
           </div>
           <div className="mib">
             {t('share.copyLink', lang)}
-            <small>{lang === 'en' ? 'landing page URL' : '落地页链接'}</small>
+            <small>{tx('落地页链接', 'landing page URL', lang)}</small>
           </div>
           <Icon name="right" size={13} />
         </div>
@@ -141,7 +141,7 @@ export function ShareScreen(): JSX.Element {
           </div>
           <div className="mib">
             {t('share.system', lang)}
-            <small>{lang === 'en' ? 'system share sheet' : '调起系统分享'}</small>
+            <small>{tx('调起系统分享', 'system share sheet', lang)}</small>
           </div>
           <Icon name="right" size={13} />
         </div>

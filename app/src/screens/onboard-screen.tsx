@@ -9,7 +9,7 @@ import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { Btn } from '../components/basics';
 import { BrandMark } from '../components/icons';
-import { t, termText } from '../i18n';
+import { t, termText, tx } from '../i18n';
 import type { Lang } from '../engine/types';
 import { INDUSTRIES } from '../data/industries';
 import { WX_LABEL } from './ui-helpers';
@@ -33,48 +33,48 @@ export function OnboardScreen(): JSX.Element {
   const arts: JSX.Element[] = [
     <div className="cmpv" key="a0">
       <div className="cmpv-row">
-        <div className="cv-t">{lang === 'en' ? 'ALMANAC' : '通书'}</div>
+        <div className="cv-t">{tx('通书', 'ALMANAC', lang)}</div>
         <div className="cv-b">
-          <em>{lang === 'en' ? 'Same for everyone' : '宜纳财栽种 · 忌开市出行'}</em>
-          <span>{lang === 'en' ? 'One answer for all' : '对所有人一样'}</span>
+          <em>{tx('宜纳财栽种 · 忌开市出行', 'Same for everyone', lang)}</em>
+          <span>{tx('对所有人一样', 'One answer for all', lang)}</span>
         </div>
       </div>
       <div className="cmpv-row own">
-        <div className="cv-t">{lang === 'en' ? 'YOURS' : '你的'}</div>
+        <div className="cv-t">{tx('你的', 'YOURS', lang)}</div>
         <div className="cv-b">
-          <em>{lang === 'en' ? 'Only true for you' : '只对你成立'}</em>
-          <span>{lang === 'en' ? 'By your own pillars' : '按你的四柱年命'}</span>
+          <em>{tx('只对你成立', 'Only true for you', lang)}</em>
+          <span>{tx('按你的四柱年命', 'By your own pillars', lang)}</span>
         </div>
       </div>
     </div>,
     <div className="tri" key="a1">
       <div className="tri-cell">
-        <b>{lang === 'en' ? 'Person' : '人'}</b>
-        <span>{lang === 'en' ? 'Pillars' : '四柱年命'}</span>
+        <b>{tx('人', 'Person', lang)}</b>
+        <span>{tx('四柱年命', 'Pillars', lang)}</span>
       </div>
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
-        <b>{lang === 'en' ? 'Matter' : '事'}</b>
-        <span>{lang === 'en' ? 'Event / trade' : '用事 / 业态'}</span>
+        <b>{tx('事', 'Matter', lang)}</b>
+        <span>{tx('用事 / 业态', 'Event / trade', lang)}</span>
       </div>
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
-        <b>{lang === 'en' ? 'Day' : '日'}</b>
-        <span>{lang === 'en' ? 'Day lesson' : '月建日课'}</span>
+        <b>{tx('日', 'Day', lang)}</b>
+        <span>{tx('月建日课', 'Day lesson', lang)}</span>
       </div>
     </div>,
     <div className="deliv" key="a2">
       <div className="hi">
-        <b>{lang === 'en' ? 'Report' : '课期报告'}</b>
-        <span>{lang === 'en' ? '9 chapters' : '九章 · 可导出'}</span>
+        <b>{tx('课期报告', 'Report', lang)}</b>
+        <span>{tx('九章 · 可导出', '9 chapters', lang)}</span>
       </div>
       <div>
-        <b>{lang === 'en' ? 'Day card' : '吉日课帖'}</b>
-        <span>{lang === 'en' ? '5 themes' : '五版式 · 可传'}</span>
+        <b>{tx('吉日课帖', 'Day card', lang)}</b>
+        <span>{tx('五版式 · 可传', '5 themes', lang)}</span>
       </div>
       <div>
-        <b>{lang === 'en' ? 'Library' : '知库'}</b>
-        <span>{lang === 'en' ? 'Rules & books' : '典籍与规则'}</span>
+        <b>{tx('知库', 'Library', lang)}</b>
+        <span>{tx('典籍与规则', 'Rules & books', lang)}</span>
       </div>
     </div>,
     <div className="tax-grid" key="a3" style={{ padding: '4px 2px' }}>
@@ -107,7 +107,7 @@ export function OnboardScreen(): JSX.Element {
           : '通书答「今天怎么样」，课格答「今天对你这件事怎么样」。两句都对，只是层级不同。',
     },
     {
-      h: lang === 'en' ? 'Person + Matter + Day' : '三元定一课',
+      h: tx('三元定一课', 'Person + Matter + Day', lang),
       p:
         lang === 'en'
           ? 'First the person (pillars), then the matter (event & trade), and only then the day lesson. Without all three, even a "yellow dao" day is useless.'
@@ -129,7 +129,7 @@ export function OnboardScreen(): JSX.Element {
           : '报告九章 · 课帖五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。',
     },
     {
-      h: lang === 'en' ? 'Pick your trade' : '先定你的业态',
+      h: tx('先定你的业态', 'Pick your trade', lang),
       p:
         lang === 'en'
           ? 'Your trade decides the five-phase taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.'
@@ -159,7 +159,7 @@ export function OnboardScreen(): JSX.Element {
         <div className="onb-art">
           <div className="ph2">{arts[step]}</div>
           <div className="cap">
-            {lang === 'en' ? `Step ${step + 1} / 4` : `第 ${step + 1} 步 ／ 共 4 步`}
+            {tx(`第 ${step + 1} 步 ／ 共 4 步`, `Step ${step + 1} / 4`, lang)}
           </div>
         </div>
         <h2 className="onb-h" dangerouslySetInnerHTML={{ __html: s.h }} />
@@ -183,7 +183,7 @@ export function OnboardScreen(): JSX.Element {
             }
           }}
         >
-          {step < 3 ? t('nav.next', lang) : lang === 'en' ? 'Enter Zeji' : '进入择吉'}
+          {step < 3 ? t('nav.next', lang) : tx('进入择吉', 'Enter Zeji', lang)}
         </Btn>
       </div>
     </div>

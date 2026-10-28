@@ -13,7 +13,7 @@ import { createCheckout } from '../services/pay/creem';
 import { redeemCode } from '../services/pay/redeem';
 import { licenseRepo } from '../db/repos/license.repo';
 import { analytics, EVENTS } from '../services/analytics';
-import { t } from '../i18n';
+import { t, tx } from '../i18n';
 import { Btn, Chip, Seg, Ring } from '../components/basics';
 import { AppBar } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -146,12 +146,12 @@ export function PayScreen(): JSX.Element {
 
       {SKUS.map((k) => (
         <div key={k} className={`plan${sku === k ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => setSku(k)} onKeyDown={(e) => e.key === 'Enter' && setSku(k)}>
-          {k === 'ai10' && <div className="badge">{lang === 'en' ? 'NEW' : '新'}</div>}
+          {k === 'ai10' && <div className="badge">{tx('新', 'NEW', lang)}</div>}
           <div className="pt">
             <b>{t(`sku.${k}` as 'sku.once', lang)}</b>
             <span className="pp">
               {formatPrice(k, currency)}
-              <small>{k === 'year' ? ` / ${lang === 'en' ? 'yr' : '年'}` : k === 'ai10' ? ` / 10 ${lang === 'en' ? 'uses' : '次'}` : ` / ${lang === 'en' ? 'use' : '次'}`}</small>
+              <small>{k === 'year' ? ` / ${tx('年', 'yr', lang)}` : k === 'ai10' ? ` / 10 ${tx('次', 'uses', lang)}` : ` / ${tx('次', 'use', lang)}`}</small>
             </span>
           </div>
           <div className="pd">
@@ -174,7 +174,7 @@ export function PayScreen(): JSX.Element {
 
       <div className="card flat" style={{ marginTop: 12 }}>
         <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
-          {lang === 'en' ? 'Redeem code' : '兑换码'}
+          {tx('兑换码', 'Redeem code', lang)}
         </div>
         <div style={{ display: 'flex', gap: 7 }}>
           <input
@@ -193,7 +193,7 @@ export function PayScreen(): JSX.Element {
 
       <div className="card flat" style={{ marginTop: 10 }}>
         <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
-          {lang === 'en' ? 'Payment methods' : '支付方式'}
+          {tx('支付方式', 'Payment methods', lang)}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
           {(lang === 'en'

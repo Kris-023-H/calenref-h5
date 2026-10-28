@@ -17,7 +17,7 @@ import { industryById } from '../data/industries';
 import { JC_YI, JC_JI } from '../data/jc-tables';
 import { KB_ARTICLES } from '../data/kb';
 import { todayInTz } from '../services/timezone';
-import { t, termText, jianchuName } from '../i18n';
+import { t, jianchuName, termText, tx } from '../i18n';
 import { Ring, Chip } from '../components/basics';
 import { BrandMark, Icon } from '../components/icons';
 import { IconBtn, AppBar } from '../components/app-bar';
@@ -73,10 +73,10 @@ export function HomeScreen(): JSX.Element {
   };
 
   const quick: Array<[string, string, string]> = [
-    ['open', '開', lang === 'en' ? 'Open' : '开业'],
-    ['sign', '契', lang === 'en' ? 'Sign' : '签约'],
-    ['marry', '囍', lang === 'en' ? 'Marry' : '嫁娶'],
-    ['move', '遷', lang === 'en' ? 'Move' : '入宅'],
+    ['open', '開', tx('开业', 'Open', lang)],
+    ['sign', '契', tx('签约', 'Sign', lang)],
+    ['marry', '囍', tx('嫁娶', 'Marry', lang)],
+    ['move', '遷', tx('入宅', 'Move', lang)],
   ];
 
   const article = KB_ARTICLES[0];
@@ -89,13 +89,13 @@ export function HomeScreen(): JSX.Element {
             <span className="applogo">
               <BrandMark size={20} tone="gold" />
             </span>
-            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={lang === 'en' ? 'Threefold' : '三元择日'} titleSize={15} />
+            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={tx('三元择日', 'Threefold', lang)} titleSize={15} />
           </div>
         }
         actions={
           <>
-            <IconBtn name="grid" label={lang === 'en' ? 'Guide' : '场景导览'} onClick={() => openSheet('guide')} />
-            <IconBtn name="bell" label={lang === 'en' ? 'Reminders' : '提醒'} onClick={() => push('remind')} />
+            <IconBtn name="grid" label={tx('场景导览', 'Guide', lang)} onClick={() => openSheet('guide')} />
+            <IconBtn name="bell" label={tx('提醒', 'Reminders', lang)} onClick={() => push('remind')} />
           </>
         }
       />
@@ -109,17 +109,17 @@ export function HomeScreen(): JSX.Element {
             <b>{today.d}</b>
             <span>
               {monthFullName(monthZhiOf(today))} · {monthZhiName(monthZhiOf(today))}
-              {lang === 'en' ? ' month' : '月'}
+              {tx('月', ' month', lang)}
             </span>
           </div>
           <div className="hgz">
             {dg.text}
-            {lang === 'en' ? ' Day' : '日'} ／ {t('home.todayJianchu', lang)} {jianchuName(jc.name, lang)}
-            {lang === 'en' ? ' Day' : '日'} ／ {lang === 'en' ? 'clash ' : '冲'}
+            {tx('日', ' Day', lang)} ／ {t('home.todayJianchu', lang)} {jianchuName(jc.name, lang)}
+            {tx('日', ' Day', lang)} ／ {tx('冲', 'clash ', lang)}
             {ZHI[(dg.zhi + 6) % 12]}
           </div>
           <div className="hi-cap" role="button" tabIndex={0} onClick={() => openSheet('why')} onKeyDown={(e) => e.key === 'Enter' && openSheet('why')}>
-            {t('home.todayTitle', lang)} · {lang === 'en' ? 'general reading' : '通用口径'}
+            {t('home.todayTitle', lang)} · {tx('通用口径', 'general reading', lang)}
             <b>?</b>
             <Icon name="right" size={10} />
           </div>
@@ -186,10 +186,10 @@ export function HomeScreen(): JSX.Element {
             <b>{monthDay(nextGood.date, lang)}</b>
             <span>
               {weekdayShort(nextGood.weekday, lang)} ／ {nextGood.dayGZ.text}
-              {lang === 'en' ? ' Day' : '日'} ／ {jianchuName(nextGood.jianchu, lang)}
-              {lang === 'en' ? ' Day' : '日'} ／ {lang === 'en' ? 'hour ' : '吉时 '}
+              {tx('日', ' Day', lang)} ／ {jianchuName(nextGood.jianchu, lang)}
+              {tx('日', ' Day', lang)} ／ {tx('吉时 ', 'hour ', lang)}
               {nextGood.goodHours[0]?.name ?? '—'}
-              {lang === 'en' ? '' : '时'}
+              {tx('时', '', lang)}
             </span>
           </div>
           <Icon name="right" size={14} />
@@ -197,8 +197,8 @@ export function HomeScreen(): JSX.Element {
       )}
 
       <div className="sect">
-        <h3>{lang === 'en' ? 'Active lesson periods' : '进行中的课期'}</h3>
-        <em>{lang === 'en' ? 'Active' : '进行中'}</em>
+        <h3>{tx('进行中的课期', 'Active lesson periods', lang)}</h3>
+        <em>{tx('进行中', 'Active', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('reports')} onKeyDown={(e) => e.key === 'Enter' && switchTab('reports')}>
           {t('common.all', lang)}
         </a>
@@ -209,13 +209,13 @@ export function HomeScreen(): JSX.Element {
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
               <Chip tone="gold">{termText(ind.name, lang)}</Chip>
               <Chip>
-                {draft.span} {lang === 'en' ? 'days' : '天课期'}
+                {draft.span} {tx('天课期', 'days', lang)}
               </Chip>
             </div>
             <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>
               {scans.length > 0
                 ? scans[0].title
-                : `${termText(ev.name, lang)} · ${lang === 'en' ? 'not run yet' : '尚未推演'}`}
+                : `${termText(ev.name, lang)} · ${tx('尚未推演', 'not run yet', lang)}`}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>
               {scans.length > 0
@@ -227,14 +227,14 @@ export function HomeScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 20, fontWeight: 700, color: 'var(--gold)' }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.08em' }}>{lang === 'en' ? 'reports' : '份'}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.08em' }}>{tx('份', 'reports', lang)}</div>
           </div>
         </div>
       </div>
 
       <div className="sect">
-        <h3>{lang === 'en' ? 'Start a lesson' : '起一课'}</h3>
-        <em>{lang === 'en' ? 'New' : '新起'}</em>
+        <h3>{tx('起一课', 'Start a lesson', lang)}</h3>
+        <em>{tx('新起', 'New', lang)}</em>
       </div>
       <div className="quick">
         {quick.map((x) => (
@@ -247,7 +247,7 @@ export function HomeScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('home.kbEntry', lang)}</h3>
-        <em>{lang === 'en' ? 'Library' : '知库'}</em>
+        <em>{tx('知库', 'Library', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('kb')} onKeyDown={(e) => e.key === 'Enter' && switchTab('kb')}>
           {t('nav.more', lang)}
         </a>

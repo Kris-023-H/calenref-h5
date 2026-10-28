@@ -9,7 +9,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { RULE_VERSION } from '../engine/types';
-import { t, bytesText, LANG_SELF_NAME } from '../i18n';
+import { t, LANG_SELF_NAME, bytesText, tx } from '../i18n';
 import { LEGAL_PAGES, LEGAL_TITLE_KEY } from '../data/legal';
 import { SITE } from '../data/site';
 import { clearConsent } from '../services/consent';
@@ -50,25 +50,25 @@ export function MeScreen(): JSX.Element {
     {
       icon: 'user',
       label: t('me.people', lang),
-      sub: `${people.length} ${lang === 'en' ? 'files' : '份档案'}`,
+      sub: `${people.length} ${tx('份档案', 'files', lang)}`,
       onClick: () => push('people'),
     },
     {
       icon: 'doc',
       label: t('me.reports', lang),
-      sub: `${scans.length} ${lang === 'en' ? 'lessons' : '课课期'}`,
+      sub: `${scans.length} ${tx('课课期', 'lessons', lang)}`,
       onClick: () => push('reports'),
     },
     {
       icon: 'star',
       label: t('me.fav', lang),
-      sub: lang === 'en' ? 'days & articles' : '日课与文章',
+      sub: tx('日课与文章', 'days & articles', lang),
       onClick: () => push('fav'),
     },
     {
       icon: 'bell',
       label: t('me.remind', lang),
-      sub: lang === 'en' ? 'on this device' : '仅存本机',
+      sub: tx('仅存本机', 'on this device', lang),
       onClick: () => push('remind'),
     },
     {
@@ -204,8 +204,8 @@ export function MeScreen(): JSX.Element {
         <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 8 }}>{t('settings.analytics', lang)}</div>
         <Seg
           options={[
-            { value: 'on', label: lang === 'en' ? 'On' : '开启' },
-            { value: 'off', label: lang === 'en' ? 'Off' : '关闭' },
+            { value: 'on', label: tx('开启', 'On', lang) },
+            { value: 'off', label: tx('关闭', 'Off', lang) },
           ]}
           value={analyticsOn ? 'on' : 'off'}
           onChange={(v) => void setAnalytics(v === 'on')}
@@ -255,7 +255,7 @@ export function MeScreen(): JSX.Element {
         <div className="divider" />
 
         <Btn variant="ghost" block onClick={doClear}>
-          {confirm === 'idle' ? t('settings.clear', lang) : confirm === 'once' ? t('settings.clearConfirm', lang) : lang === 'en' ? 'Tap a third time to erase' : '再点一次，永久清除'}
+          {confirm === 'idle' ? t('settings.clear', lang) : confirm === 'once' ? t('settings.clearConfirm', lang) : tx('再点一次，永久清除', 'Tap a third time to erase', lang)}
         </Btn>
       </div>
 

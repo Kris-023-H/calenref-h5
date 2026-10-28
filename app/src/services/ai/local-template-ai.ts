@@ -1,3 +1,4 @@
+import { tx } from '../../i18n';
 /**
  * services/ai/local-template-ai.ts — LocalTemplateAiService：离线模板四段解读。
  * 结构固定（PRD v3.5 §8）：结论口径 / 业态适配 / 风险与化解 / 执行建议。
@@ -26,13 +27,13 @@ function peopleText(scan: ScanResult, lang: Lang): string {
   return scan.input.people
     .map((p) => {
       const zodiac = readPerson(p).zodiac;
-      return lang === 'en' ? `${p.name} (${zodiac})` : `${p.name}（属${zodiac}）`;
+      return tx(`${p.name}（属${zodiac}）`, `${p.name} (${zodiac})`, lang);
     })
-    .join(lang === 'en' ? ' & ' : '与');
+    .join(tx('与', ' & ', lang));
 }
 
 function hourText(h: DayResult['goodHours'][number], lang: Lang): string {
-  return `${h.name}${lang === 'en' ? ' hour' : '时'}（${h.range}）`;
+  return `${h.name}${tx('时', ' hour', lang)}（${h.range}）`;
 }
 
 /** 四段解读（模板双语；HTML 仅 <b>，TypeWriter 可安全保留） */

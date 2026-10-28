@@ -11,7 +11,7 @@ import { cityById } from '../data/cities';
 import { INDUSTRIES, industryById } from '../data/industries';
 import { SITS } from '../data/sits';
 import { ZHI } from '../engine/calendar/sexagenary';
-import { t, termText, offsetMinText } from '../i18n';
+import { t, offsetMinText, termText, tx } from '../i18n';
 import { Chip, Btn, Seg } from '../components/basics';
 import { AppBar } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -42,16 +42,16 @@ export function InfoScreen(): JSX.Element {
   const personB = people.find((p) => p.id === draft.personIds[1]);
 
   const schoolOptions: Array<{ value: SchoolKey; label: string }> = [
-    { value: 'xingjia', label: lang === 'en' ? 'Marry-month' : '行嫁月派' },
-    { value: 'bujiang', label: lang === 'en' ? 'Non-jiang' : '不将日派' },
-    { value: 'jianchu', label: lang === 'en' ? 'Jianchu' : '建除派' },
+    { value: 'xingjia', label: tx('行嫁月派', 'Marry-month', lang) },
+    { value: 'bujiang', label: tx('不将日派', 'Non-jiang', lang) },
+    { value: 'jianchu', label: tx('建除派', 'Jianchu', lang) },
   ];
 
   return (
     <div className="screen">
-      <AppBar title={`${termText(ev.name, lang)} · ${lang === 'en' ? 'Pillars' : '录四柱'}`} onBack={() => pop()} actions={<Chip>{ev.group}</Chip>} />
+      <AppBar title={`${termText(ev.name, lang)} · ${tx('录四柱', 'Pillars', lang)}`} onBack={() => pop()} actions={<Chip>{ev.group}</Chip>} />
       <h2 className="tt">
-        {two ? (lang === 'en' ? 'Both pillars' : '双方四柱') : lang === 'en' ? 'Subject pillars' : '当事人四柱'}
+        {two ? (tx('双方四柱', 'Both pillars', lang)) : tx('当事人四柱', 'Subject pillars', lang)}
         <small>
           {two
             ? lang === 'en'
@@ -67,7 +67,7 @@ export function InfoScreen(): JSX.Element {
         lang={lang}
         person={personA}
         title={PERSON_LABEL[draft.eventKey]?.[loc] ?? t('person.title', lang)}
-        tag={two ? (lang === 'en' ? 'marry-month' : '取月用女命') : lang === 'en' ? 'year pillar' : '年命'}
+        tag={two ? (tx('取月用女命', 'marry-month', lang)) : tx('年命', 'year pillar', lang)}
         onPick={() => push('people')}
         onClear={() => personA && togglePerson(personA.id)}
       />
@@ -76,7 +76,7 @@ export function InfoScreen(): JSX.Element {
           lang={lang}
           person={personB}
           title={PERSON_LABEL_B[draft.eventKey]?.[loc] ?? t('person.title', lang)}
-          tag={lang === 'en' ? 'clash check' : '查日辰冲命'}
+          tag={tx('查日辰冲命', 'clash check', lang)}
           onPick={() => push('people')}
           onClear={() => personB && togglePerson(personB.id)}
         />
@@ -84,10 +84,10 @@ export function InfoScreen(): JSX.Element {
 
       <div className="pblock">
         <div className="ph">
-          <div className="pn">{lang === 'en' ? 'T' : '时'}</div>
+          <div className="pn">{tx('时', 'T', lang)}</div>
           <div className="pt">
-            {lang === 'en' ? 'Hour unverified' : '时辰待核'}
-            <small>{lang === 'en' ? 'elders often remember the date only' : '长辈多只记日期，不记时刻'}</small>
+            {tx('时辰待核', 'Hour unverified', lang)}
+            <small>{tx('长辈多只记日期，不记时刻', 'elders often remember the date only', lang)}</small>
           </div>
           <div style={{ marginLeft: 'auto' }}>
             <div
@@ -116,15 +116,15 @@ export function InfoScreen(): JSX.Element {
 
       <div className="pblock">
         <div className="ph">
-          <div className="pn">{lang === 'en' ? 'P' : '期'}</div>
+          <div className="pn">{tx('期', 'P', lang)}</div>
           <div className="pt">
-            {lang === 'en' ? 'Lesson window' : '课期区间'}
-            <small>{lang === 'en' ? 'a wider window meets more fitting days' : '区间越宽，越可能撞上真正合的日子'}</small>
+            {tx('课期区间', 'Lesson window', lang)}
+            <small>{tx('区间越宽，越可能撞上真正合的日子', 'a wider window meets more fitting days', lang)}</small>
           </div>
         </div>
         <div className="row2">
           <div className="fld">
-            <label>{lang === 'en' ? 'Start from' : '起课自'}</label>
+            <label>{tx('起课自', 'Start from', lang)}</label>
             <div className="unit">
               <select value={String(draft.startOffset)} onChange={(e) => setDraft({ startOffset: Number(e.target.value) })}>
                 {START_OFFSETS.map((o) => (
@@ -136,12 +136,12 @@ export function InfoScreen(): JSX.Element {
             </div>
           </div>
           <div className="fld">
-            <label>{lang === 'en' ? 'Window' : '课期长度'}</label>
+            <label>{tx('课期长度', 'Window', lang)}</label>
             <div className="unit">
               <select value={String(draft.span)} onChange={(e) => setDraft({ span: Number(e.target.value) })}>
                 {SPANS.map((s) => (
                   <option key={s} value={s}>
-                    {s} {lang === 'en' ? 'days' : '天'}
+                    {s} {tx('天', 'days', lang)}
                   </option>
                 ))}
               </select>
@@ -152,10 +152,10 @@ export function InfoScreen(): JSX.Element {
 
       <div className="pblock">
         <div className="ph">
-          <div className="pn">{lang === 'en' ? 'S' : '派'}</div>
+          <div className="pn">{tx('派', 'S', lang)}</div>
           <div className="pt">
             {t('school.title', lang)}
-            <small>{lang === 'en' ? 'schools differ — the report gives all three' : '宗派不同，结论会不同——报告给出三派对照'}</small>
+            <small>{tx('宗派不同，结论会不同——报告给出三派对照', 'schools differ — the report gives all three', lang)}</small>
           </div>
         </div>
         <Seg options={schoolOptions} value={draft.school} onChange={(v) => setDraft({ school: v })} />
@@ -177,9 +177,9 @@ export function InfoScreen(): JSX.Element {
       {(hasWuxingLayer(draft.eventKey) || hasSitLayer(draft.eventKey)) && (
         <div className="pblock">
           <div className="ph">
-            <div className="pn">{lang === 'en' ? 'B' : '业'}</div>
+            <div className="pn">{tx('业', 'B', lang)}</div>
             <div className="pt">
-              {lang === 'en' ? 'Trade & facing' : '业态与坐向'}
+              {tx('业态与坐向', 'Trade & facing', lang)}
               <small>
                 {hasWuxingLayer(draft.eventKey)
                   ? lang === 'en'
@@ -193,7 +193,7 @@ export function InfoScreen(): JSX.Element {
           </div>
           {hasWuxingLayer(draft.eventKey) && (
             <div className="fld">
-              <label>{lang === 'en' ? 'Trade (industry)' : '业态（行业门类）'}</label>
+              <label>{tx('业态（行业门类）', 'Trade (industry)', lang)}</label>
               <div className="unit">
                 <select value={draft.industryId ?? ''} onChange={(e) => setDraft({ industryId: e.target.value })}>
                   {INDUSTRIES.map((x) => (
@@ -213,7 +213,7 @@ export function InfoScreen(): JSX.Element {
                   {SITS.map((x) => (
                     <option key={x.key} value={x.key}>
                       {termText(x.name, lang)}（{ZHI[x.zhi]}
-                      {lang === 'en' ? ' mountain' : '山'}）
+                      {tx('山', ' mountain', lang)}）
                     </option>
                   ))}
                 </select>
@@ -235,7 +235,7 @@ export function InfoScreen(): JSX.Element {
                 <b>{ind.acts[0]?.[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh'] ?? '—'}</b>
               </div>
               <div>
-                <em>{lang === 'en' ? 'Second' : '次动作'}</em>
+                <em>{tx('次动作', 'Second', lang)}</em>
                 <b>{ind.acts[1]?.[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh'] ?? '—'}</b>
               </div>
             </div>
@@ -286,7 +286,7 @@ export function InfoScreen(): JSX.Element {
             void startScan().then(() => push('calc'));
           }}
         >
-          {lang === 'en' ? 'Run lesson' : '排课'} · {lang === 'en' ? `${draft.span} days` : `课期 ${draft.span} 天`}
+          {tx('排课', 'Run lesson', lang)} · {tx(`课期 ${draft.span} 天`, `${draft.span} days`, lang)}
         </Btn>
       </div>
     </div>
@@ -320,7 +320,7 @@ function PersonSlot({
           </div>
         </div>
         <Btn variant="gold" block onClick={onPick}>
-          {lang === 'en' ? 'Choose from files' : '从档案选'}
+          {tx('从档案选', 'Choose from files', lang)}
         </Btn>
       </div>
     );
@@ -337,10 +337,10 @@ function PersonSlot({
         </div>
         <div className="pd">
           <button type="button" className="pkbtn" onClick={onClear}>
-            {lang === 'en' ? 'Change' : '更换'}
+            {tx('更换', 'Change', lang)}
           </button>
           {r.zodiac}
-          {lang === 'en' ? ' year · true solar ' : '年 · 真太阳时 '}
+          {tx('年 · 真太阳时 ', ' year · true solar ', lang)}
           {r.trueTime}
         </div>
       </div>

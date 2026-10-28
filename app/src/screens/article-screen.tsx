@@ -9,7 +9,7 @@ import { useUi } from '../store/ui-store';
 import { KB_ARTICLES } from '../data/kb';
 import { BOOKS } from '../data/books';
 import { eventByKey } from '../data/events';
-import { t, termText } from '../i18n';
+import { t, termText, tx } from '../i18n';
 import { Btn, Chip } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { useNav } from './types';
@@ -37,9 +37,9 @@ export function ArticleScreen(): JSX.Element {
 
       <div className="bib" style={{ marginBottom: 16 }}>
         <div className="bib-t">
-          <b>{lang === 'en' ? 'Source' : '本课出处'}</b>
+          <b>{tx('本课出处', 'Source', lang)}</b>
           <em>{a.books.join('　')}</em>
-          <span>{lang === 'en' ? 'verifiable' : '可核'}</span>
+          <span>{tx('可核', 'verifiable', lang)}</span>
         </div>
         <div className="bib-d">{book.desc[loc]}</div>
       </div>
@@ -64,10 +64,10 @@ export function ArticleScreen(): JSX.Element {
 
       <div className="card lacquer" style={{ marginTop: 18, cursor: 'pointer' }} role="button" tabIndex={0} onClick={() => { push('event'); }}>
         <div style={{ fontSize: 9, letterSpacing: '.2em', color: 'var(--gold-2)', fontWeight: 700, marginBottom: 6 }}>
-          {lang === 'en' ? 'TRY A LESSON' : '试排一课'}
+          {tx('试排一课', 'TRY A LESSON', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>
-          {lang === 'en' ? 'Enter pillars, run a lesson' : '录四柱，排一课看看'}
+          {tx('录四柱，排一课看看', 'Enter pillars, run a lesson', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
           {lang === 'en' ? `90-day window · layer by layer · ~3s` : '90 天课期 · 逐层推演 · 约 3 秒'}

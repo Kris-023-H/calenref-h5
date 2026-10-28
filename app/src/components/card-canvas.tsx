@@ -5,7 +5,7 @@
 
 import { useEffect, useRef, type ReactNode } from 'react';
 import type { FourPillars } from '../engine/types';
-import { isoDate } from '../i18n';
+import { isoDate, tx } from '../i18n';
 import type { CalDate, Lang } from '../engine/types';
 
 export type CardTheme = 'paper' | 'lacquer' | 'teal' | 'ink' | 'vermilion';
@@ -37,22 +37,22 @@ export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme 
   const { lang } = data;
   const dateText = `${data.date.y}.${String(data.date.m).padStart(2, '0')}.${String(data.date.d).padStart(2, '0')}`;
   const rows: Array<[string, string]> = [
-    [lang === 'en' ? 'Matter' : '用事', `${data.eventName}（${data.industryName}）`],
-    [lang === 'en' ? 'Pillars' : '四柱', `${data.pillars.year} ${data.pillars.month} ${data.pillars.day} ${data.pillars.hour}`],
-    [lang === 'en' ? 'Facing' : '坐向', data.sitDeg],
-    [lang === 'en' ? 'Hour' : '吉时', `${data.hourName}（${data.hourRange}）`],
+    [tx('用事', 'Matter', lang), `${data.eventName}（${data.industryName}）`],
+    [tx('四柱', 'Pillars', lang), `${data.pillars.year} ${data.pillars.month} ${data.pillars.day} ${data.pillars.hour}`],
+    [tx('坐向', 'Facing', lang), data.sitDeg],
+    [tx('吉时', 'Hour', lang), `${data.hourName}（${data.hourRange}）`],
   ];
   return (
     <div className={`gcard ${theme}`} id="gcard">
       <div className="gc-inner">
         <div className="gc-top">
-          <div className="gc-eyebrow">{lang === 'en' ? 'ZEJI · DAY CARD' : '择 吉 · 吉 日 课 帖'}</div>
+          <div className="gc-eyebrow">{tx('择 吉 · 吉 日 课 帖', 'ZEJI · DAY CARD', lang)}</div>
           <div className="gc-seal">吉</div>
         </div>
         <div className="gc-date">{dateText}</div>
         <div className="gc-gz">
           {data.dayGZ}
-          {lang === 'en' ? 'Day' : '日'} ／ {data.jianchu} ／{' '}
+          {tx('日', 'Day', lang)} ／ {data.jianchu} ／{' '}
           {lang === 'en' ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][data.weekday] : `周${'日一二三四五六'[data.weekday]}`}
         </div>
         <div className="gc-rows">
@@ -66,9 +66,9 @@ export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme 
           ))}
         </div>
         <div className="gc-foot">
-          <span className="gc-brand">{lang === 'en' ? 'Person · Matter · Day' : '人 · 事 · 日 三元择吉'}</span>
+          <span className="gc-brand">{tx('人 · 事 · 日 三元择吉', 'Person · Matter · Day', lang)}</span>
           <span className="gc-no">
-            {lang === 'en' ? 'No. ' : '编号 '}
+            {tx('编号 ', 'No. ', lang)}
             {isoDate(data.date).replace(/-/g, '')}
           </span>
         </div>

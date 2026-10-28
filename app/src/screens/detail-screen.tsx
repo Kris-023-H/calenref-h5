@@ -14,7 +14,7 @@ import { fourPillarsOf } from '../engine/pillars';
 import { schoolReadings, schoolAdvice } from '../engine/schools';
 import { ZHI } from '../engine/calendar/sexagenary';
 import { SCORE_MIN } from '../engine/types';
-import { t, termText, hardReasonLong, scoreLowText, isoDate } from '../i18n';
+import { t, hardReasonLong, isoDate, scoreLowText, termText, tx } from '../i18n';
 import { Ring, Btn, EmptyState } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -81,14 +81,14 @@ export function DetailScreen(): JSX.Element {
         <div className="dh-top">
           <div style={{ flex: 1 }}>
             <div className="k">
-              {rank === 0 ? (lang === 'en' ? 'FIRST CHOICE' : '首 选 课') : lang === 'en' ? 'ALTERNATE' : '备 选 课'} ／ {termText(ev.name, lang)} ／{' '}
+              {rank === 0 ? (tx('首 选 课', 'FIRST CHOICE', lang)) : tx('备 选 课', 'ALTERNATE', lang)} ／ {termText(ev.name, lang)} ／{' '}
               {termText(ind.name, lang)}
             </div>
             <div className="big">{dottedDate(day.date)}</div>
             <div className="sub2">
               {weekdayShort(day.weekday, lang)}　{day.dayGZ.text}
-              {lang === 'en' ? ' Day' : '日'}　{day.jianchu}
-              {lang === 'en' ? ' Day' : '日'}　{lang === 'en' ? 'month ' : '月建'}
+              {tx('日', ' Day', lang)}　{day.jianchu}
+              {tx('日', ' Day', lang)}　{tx('月建', 'month ', lang)}
               {ZHI[day.monthZhi]}
             </div>
           </div>
@@ -96,13 +96,13 @@ export function DetailScreen(): JSX.Element {
         </div>
         <div className="dh-meta">
           <span>
-            {monthFullName(day.monthZhi)} · {lang === 'en' ? 'after term' : '後'}
+            {monthFullName(day.monthZhi)} · {tx('後', 'after term', lang)}
           </span>
           <span>{readings.length > 0 ? readings.map((r) => r.name).join(' & ') : t('scan.generic', lang)}</span>
           <span>
-            {lang === 'en' ? 'hour ' : '吉时 '}
+            {tx('吉时 ', 'hour ', lang)}
             {day.goodHours[0]?.name ?? '—'}
-            {lang === 'en' ? '' : '时'}
+            {tx('时', '', lang)}
           </span>
         </div>
       </div>
@@ -114,7 +114,7 @@ export function DetailScreen(): JSX.Element {
             <b>
               {fp.year}　{fp.month}　{fp.day}　{fp.hour}
             </b>
-            　{lang === 'en' ? 'year · month · day · hour' : '年 · 月 · 日 · 时'}
+            　{tx('年 · 月 · 日 · 时', 'year · month · day · hour', lang)}
           </div>
         </div>
         <div className="rtab-row">
@@ -154,11 +154,11 @@ export function DetailScreen(): JSX.Element {
       <div className="sect" style={{ marginTop: 16 }}>
         <h3>{t('detail.layersTitle', lang)}</h3>
         <em>
-          {lang === 'en' ? `${day.layers.length} layers` : `共 ${day.layers.length} 重`}
+          {tx(`共 ${day.layers.length} 重`, `${day.layers.length} layers`, lang)}
         </em>
       </div>
       <div style={{ fontSize: 10.5, color: 'var(--muted)', margin: '-4px 0 10px' }}>
-        {lang === 'en' ? 'Open each layer — every one states its basis and source, ready to verify.' : '逐层点开，每一层都给出口径与出处，可拿去核对。'}
+        {tx('逐层点开，每一层都给出口径与出处，可拿去核对。', 'Open each layer — every one states its basis and source, ready to verify.', lang)}
       </div>
       <div id="layers">
         {day.layers.map((l, i) => (
@@ -168,7 +168,7 @@ export function DetailScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('detail.hoursTitle', lang)}</h3>
-        <em>{lang === 'en' ? 'Hours' : '时辰'}</em>
+        <em>{tx('时辰', 'Hours', lang)}</em>
       </div>
       <div style={{ fontSize: 10.5, color: 'var(--muted)', margin: '-4px 0 9px' }}>{t('detail.hoursHint', lang)}</div>
       <div className="hours">
@@ -179,14 +179,14 @@ export function DetailScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('detail.schoolsTitle', lang)}</h3>
-        <em>{lang === 'en' ? '3 schools' : '三派'}</em>
+        <em>{tx('三派', '3 schools', lang)}</em>
       </div>
       <div className="schools">
         {readings3.map((r) => (
           <div key={r.school} className={`school${r.score === Math.max(...readings3.map((x) => x.score)) ? ' best' : ''}`}>
             <em>{SCHOOL_NAMES[r.school]}</em>
             <b>{r.score}</b>
-            <span>{r.score >= SCORE_MIN ? (lang === 'en' ? 'pass' : '过阈值') : lang === 'en' ? 'below' : '未过'}</span>
+            <span>{r.score >= SCORE_MIN ? (tx('过阈值', 'pass', lang)) : tx('未过', 'below', lang)}</span>
           </div>
         ))}
       </div>
@@ -199,8 +199,8 @@ export function DetailScreen(): JSX.Element {
       </div>
 
       <div className="sect">
-        <h3>{lang === 'en' ? 'Secondary sha & remedies' : '次级煞与制化'}</h3>
-        <em>{lang === 'en' ? 'Remedy' : '制化'}</em>
+        <h3>{tx('次级煞与制化', 'Secondary sha & remedies', lang)}</h3>
+        <em>{tx('制化', 'Remedy', lang)}</em>
       </div>
       <SubShaCard layers={day.layers.filter((l) => l.cls === 'warn' || l.cls === 'bad')} lang={lang} />
 
@@ -208,13 +208,13 @@ export function DetailScreen(): JSX.Element {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 9, letterSpacing: '.22em', color: 'var(--gold-2)', fontWeight: 700, marginBottom: 5 }}>
-              {lang === 'en' ? 'FOR ELDERS' : '呈长辈'}
+              {tx('呈长辈', 'FOR ELDERS', lang)}
             </div>
             <div className="serif" style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>
-              {lang === 'en' ? 'Basis excerpt' : '依据摘录 · 呈长辈'}
+              {tx('依据摘录 · 呈长辈', 'Basis excerpt', lang)}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
-              {lang === 'en' ? 'Three verifiable sources, forwardable.' : '三条可核的出处，可直接转发'}
+              {tx('三条可核的出处，可直接转发', 'Three verifiable sources, forwardable.', lang)}
             </div>
           </div>
           <Icon name="right" size={15} />
@@ -227,7 +227,7 @@ export function DetailScreen(): JSX.Element {
             {t('detail.reportTitle', lang)}
           </Btn>
           <Btn variant="gold" onClick={() => push('card')}>
-            {lang === 'en' ? 'Make day card' : '制吉日课帖'}
+            {tx('制吉日课帖', 'Make day card', lang)}
           </Btn>
         </div>
       </div>

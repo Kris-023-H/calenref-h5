@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
-import { t } from '../i18n';
+import { t, tx } from '../i18n';
 import { Btn, Chip, EmptyState, Bar } from '../components/basics';
 import { AppBar } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -63,7 +63,7 @@ export function AiScreen(): JSX.Element {
         </div>
         <div className="ab-t">
           <b>{left > 0 ? t('ai.quotaLeft', lang, { n: left }) : t('ai.noQuota', lang)}</b>
-          <span>{lang === 'en' ? '3/month free · unlimited on yearly · follow-ups count 1' : '免费 3 次 / 月 · 年卡无限 · 追问同计 1 次'}</span>
+          <span>{tx('免费 3 次 / 月 · 年卡无限 · 追问同计 1 次', '3/month free · unlimited on yearly · follow-ups count 1', lang)}</span>
         </div>
         <div className="ab-q">
           {quota.unlimited ? '∞' : left}
@@ -75,8 +75,8 @@ export function AiScreen(): JSX.Element {
           <Bar percent={quota.unlimited ? 100 : Math.round((left / 3) * 100)} />
         </div>
         <span>
-          {lang === 'en' ? 'used ' : '已用 '}
-          <b>{quota.unlimited ? 0 : 3 - left}</b> {lang === 'en' ? '· resets on the 1st' : ' 次 · 每月 1 日重置'}
+          {tx('已用 ', 'used ', lang)}
+          <b>{quota.unlimited ? 0 : 3 - left}</b> {tx(' 次 · 每月 1 日重置', '· resets on the 1st', lang)}
         </span>
       </div>
 
@@ -85,7 +85,7 @@ export function AiScreen(): JSX.Element {
           <div className="aicard" key={i}>
             <div className="ai-h">
               <b>{titles[i]}</b>
-              <span>{lang === 'en' ? 'AI' : '智能解读'}</span>
+              <span>{tx('智能解读', 'AI', lang)}</span>
             </div>
             <div className="ai-p" dangerouslySetInnerHTML={{ __html: sec }} />
           </div>
@@ -95,7 +95,7 @@ export function AiScreen(): JSX.Element {
       ) : left > 0 ? (
         <EmptyState
           mark="ai"
-          title={lang === 'en' ? 'No reading yet' : '尚未生成解读'}
+          title={tx('尚未生成解读', 'No reading yet', lang)}
           body={
             lang === 'en'
               ? 'Tap generate — the reading unfolds in four sections, each citing its rule source.'
@@ -103,13 +103,13 @@ export function AiScreen(): JSX.Element {
           }
           action={
             <Btn variant="gold" onClick={() => void generateAi()}>
-              {t('ai.gen', lang)} · {lang === 'en' ? 'uses 1' : '扣 1 次'}
+              {t('ai.gen', lang)} · {tx('扣 1 次', 'uses 1', lang)}
             </Btn>
           }
         />
       ) : (
         <div className="aipay">
-          <div className="ap-t">{lang === 'en' ? 'Monthly quota used up' : '本月 3 次已用完'}</div>
+          <div className="ap-t">{tx('本月 3 次已用完', 'Monthly quota used up', lang)}</div>
           <div className="ap-s">
             {lang === 'en' ? (
               <>
@@ -134,8 +134,8 @@ export function AiScreen(): JSX.Element {
       {followups.map((m, i) => (
         <div className="aicard" key={`f${i}`}>
           <div className="ai-h">
-            <b>{lang === 'en' ? 'Follow-up' : '追问'}</b>
-            <span>{lang === 'en' ? 'Q' : '问'}</span>
+            <b>{tx('追问', 'Follow-up', lang)}</b>
+            <span>{tx('问', 'Q', lang)}</span>
           </div>
           <div className="ai-p" style={{ color: 'var(--muted)', fontSize: 10.5, marginBottom: 7 }}>
             {m.q}
@@ -147,7 +147,7 @@ export function AiScreen(): JSX.Element {
       {aiSections.length === 4 && (
         <>
           <div className="rule-h">
-            <span>{lang === 'en' ? 'Follow-up' : '追问'}</span>
+            <span>{tx('追问', 'Follow-up', lang)}</span>
             <i />
           </div>
           <div className="aichips">
@@ -173,14 +173,14 @@ export function AiScreen(): JSX.Element {
             <input
               type="text"
               value={q}
-              placeholder={lang === 'en' ? 'Ask about this lesson, e.g. “door faces west?”' : '就这一课继续问，如「门朝西有影响吗」'}
+              placeholder={tx('就这一课继续问，如「门朝西有影响吗」', 'Ask about this lesson, e.g. “door faces west?”', lang)}
               onChange={(e) => setQ(e.target.value)}
             />
             <button
               type="button"
               aria-label="send"
               onClick={() => {
-                const question = q.trim() || (lang === 'en' ? 'Anything else to note?' : '这一课还有别的要注意的吗');
+                const question = q.trim() || (tx('这一课还有别的要注意的吗', 'Anything else to note?', lang));
                 if (left <= 0) {
                   showToast(t('ai.noQuota', lang));
                   push('pay');

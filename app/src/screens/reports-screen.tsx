@@ -7,7 +7,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { eventByKey } from '../data/events';
-import { t, termText, isoDate } from '../i18n';
+import { t, isoDate, termText, tx } from '../i18n';
 import { Btn, Chip, EmptyState, Seg } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -33,14 +33,14 @@ export function ReportsScreen(): JSX.Element {
       <AppBar title={t('reports.title', lang)} actions={<IconBtn name="grid" onClick={() => openSheet('guide')} />} />
       <h2 className="tt">
         {t('reports.title', lang)}
-        <small>{lang === 'en' ? 'Every lesson is archived — next year’s expansion reuses it.' : '每一课都留档——同一家店，明年扩店还会再用一次。'}</small>
+        <small>{tx('每一课都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
       </h2>
 
       <Seg
         options={[
           { value: 'all', label: t('common.all', lang) },
-          { value: 'done', label: lang === 'en' ? 'Issued' : '已出具' },
-          { value: 'wait', label: lang === 'en' ? 'No usable' : '待解锁' },
+          { value: 'done', label: tx('已出具', 'Issued', lang) },
+          { value: 'wait', label: tx('待解锁', 'No usable', lang) },
         ]}
         value={tab}
         onChange={setTab}
@@ -52,19 +52,19 @@ export function ReportsScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.reduce((n, r) => n + r.result.usable.length, 0)}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{lang === 'en' ? 'usable days' : '可用之日'}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('可用之日', 'usable days', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{lang === 'en' ? 'lessons' : '历史课期'}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史课期', 'lessons', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {quota.unlimited ? '∞' : quota.freeLeft}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{lang === 'en' ? 'AI left' : 'AI 解读余次'}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('AI 解读余次', 'AI left', lang)}</div>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function ReportsScreen(): JSX.Element {
           body={t('reports.emptyHint', lang)}
           action={
             <Btn variant="gold" onClick={() => push('event')}>
-              {lang === 'en' ? 'Start first lesson' : '起第一课'}
+              {tx('起第一课', 'Start first lesson', lang)}
             </Btn>
           }
         />
@@ -90,14 +90,14 @@ export function ReportsScreen(): JSX.Element {
               <div className="rd">
                 <b>{d.getDate()}</b>
                 <span>
-                  {d.getMonth() + 1} {lang === 'en' ? '' : '月'}
+                  {d.getMonth() + 1} {tx('月', '', lang)}
                 </span>
               </div>
               <div className="rb">
                 <b>{r.title}</b>
                 <span>
                   {termText(ev.name, lang)} · {t('reports.createdAt', lang, { date: isoDate({ y: d.getFullYear(), m: d.getMonth() + 1, d: d.getDate() }) })} ·{' '}
-                  {top ? `${lang === 'en' ? 'best ' : '首选 '}${top.score}` : t('result.noneTitle', lang)}
+                  {top ? `${tx('首选 ', 'best ', lang)}${top.score}` : t('result.noneTitle', lang)}
                 </span>
               </div>
               <button
@@ -116,7 +116,7 @@ export function ReportsScreen(): JSX.Element {
       )}
 
       <div className="rule-h">
-        <span>{lang === 'en' ? 'Reminders' : '提醒'}</span>
+        <span>{tx('提醒', 'Reminders', lang)}</span>
         <i />
       </div>
       <div className="card flat" role="button" tabIndex={0} style={{ cursor: 'pointer' }} onClick={() => push('remind')}>
@@ -125,8 +125,8 @@ export function ReportsScreen(): JSX.Element {
             <Icon name="clock" size={15} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 12, fontWeight: 700 }}>{lang === 'en' ? 'Countdown checklist' : '仪程倒排清单'}</div>
-            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{lang === 'en' ? 'by good hours, backwards' : '还有 6 项待办 · 按吉时倒排'}</div>
+            <div style={{ fontSize: 12, fontWeight: 700 }}>{tx('仪程倒排清单', 'Countdown checklist', lang)}</div>
+            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{tx('还有 6 项待办 · 按吉时倒排', 'by good hours, backwards', lang)}</div>
           </div>
           <Icon name="right" size={13} />
         </div>

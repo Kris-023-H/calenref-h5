@@ -8,7 +8,7 @@ import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { EVENTS, EVENT_GROUPS, GROUP_DESC, isBizEvent, isEngEvent, hasWuxingLayer, hasSitLayer } from '../data/events';
 import { industryById } from '../data/industries';
-import { t, termText } from '../i18n';
+import { t, termText, tx } from '../i18n';
 import { Chip, Btn } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { useNav } from './types';
@@ -46,7 +46,7 @@ export function EventScreen(): JSX.Element {
         }
       />
       <h2 className="tt">
-        {lang === 'en' ? 'What is the matter?' : '所办何事？'}
+        {tx('所办何事？', 'What is the matter?', lang)}
         <small>
           {lang === 'en'
             ? 'The matter decides which lesson set applies. The same day suits opening but not marrying.'
@@ -62,7 +62,7 @@ export function EventScreen(): JSX.Element {
               <b>{g}</b>
               <i />
               <span>
-                {list.length} {lang === 'en' ? 'items' : '项'}
+                {list.length} {tx('项', 'items', lang)}
               </span>
             </div>
             <div className="gd">{GROUP_DESC[g][lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}</div>
@@ -85,16 +85,16 @@ export function EventScreen(): JSX.Element {
       })}
 
       <div className="rule-h">
-        <span>{lang === 'en' ? 'This lesson takes' : '本课取用'}</span>
+        <span>{tx('本课取用', 'This lesson takes', lang)}</span>
         <i />
       </div>
       <div className="card flat">
         <div style={{ fontSize: 11.5, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {lang === 'en' ? 'Matter' : '用事'}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{ev.group}）
+          {tx('用事', 'Matter', lang)}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{ev.group}）
           <br />
           {t('event.needLabel', lang)}　{ev.need[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}
           <br />
-          {lang === 'en' ? 'Layers' : '课格'}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
+          {tx('课格', 'Layers', lang)}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
           <br />
           {t('event.actsLabel', lang)}　{ev.acts.map((a) => a[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']).join(' → ')}
           {ev.twoPerson && (
@@ -108,7 +108,7 @@ export function EventScreen(): JSX.Element {
 
       <div className="ctabar">
         <Btn block onClick={() => push('info')}>
-          {t('nav.next', lang)} · {lang === 'en' ? 'enter pillars' : '录当事人四柱'}
+          {t('nav.next', lang)} · {tx('录当事人四柱', 'enter pillars', lang)}
         </Btn>
       </div>
     </div>

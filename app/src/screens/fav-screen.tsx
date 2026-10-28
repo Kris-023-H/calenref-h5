@@ -9,7 +9,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { KB_ARTICLES } from '../data/kb';
-import { t, termText, isoDate, gradeText } from '../i18n';
+import { t, gradeText, isoDate, termText, tx } from '../i18n';
 import { Btn, Chip, EmptyState, Seg } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -98,7 +98,7 @@ export function FavScreen(): JSX.Element {
               >
                 <div className="rd" style={{ background: 'var(--teal)' }}>
                   <b>文</b>
-                  <span>{lang === 'en' ? 'ART' : '文章'}</span>
+                  <span>{tx('文章', 'ART', lang)}</span>
                 </div>
                 <div className="rb">
                   <b>{f.articleTitle ?? KB_ARTICLES.find((a) => String(a.id) === f.refId)?.title[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh'] ?? t('common.unknown', lang)}</b>
@@ -122,7 +122,7 @@ export function FavScreen(): JSX.Element {
                 <div className="rb">
                   <b>
                     {f.snapshot?.dayGZ ?? t('common.unknown', lang)}
-                    {lang === 'en' ? ' Day' : '日'}
+                    {tx('日', ' Day', lang)}
                   </b>
                   <span>
                     {f.eventKey ? termText(`term.ev.${f.eventKey}`, lang) : f.snapshot?.eventName ?? ''}
@@ -143,7 +143,7 @@ export function FavScreen(): JSX.Element {
 
       <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 16, lineHeight: 1.7 }}>
         <Icon name="shield" size={11} />
-        {lang === 'en' ? 'Favorites live on this device only.' : '收藏仅存本机，不随账户同步。'}
+        {tx('收藏仅存本机，不随账户同步。', 'Favorites live on this device only.', lang)}
       </div>
       <div style={{ height: 8 }} />
     </div>

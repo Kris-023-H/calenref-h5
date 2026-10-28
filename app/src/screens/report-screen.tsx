@@ -14,7 +14,7 @@ import { readPerson } from '../engine/person';
 import { fourPillarsOf } from '../engine/pillars';
 import { addDays } from '../engine/calendar/julian';
 import { ZHI, MONTH_NAME } from '../engine/calendar/sexagenary';
-import { t, termText, hardReasonText, layerName, layerResultText, jianchuName, isoDate } from '../i18n';
+import { t, hardReasonText, isoDate, jianchuName, layerName, layerResultText, termText, tx } from '../i18n';
 import { RULE_VERSION } from '../engine/types';
 import { Ring, Chip, Btn, EmptyState, Bar } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
@@ -74,7 +74,7 @@ export function ReportScreen(): JSX.Element {
         onBack={() => pop()}
         actions={
           <>
-            <IconBtn name="down" label={lang === 'en' ? 'Export' : '导出'} onClick={() => showToast(lang === 'en' ? 'Document exported' : '已导出文档')} />
+            <IconBtn name="down" label={tx('导出', 'Export', lang)} onClick={() => showToast(tx('已导出文档', 'Document exported', lang))} />
             <IconBtn name="share" label={t('share.title', lang)} onClick={() => openSheet('share')} />
           </>
         }
@@ -88,33 +88,33 @@ export function ReportScreen(): JSX.Element {
           </div>
           <div className="serif" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.4, margin: '2px 0 4px' }}>
             {termText(ev.name, lang)}
-            {lang === 'en' ? ' lesson report' : '课期报告'}
+            {tx('课期报告', ' lesson report', lang)}
           </div>
           <div style={{ fontSize: 11, color: 'var(--gold-2)', letterSpacing: '.1em', marginBottom: 10 }}>
             {termText(ind.name, lang)} ／ {termText(ind.category, lang)}
           </div>
           <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.9 }}>
-            {lang === 'en' ? 'Subjects' : '当事人'}　
+            {tx('当事人', 'Subjects', lang)}　
             {readings.length > 0
-              ? readings.map((r) => `${r.name}（${r.zodiac}${lang === 'en' ? ' · ' : '年·'}${r.trueTime}）`).join('　')
-              : `${t('scan.generic', lang)} · ${lang === 'en' ? 'no pillars' : '未录四柱'}`}
+              ? readings.map((r) => `${r.name}（${r.zodiac}${tx('年·', ' · ', lang)}${r.trueTime}）`).join('　')
+              : `${t('scan.generic', lang)} · ${tx('未录四柱', 'no pillars', lang)}`}
             <br />
-            {lang === 'en' ? 'Window' : '课期'}　　{startIso} — {endIso}（{s.total} {lang === 'en' ? 'days' : '天'}）
+            {tx('课期', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
             <br />
-            {lang === 'en' ? 'Facing' : '坐向'}　　{ZHI[sit.zhi]}
-            {lang === 'en' ? ' mountain' : '山'}
+            {tx('坐向', 'Facing', lang)}　　{ZHI[sit.zhi]}
+            {tx('山', ' mountain', lang)}
           </div>
           <div className="dh-meta">
             <span>
-              {lang === 'en' ? 'usable ' : '可用 '}
-              {list.length} {lang === 'en' ? '' : '日'}
+              {tx('可用 ', 'usable ', lang)}
+              {list.length} {tx('日', '', lang)}
             </span>
             <span>
-              {lang === 'en' ? 'excluded ' : '出局 '}
-              {s.total - list.length} {lang === 'en' ? '' : '日'}
+              {tx('出局 ', 'excluded ', lang)}
+              {s.total - list.length} {tx('日', '', lang)}
             </span>
             <span>
-              {lang === 'en' ? 'first ' : '首选 '}
+              {tx('首选 ', 'first ', lang)}
               {dottedDate(top.date)}
             </span>
           </div>
@@ -122,13 +122,13 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 一 结论 */}
-      <SectionHead index="一" title={t('report.ch1', lang)} note={lang === 'en' ? 'first & alternates' : '首选与备选'} />
+      <SectionHead index="一" title={t('report.ch1', lang)} note={tx('首选与备选', 'first & alternates', lang)} />
       <div className="card" style={{ borderColor: 'rgba(175,137,62,.5)', background: 'linear-gradient(178deg,#FFFBF0,var(--paper-2))' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <Ring value={top.score} />
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 9, letterSpacing: '.2em', color: 'var(--gold)', fontWeight: 700 }}>
-              {lang === 'en' ? 'FIRST CHOICE · ' : '首 选 课 · '}
+              {tx('首 选 课 · ', 'FIRST CHOICE · ', lang)}
               {gradeLabel(top.score, lang)}
             </div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700, margin: '3px 0 2px' }}>
@@ -136,10 +136,10 @@ export function ReportScreen(): JSX.Element {
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>
               {top.dayGZ.text}
-              {lang === 'en' ? ' Day' : '日'} · {jianchuName(top.jianchu, lang)}
-              {lang === 'en' ? ' Day' : '日'} · {lang === 'en' ? 'hour ' : '吉时 '}
+              {tx('日', ' Day', lang)} · {jianchuName(top.jianchu, lang)}
+              {tx('日', ' Day', lang)} · {tx('吉时 ', 'hour ', lang)}
               {top.goodHours[0]?.name ?? '—'}
-              {lang === 'en' ? '' : '时'}
+              {tx('时', '', lang)}
             </div>
           </div>
         </div>
@@ -149,7 +149,7 @@ export function ReportScreen(): JSX.Element {
             .slice(0, 3)
             .map((l) => `「${layerName(l.key, lang)}·${layerResultText(l, lang)}」`)
             .join('　')}
-          。{lang === 'en' ? 'All three schools agree in direction: usable.' : '三派结论方向一致，可用。'}
+          。{tx('三派结论方向一致，可用。', 'All three schools agree in direction: usable.', lang)}
         </div>
       </div>
       {list.length > 1 && (
@@ -169,16 +169,16 @@ export function ReportScreen(): JSX.Element {
       )}
 
       {/* 二 用事与取用 */}
-      <SectionHead index="二" title={t('report.ch3', lang)} note={lang === 'en' ? 'variables' : '取用变量'} />
+      <SectionHead index="二" title={t('report.ch3', lang)} note={tx('取用变量', 'variables', lang)} />
       <div className="rtab">
         <div className="rtab-row">
-          <div>{lang === 'en' ? 'Matter' : '用事'}</div>
+          <div>{tx('用事', 'Matter', lang)}</div>
           <div>
             <b>{termText(ev.name, lang)}</b>（{ev.group}）
           </div>
         </div>
         <div className="rtab-row">
-          <div>{lang === 'en' ? 'Trade' : '业态'}</div>
+          <div>{tx('业态', 'Trade', lang)}</div>
           <div>
             <b>{termText(ind.name, lang)}</b>　{ind.subs[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}
           </div>
@@ -206,18 +206,18 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 三 四柱 */}
-      <SectionHead index="三" title={t('report.ch4', lang)} note={lang === 'en' ? 'pillars' : '四柱排布'} />
+      <SectionHead index="三" title={t('report.ch4', lang)} note={tx('四柱排布', 'pillars', lang)} />
       <div className="rtab">
         <div className="rtab-row">
           <div>{t('detail.pillarYear', lang)}</div>
           <div>
-            <b>{fp.year}</b>　{lang === 'en' ? 'year' : '岁次'}
+            <b>{fp.year}</b>　{tx('岁次', 'year', lang)}
           </div>
         </div>
         <div className="rtab-row">
           <div>{t('detail.pillarMonth', lang)}</div>
           <div>
-            <b>{fp.month}</b>　{lang === 'en' ? 'month ' : '月建 '}
+            <b>{fp.month}</b>　{tx('月建 ', 'month ', lang)}
             {ZHI[top.monthZhi]}（{MONTH_NAME[top.monthZhi]}）
           </div>
         </div>
@@ -225,15 +225,15 @@ export function ReportScreen(): JSX.Element {
           <div>{t('detail.pillarDay', lang)}</div>
           <div>
             <b>{fp.day}</b>　{jianchuName(top.jianchu, lang)}
-            {lang === 'en' ? ' day' : '日'}
+            {tx('日', ' day', lang)}
           </div>
         </div>
         <div className="rtab-row">
           <div>{t('detail.pillarHour', lang)}</div>
           <div>
-            <b>{fp.hour}</b>　{lang === 'en' ? 'first hour ' : '首选吉时 '}
+            <b>{fp.hour}</b>　{tx('首选吉时 ', 'first hour ', lang)}
             {top.goodHours[0]?.name ?? '—'}
-            {lang === 'en' ? `（${top.goodHours[0]?.range ?? ''}）` : `时（${top.goodHours[0]?.range ?? ''}）`}
+            {tx(`时（${top.goodHours[0]?.range ?? ''}）`, `（${top.goodHours[0]?.range ?? ''}）`, lang)}
           </div>
         </div>
         <div className="rtab-row">
@@ -245,7 +245,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 四 可用清单 */}
-      <SectionHead index="四" title={lang === 'en' ? 'Usable days' : '可用课期清单'} note={`${list.length} ${lang === 'en' ? 'days' : '日'}`} />
+      <SectionHead index="四" title={tx('可用课期清单', 'Usable days', lang)} note={`${list.length} ${tx('日', 'days', lang)}`} />
       {list.slice(0, 8).map((d, i) => (
         <div key={dottedDate(d.date)} className="rrow" role="button" tabIndex={0} onClick={() => { push('detail'); }}>
           <div className="rrd">
@@ -255,13 +255,13 @@ export function ReportScreen(): JSX.Element {
           <div className="rri">
             <b>
               {d.dayGZ.text}
-              {lang === 'en' ? ' Day' : '日'} · {jianchuName(d.jianchu, lang)}
-              {lang === 'en' ? ' Day' : '日'}
+              {tx('日', ' Day', lang)} · {jianchuName(d.jianchu, lang)}
+              {tx('日', ' Day', lang)}
             </b>
             <span>
-              {lang === 'en' ? 'hour ' : '吉时 '}
+              {tx('吉时 ', 'hour ', lang)}
               {d.goodHours[0]?.name ?? '—'}
-              {lang === 'en' ? '' : '时'} · {gradeLabel(d.score, lang)}
+              {tx('时', '', lang)} · {gradeLabel(d.score, lang)}
             </span>
           </div>
           <div className="rrp">
@@ -273,19 +273,19 @@ export function ReportScreen(): JSX.Element {
       ))}
       {list.length > 8 && (
         <div className="hint" style={{ fontSize: 10, textAlign: 'center' }}>
-          {lang === 'en' ? `${list.length - 8} more in the appendix (score desc)` : `其余 ${list.length - 8} 日见附录（按课格降序）`}
+          {tx(`其余 ${list.length - 8} 日见附录（按课格降序）`, `${list.length - 8} more in the appendix (score desc)`, lang)}
         </div>
       )}
 
       {/* 五 出局归因 */}
-      <SectionHead index="五" title={lang === 'en' ? 'Exclusion attribution' : '出局归因'} note={lang === 'en' ? 'screening' : '筛选过程'} />
+      <SectionHead index="五" title={tx('出局归因', 'Exclusion attribution', lang)} note={tx('筛选过程', 'screening', lang)} />
       <div className="card flat">
         {Object.entries(s.byReason).map(([k, n]) => (
           <div key={k} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '7px 0', borderBottom: '1px solid var(--line-2)' }}>
             <Chip tone={k === 'reason.scoreLow' ? 'plain' : 'verm'} style={{ flex: '0 0 auto' }}>
               {reasonLabel(k, lang)}
             </Chip>
-            <span style={{ flex: 1, fontSize: 10.5, color: 'var(--muted)' }}>{lang === 'en' ? 'days' : '天'}</span>
+            <span style={{ flex: 1, fontSize: 10.5, color: 'var(--muted)' }}>{tx('天', 'days', lang)}</span>
             <b className="serif" style={{ fontSize: 14 }}>
               {n}
             </b>
@@ -299,7 +299,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 六 动作时点 */}
-      <SectionHead index="六" title={lang === 'en' ? 'Key action hours' : '关键动作时点'} note={lang === 'en' ? 'good hours' : '吉时落点'} />
+      <SectionHead index="六" title={tx('关键动作时点', 'Key action hours', lang)} note={tx('吉时落点', 'good hours', lang)} />
       <div className="acts">
         {ev.acts.map((a, i) => {
           const h = top.goodHours[i] ?? top.goodHours[0] ?? top.hours[0];
@@ -308,7 +308,7 @@ export function ReportScreen(): JSX.Element {
               <b>{a[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}</b>
               <span>
                 {dottedDate(top.date)}　{h?.name ?? '—'}
-                {lang === 'en' ? `（${h?.range ?? ''}）` : `时（${h?.range ?? ''}）`}　{i === 0 ? (lang === 'en' ? 'first' : '首取') : lang === 'en' ? 'next' : '次取'}
+                {tx(`时（${h?.range ?? ''}）`, `（${h?.range ?? ''}）`, lang)}　{i === 0 ? (tx('首取', 'first', lang)) : tx('次取', 'next', lang)}
               </span>
             </div>
           );
@@ -321,17 +321,17 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 七 节奏 */}
-      <SectionHead index="七" title={lang === 'en' ? 'First-month rhythm' : '开市首月节奏'} note={lang === 'en' ? '90 days' : '九十日'} />
+      <SectionHead index="七" title={tx('开市首月节奏', 'First-month rhythm', lang)} note={tx('九十日', '90 days', lang)} />
       <div className="rhythm">
         {[
-          ['D1', lang === 'en' ? 'Open' : '开市', lang === 'en' ? 'first guest' : '首客 · 首单'],
-          ['D3', lang === 'en' ? 'Settle' : '稳客', lang === 'en' ? 'repeat & revisit' : '复购与回访'],
-          ['D7', lang === 'en' ? 'Review' : '小结', lang === 'en' ? 'week-one data' : '首周数据复盘'],
-          ['D15', lang === 'en' ? 'Adjust' : '调整', lang === 'en' ? 'flow & roster' : '动线与排班'],
-          ['D30', lang === 'en' ? 'Close' : '定盘', lang === 'en' ? 'monthly settle' : '月度结算'],
-          ['D45', lang === 'en' ? 'Expand' : '扩客', lang === 'en' ? 'first ads' : '首轮投放'],
-          ['D60', lang === 'en' ? 'Stock' : '固本', lang === 'en' ? 'supply & stock' : '供应与库存'],
-          ['D90', lang === 'en' ? 'Re-run' : '再课', lang === 'en' ? 'expansion' : '扩店或二店'],
+          ['D1', tx('开市', 'Open', lang), tx('首客 · 首单', 'first guest', lang)],
+          ['D3', tx('稳客', 'Settle', lang), tx('复购与回访', 'repeat & revisit', lang)],
+          ['D7', tx('小结', 'Review', lang), tx('首周数据复盘', 'week-one data', lang)],
+          ['D15', tx('调整', 'Adjust', lang), tx('动线与排班', 'flow & roster', lang)],
+          ['D30', tx('定盘', 'Close', lang), tx('月度结算', 'monthly settle', lang)],
+          ['D45', tx('扩客', 'Expand', lang), tx('首轮投放', 'first ads', lang)],
+          ['D60', tx('固本', 'Stock', lang), tx('供应与库存', 'supply & stock', lang)],
+          ['D90', tx('再课', 'Re-run', lang), tx('扩店或二店', 'expansion', lang)],
         ].map((x) => (
           <div key={x[0]}>
             <em>{x[0]}</em>
@@ -347,7 +347,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 八 AI */}
-      <SectionHead index="八" title={lang === 'en' ? 'AI reading' : 'AI 解读'} note={lang === 'en' ? 'limited' : '限次解读'} />
+      <SectionHead index="八" title={tx('AI 解读', 'AI reading', lang)} note={tx('限次解读', 'limited', lang)} />
       {aiSections.length === 4 ? (
         <>
           <div className="aicard">
@@ -358,7 +358,7 @@ export function ReportScreen(): JSX.Element {
             <div className="ai-p" dangerouslySetInnerHTML={{ __html: aiSections[0] }} />
           </div>
           <Btn variant="ghost" onClick={() => push('ai')}>
-            {lang === 'en' ? 'Full reading & follow-ups' : '查看完整解读'}
+            {tx('查看完整解读', 'Full reading & follow-ups', lang)}
           </Btn>
         </>
       ) : (
@@ -368,19 +368,19 @@ export function ReportScreen(): JSX.Element {
               <Icon name="ai" size={14} />
             </div>
             <div className="ab-t">
-              <b>{lang === 'en' ? 'AI reads this lesson' : 'AI 解读本课'}</b>
-              <span>{lang === 'en' ? 'cites rules · askable · 3/month' : '引规则出处 · 可追问 · 每月 3 次'}</span>
+              <b>{tx('AI 解读本课', 'AI reads this lesson', lang)}</b>
+              <span>{tx('引规则出处 · 可追问 · 每月 3 次', 'cites rules · askable · 3/month', lang)}</span>
             </div>
             <div className="ab-q">{quotaLeft()}</div>
           </div>
           <Btn variant="gold" onClick={() => push('ai')}>
-            {lang === 'en' ? 'Generate reading' : '生成 AI 解读'}
+            {tx('生成 AI 解读', 'Generate reading', lang)}
           </Btn>
         </>
       )}
 
       {/* 九 附则 */}
-      <SectionHead index="九" title={t('report.ch9', lang)} note={lang === 'en' ? 'boundaries' : '边界声明'} />
+      <SectionHead index="九" title={t('report.ch9', lang)} note={tx('边界声明', 'boundaries', lang)} />
       <div className="card flat">
         <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.85 }}>
           {lang === 'en'
@@ -391,10 +391,10 @@ export function ReportScreen(): JSX.Element {
 
       <div className="card lacquer" style={{ marginTop: 14, cursor: 'pointer' }} role="button" tabIndex={0} onClick={() => openSheet('elder')}>
         <div style={{ fontSize: 9, letterSpacing: '.2em', color: 'var(--gold-2)', fontWeight: 700, marginBottom: 5 }}>
-          {lang === 'en' ? 'APPENDIX · BASIS EXCERPT' : '附 · 依据摘录（呈长辈）'}
+          {tx('附 · 依据摘录（呈长辈）', 'APPENDIX · BASIS EXCERPT', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14, fontWeight: 700 }}>
-          {lang === 'en' ? 'Three verifiable sources, forwardable' : '三条可核的出处，可直接转发'}
+          {tx('三条可核的出处，可直接转发', 'Three verifiable sources, forwardable', lang)}
         </div>
       </div>
 
@@ -403,7 +403,7 @@ export function ReportScreen(): JSX.Element {
           ? 'Compiled per the Xieji Bianfang Shu and Xingli Kaoyuan, with trade references from the Yingzao Fashi and Tiangong Kaiwu. Traditional folk reference only — no guarantee of outcomes, no medical or investment advice.'
           : '本报告依《协纪辨方书》《星历考原》取用次第，参《营造法式》《鲁班经匠家镜》《天工开物》等行业专书，属传统民俗参考，不构成任何结果保证，不涉及医疗与投资建议。'}
         <br />
-        {t('app.ruleVersion', lang)} {RULE_VERSION} ／ {lang === 'en' ? 'issued ' : '出具于 '}
+        {t('app.ruleVersion', lang)} {RULE_VERSION} ／ {tx('出具于 ', 'issued ', lang)}
         {new Date().getFullYear()}.{String(new Date().getMonth() + 1).padStart(2, '0')}.{String(new Date().getDate()).padStart(2, '0')}
       </div>
 
@@ -442,6 +442,6 @@ export function ReportScreen(): JSX.Element {
 
 function reasonLabel(key: string, lang: Lang): string {
   if (key.startsWith('hard.')) return hardReasonText(key.slice(5) as 'yuepo', lang);
-  if (key === 'reason.scoreLow') return lang === 'en' ? 'score below threshold' : '评分不足';
+  if (key === 'reason.scoreLow') return tx('评分不足', 'score below threshold', lang);
   return key;
 }

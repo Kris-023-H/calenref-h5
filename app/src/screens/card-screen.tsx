@@ -11,7 +11,7 @@ import { industryById } from '../data/industries';
 import { sitByKey } from '../data/sits';
 import { fourPillarsOf } from '../engine/pillars';
 import { ZHI } from '../engine/calendar/sexagenary';
-import { t, termText } from '../i18n';
+import { t, termText, tx } from '../i18n';
 import { Btn, Chip } from '../components/basics';
 import { AppBar } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -52,24 +52,24 @@ export function CardScreen(): JSX.Element {
     eventName: termText(ev.name, lang),
     industryName: termText(ind.name, lang),
     pillars: fp,
-    sitDeg: `${ZHI[sit.zhi]}${lang === 'en' ? ' mountain' : '山'}`,
+    sitDeg: `${ZHI[sit.zhi]}${tx('山', ' mountain', lang)}`,
     hourName: hour?.name ?? '—',
     hourRange: hour?.range ?? '',
     lang,
   };
 
   const shareTargets: Array<{ key: string; label: string; sub: string }> = [
-    { key: 'image', label: lang === 'en' ? 'Save image' : '存为图片', sub: '1080 × 1440' },
-    { key: 'social', label: lang === 'en' ? 'Share to social' : '转发至社交平台', sub: lang === 'en' ? 'reels · feed · notes · chat' : '短视频 · 图文社区 · 笔记 · 微信' },
-    { key: 'landing', label: lang === 'en' ? 'Preview recipient view' : '预览「受帖者」所见', sub: lang === 'en' ? 'landing page' : '落地页 · 转化入口' },
+    { key: 'image', label: tx('存为图片', 'Save image', lang), sub: '1080 × 1440' },
+    { key: 'social', label: tx('转发至社交平台', 'Share to social', lang), sub: tx('短视频 · 图文社区 · 笔记 · 微信', 'reels · feed · notes · chat', lang) },
+    { key: 'landing', label: tx('预览「受帖者」所见', 'Preview recipient view', lang), sub: tx('落地页 · 转化入口', 'landing page', lang) },
   ];
 
   return (
     <div className="screen">
-      <AppBar title={t('card.title', lang)} onBack={() => pop()} actions={<Chip>5 {lang === 'en' ? 'themes' : '版式'}</Chip>} />
+      <AppBar title={t('card.title', lang)} onBack={() => pop()} actions={<Chip>5 {tx('版式', 'themes', lang)}</Chip>} />
       <h2 className="tt">
-        {lang === 'en' ? 'A card you can pass on' : '一纸可传的课帖'}
-        <small>{lang === 'en' ? 'Whoever receives it can find their own day too.' : '一纸可传，收到帖的人也能排自己的那一天。'}</small>
+        {tx('一纸可传的课帖', 'A card you can pass on', lang)}
+        <small>{tx('一纸可传，收到帖的人也能排自己的那一天。', 'Whoever receives it can find their own day too.', lang)}</small>
       </h2>
 
       <div className="seg" style={{ marginBottom: 14 }}>
@@ -91,8 +91,8 @@ export function CardScreen(): JSX.Element {
       </div>
 
       <div className="sect">
-        <h3>{lang === 'en' ? 'Send the card' : '传帖'}</h3>
-        <em>{lang === 'en' ? '3 exits' : '五个出口'}</em>
+        <h3>{tx('传帖', 'Send the card', lang)}</h3>
+        <em>{tx('五个出口', '3 exits', lang)}</em>
       </div>
       <div className="menu">
         {shareTargets.map((x) => (
@@ -140,7 +140,7 @@ export function CardScreen(): JSX.Element {
           </div>
           <div className="mib">
             {t('share.copyLink', lang)}
-            <small>{lang === 'en' ? 'landing page URL' : '落地页链接'}</small>
+            <small>{tx('落地页链接', 'landing page URL', lang)}</small>
           </div>
           <Icon name="right" size={12} />
         </div>
@@ -148,7 +148,7 @@ export function CardScreen(): JSX.Element {
 
       <div style={{ height: 12 }} />
       <Btn variant="ghost" block onClick={() => push('pay')}>
-        {t('pay.upgrade', lang)} · {lang === 'en' ? 'remove watermark' : '课帖去印记'}
+        {t('pay.upgrade', lang)} · {tx('课帖去印记', 'remove watermark', lang)}
       </Btn>
     </div>
   );

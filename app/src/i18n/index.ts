@@ -7,7 +7,7 @@
 export type { MsgKey } from './zh';
 export type { TermKey, GlossaryEntry } from './glossary';
 export { GLOSSARY, termOf, termText } from './glossary';
-export { t, fill, weekdayName, calPrefLabel, yearLabel, isoDate, localDate, shortDate, offsetMinText, bytesText } from './format';
+export { t, tx, fill, weekdayName, calPrefLabel, yearLabel, isoDate, localDate, shortDate, offsetMinText, bytesText } from './format';
 export type { CalPref } from './format';
 export {
   layerName,

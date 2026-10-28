@@ -11,7 +11,7 @@ import { eventByKey } from '../data/events';
 import { formatPrice } from '../data/prices';
 import { dayOfWeek, gregorianToJDN } from '../engine/calendar/julian';
 import { termIndexOfDate } from '../engine/calendar/solar-terms';
-import { t, termText, hardReasonText, layerName, layerResultText, jianchuName } from '../i18n';
+import { t, hardReasonText, jianchuName, layerName, layerResultText, termText, tx } from '../i18n';
 import { Btn, Chip, EmptyState } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -57,9 +57,9 @@ export function ResultScreen(): JSX.Element {
 
   const filterItems = [
     { key: 'all', label: `${t('result.filterAll', lang)} ${s.usable.length}` },
-    { key: 'best', label: `${lang === 'en' ? 'Score ≥ 85' : '课格 ≥ 85'}` },
-    { key: 'weekend', label: lang === 'en' ? 'Weekend' : '仅周末' },
-    { key: 'hour', label: lang === 'en' ? 'Has hour' : '有合时' },
+    { key: 'best', label: `${tx('课格 ≥ 85', 'Score ≥ 85', lang)}` },
+    { key: 'weekend', label: tx('仅周末', 'Weekend', lang) },
+    { key: 'hour', label: tx('有合时', 'Has hour', lang) },
   ];
 
   const best = s.usable[0]?.score ?? 0;
@@ -79,13 +79,13 @@ export function ResultScreen(): JSX.Element {
 
       <div className="rhead">
         <h2 className="tt">
-          {s.total} {lang === 'en' ? 'days,' : '天课期，'}
-          {s.usable.length} {lang === 'en' ? 'usable' : '日可用'}
+          {s.total} {tx('天课期，', 'days,', lang)}
+          {s.usable.length} {tx('日可用', 'usable', lang)}
           <small>
-            {lang === 'en' ? `through ${layerCount} layers` : `通过 ${layerCount} 重`}
-            {s.generic ? (lang === 'en' ? ' (generic)' : '（通书口径）') : lang === 'en' ? ' (lesson)' : '（课格）'} ·{' '}
-            {lang === 'en' ? 'excluded ' : '已出局 '}
-            {s.total - s.usable.length} {lang === 'en' ? 'days' : '日'}
+            {tx(`通过 ${layerCount} 重`, `through ${layerCount} layers`, lang)}
+            {s.generic ? (tx('（通书口径）', ' (generic)', lang)) : tx('（课格）', ' (lesson)', lang)} ·{' '}
+            {tx('已出局 ', 'excluded ', lang)}
+            {s.total - s.usable.length} {tx('日', 'days', lang)}
           </small>
         </h2>
       </div>
@@ -106,17 +106,17 @@ export function ResultScreen(): JSX.Element {
           : Object.entries(byReason)
               .map(([k, n]) => `${reasonLabel(k, lang)} ${n}`)
               .join(' · ')}
-        。{lang === 'en' ? 'Excluded ≠ unlucky — it fails this lesson’s taking conditions.' : '出局不等于「不吉」，是不合本课格的取用条件。'}
+        。{tx('出局不等于「不吉」，是不合本课格的取用条件。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions.', lang)}
       </div>
 
       <ScrollX items={filterItems} activeKey={session.filter} onSelect={(k) => setFilter(k as typeof session.filter)} />
 
       <div style={{ display: 'flex', gap: 7, margin: '10px 0 12px' }}>
         <Btn variant={session.view === 'list' ? 'secondary' : 'ghost'} onClick={() => setView('list')} className="grow">
-          {lang === 'en' ? 'List' : '列表'}
+          {tx('列表', 'List', lang)}
         </Btn>
         <Btn variant={session.view === 'cal' ? 'secondary' : 'ghost'} onClick={() => setView('cal')} className="grow">
-          {lang === 'en' ? 'Calendar' : '历表'}
+          {tx('历表', 'Calendar', lang)}
         </Btn>
       </div>
 
@@ -129,10 +129,10 @@ export function ResultScreen(): JSX.Element {
             action={
               <>
                 <Btn variant="ghost" onClick={() => push('info')}>
-                  {lang === 'en' ? 'Change conditions' : '改课期条件'}
+                  {tx('改课期条件', 'Change conditions', lang)}
                 </Btn>
                 <Btn variant="ghost" onClick={() => setDraftGeneric()}>
-                  {lang === 'en' ? 'Try generic' : '换宗派再看'}
+                  {tx('换宗派再看', 'Try generic', lang)}
                 </Btn>
               </>
             }
@@ -144,7 +144,7 @@ export function ResultScreen(): JSX.Element {
             ))}
             {items.length > 12 && (
               <div className="hint" style={{ textAlign: 'center', marginTop: 10 }}>
-                {lang === 'en' ? `${items.length - 12} more in the full report` : `另有 ${items.length - 12} 日，完整清单见课期报告`}
+                {tx(`另有 ${items.length - 12} 日，完整清单见课期报告`, `${items.length - 12} more in the full report`, lang)}
               </div>
             )}
           </>
@@ -166,10 +166,10 @@ export function ResultScreen(): JSX.Element {
       <div className="ctabar">
         <div className="btn-row">
           <Btn variant="ghost" style={{ flex: '0 0 40%' }} onClick={() => push('info')}>
-            {lang === 'en' ? 'Conditions' : '改条件'}
+            {tx('改条件', 'Conditions', lang)}
           </Btn>
           <Btn variant="gold" onClick={() => push('pay')}>
-            {lang === 'en' ? 'Issue report' : '出具课期报告'} · {formatPrice('once', currency)}
+            {tx('出具课期报告', 'Issue report', lang)} · {formatPrice('once', currency)}
           </Btn>
         </div>
       </div>
@@ -184,7 +184,7 @@ export function ResultScreen(): JSX.Element {
 
 function reasonLabel(key: string, lang: Lang): string {
   if (key.startsWith('hard.')) return hardReasonText(key.slice(5) as HardReason, lang);
-  if (key === 'reason.scoreLow') return lang === 'en' ? 'score below threshold' : '评分不足';
+  if (key === 'reason.scoreLow') return tx('评分不足', 'score below threshold', lang);
   return key;
 }
 
@@ -209,27 +209,27 @@ function DayCard({
   return (
     <div className={`daycard${isTop ? ' top' : ''}`} role="button" tabIndex={0} onClick={onOpen} onKeyDown={(e) => e.key === 'Enter' && onOpen()}>
       <div className="dr1">
-        <span className="rk">{isTop ? (lang === 'en' ? 'FIRST' : '首 选') : `${lang === 'en' ? 'ALT ' : '备选 '}${rank}`}</span>
+        <span className="rk">{isTop ? (tx('首 选', 'FIRST', lang)) : `${tx('备选 ', 'ALT ', lang)}${rank}`}</span>
         <span className="dd">
           {monthDay(day.date, lang)}
           <em>{weekdayShort(day.weekday, lang)}</em>
         </span>
         <span className="dgz">
           {day.dayGZ.text}
-          {lang === 'en' ? ' · ' : '日 · '}
+          {tx('日 · ', ' · ', lang)}
           {jianchuName(day.jianchu, lang)}
-          {lang === 'en' ? '' : '日'}
+          {tx('日', '', lang)}
         </span>
       </div>
       <div className="why">
         {gradeLabel(day.score, lang)} ／ {okLayers.slice(0, 2).map((l) => `${layerName(l.key, lang)}·${layerResultText(l, lang)}`).join('　')}　
-        {lang === 'en' ? 'hour ' : '吉时 '}
+        {tx('吉时 ', 'hour ', lang)}
         {day.goodHours[0]?.name ?? '—'}
-        {lang === 'en' ? '' : '时'}
+        {tx('时', '', lang)}
       </div>
       <div className="dmeta">
         <Chip tone={gradeTone(day.score)}>
-          {generic ? (lang === 'en' ? 'almanac ' : '通书分 ') : lang === 'en' ? 'lesson ' : '课格 '}
+          {generic ? (tx('通书分 ', 'almanac ', lang)) : tx('课格 ', 'lesson ', lang)}
           {day.score}
         </Chip>
         {okLayers.slice(0, 2).map((l) => (
@@ -276,8 +276,8 @@ function MonthCal({
       <div className="cal">
         <div className="ch">
           <b>
-            {shown.y} {lang === 'en' ? '' : '年 '}
-            {shown.m} {lang === 'en' ? '' : '月'}
+            {shown.y} {tx('年 ', '', lang)}
+            {shown.m} {tx('月', '', lang)}
           </b>
           <span style={{ fontSize: 9, letterSpacing: '.14em', color: 'var(--muted)' }}>
             {monthFullName(monthZhiOfMonth(shown))} · {monthZhiName(monthZhiOfMonth(shown))}
@@ -335,7 +335,7 @@ function MonthCal({
       </div>
       {monthOffset === 0 && (
         <div className="hint" style={{ textAlign: 'center', fontSize: 10.5 }}>
-          {lang === 'en' ? 'One more month →' : '后一个月 →'}
+          {tx('后一个月 →', 'One more month →', lang)}
         </div>
       )}
     </>

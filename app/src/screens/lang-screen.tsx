@@ -6,7 +6,7 @@
 
 import { useSettings } from '../store/settings-store';
 import { useUi } from '../store/ui-store';
-import { LANGS, LANG_SELF_NAME, t } from '../i18n';
+import { t, LANGS, LANG_SELF_NAME, tx } from '../i18n';
 import { calPrefLabel, type CalPref } from '../i18n/format';
 import { Btn, Seg } from '../components/basics';
 import { AppBar } from '../components/app-bar';
@@ -97,7 +97,7 @@ export function LangScreen(): JSX.Element {
 
       {/* ---------- 时区 ---------- */}
       <div className="rule-h">
-        <span>{lang === 'en' ? 'Time zone' : '时区'}</span>
+        <span>{tx('时区', 'Time zone', lang)}</span>
         <i />
       </div>
       <Seg options={TZ_OPTIONS.map((o) => ({ value: String(o.value), label: o.label }))} value={String(tz)} onChange={(v) => void setTz(Number(v))} />
@@ -112,7 +112,7 @@ export function LangScreen(): JSX.Element {
         {t('nav.done', lang)}
       </Btn>
       <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 10 }}>
-        {lang === 'en' ? `Current: ${LANG_SELF_NAME[lang]} · ${calPrefLabel(cal, lang)} · UTC${tz >= 0 ? '+' : ''}${tz}` : `当前：${LANG_SELF_NAME[lang]} · ${calPrefLabel(cal, lang)} · UTC${tz >= 0 ? '+' : ''}${tz}`}
+        {tx(`当前：${LANG_SELF_NAME[lang]} · ${calPrefLabel(cal, lang)} · UTC${tz >= 0 ? '+' : ''}${tz}`, `Current: ${LANG_SELF_NAME[lang]} · ${calPrefLabel(cal, lang)} · UTC${tz >= 0 ? '+' : ''}${tz}`, lang)}
       </div>
     </div>
   );

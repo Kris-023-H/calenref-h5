@@ -34,12 +34,32 @@ export interface Env {
   CREEM_API_BASE?: string;
   /** 站点根地址，用于拼 success_url；缺省取请求 origin */
   SITE_URL?: string;
+  /**
+   * 可选的按环境覆盖产品 ID。
+   * 生产用 src/data/prices.ts 里的默认值；测试 Worker 通过 [vars] 指向测试产品，
+   * 这样同一份构建产物可以同时服务两套环境，不必改代码。
+   */
+  CREEM_PRODUCT_ONCE?: string;
+  CREEM_PRODUCT_AI10?: string;
+  CREEM_PRODUCT_PAIR?: string;
+  CREEM_PRODUCT_YEAR?: string;
 }
 
 const SKU_SET = new Set<string>(['once', 'ai10', 'pair', 'year']);
 /** ref 形如 zj_ + 20 位十六进制；严格校验，防止拿它去扫 KV */
 const REF_RE = /^zj_[A-Za-z0-9]{8,64}$/;
 const ORDER_TTL = 60 * 60 * 24 * 7;
+
+/** 产品 ID：环境变量优先（测试环境），否则用 prices.ts 里的生产默认值 */
+function productIdFor(env: Env, sku: string): string | undefined {
+  const override: Record<string, string | undefined> = {
+    once: env.CREEM_PRODUCT_ONCE,
+    ai10: env.CREEM_PRODUCT_AI10,
+    pair: env.CREEM_PRODUCT_PAIR,
+    year: env.CREEM_PRODUCT_YEAR,
+  };
+  return override[sku] || CREEM_PRODUCTS[sku as keyof typeof CREEM_PRODUCTS];
+}
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -79,7 +99,7 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
   const sku = typeof body.sku === 'string' ? body.sku : '';
   if (!SKU_SET.has(sku)) return json({ error: 'bad_sku' }, 400);
 
-  const productId = CREEM_PRODUCTS[sku as keyof typeof CREEM_PRODUCTS];
+  const productId = productIdFor(env, sku);
   if (isPlaceholderProduct(productId)) return json({ error: 'product_not_configured' }, 503);
 
   const ref = `zj_${crypto.randomUUID().replace(/-/g, '').slice(0, 20)}`;

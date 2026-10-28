@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ZHI } from '../engine/calendar/sexagenary';
 import { GuibiaoLogo } from './icons';
-import { t } from '../i18n';
+import { t, tx } from '../i18n';
 import type { Lang } from '../engine/types';
 
 export function CompassIntro({
@@ -53,8 +53,8 @@ export function CompassIntro({
       <div className="brand">择 吉</div>
       <div className="sub">{t('app.slogan', lang)}</div>
       <div className="line" />
-      <div className="tap">{lang === 'en' ? 'Tap to enter' : '轻触进入'}</div>
-      <div className="foot">{lang === 'en' ? 'NE & SE Asia · Three-fold day selection' : '东北亚 · 东南亚 ／ 三元择日规则引擎'}</div>
+      <div className="tap">{tx('轻触进入', 'Tap to enter', lang)}</div>
+      <div className="foot">{tx('东北亚 · 东南亚 ／ 三元择日规则引擎', 'NE & SE Asia · Three-fold day selection', lang)}</div>
     </div>
   );
 }

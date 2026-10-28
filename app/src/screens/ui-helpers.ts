@@ -4,7 +4,7 @@
  */
 
 import type { CalDate, Lang, DayResult } from '../engine/types';
-import { t, isoDate } from '../i18n';
+import { t, isoDate, tx } from '../i18n';
 import { ZHI, MONTH_NAME } from '../engine/calendar/sexagenary';
 import { jianchuName, monthName, gradeText } from '../i18n';
 
@@ -79,7 +79,7 @@ export function monthFullName(monthZhi: number): string {
 
 /** 日课卡头部行：「可用」统计 */
 export function usableStat(day: DayResult, lang: Lang): string {
-  return `${day.score} ${lang === 'en' ? 'pts' : '分'}`;
+  return `${day.score} ${tx('分', 'pts', lang)}`;
 }
 
 /** 起课偏移选项 */

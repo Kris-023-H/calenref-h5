@@ -8,7 +8,7 @@ import type { CalDate, Lang } from '../engine/types';
 import { zh } from './zh';
 import type { MsgKey } from './zh';
 import { en } from './en';
-import { zhHant } from './zh-hant';
+import { zhHant, s2t } from './zh-hant';
 
 /** 占位符替换：{name} → params.name */
 export function fill(template: string, params?: Record<string, string | number>): string {
@@ -23,6 +23,23 @@ export function fill(template: string, params?: Record<string, string | number>)
 export function t(key: MsgKey, lang: Lang, params?: Record<string, string | number>): string {
   const raw = lang === 'en' ? en[key] : lang === 'zh-Hant' ? zhHant[key] : zh[key];
   return fill(raw, params);
+}
+
+/**
+ * 组件内联文案。
+ *
+ * 历史包袱：大量组件把短标签写成 `lang === 'en' ? 'English' : '中文'`，
+ * 于是 zh-Hant 用户永远落到简体分支——繁体界面里混着简体字。
+ * 这些标签零散且带插值，逐个搬进 zh.ts 成本高、易漏，统一改走这里：
+ *
+ *   tx('份档案', 'files', lang)
+ *
+ * en → 英文原文；zh-Hant → 对中文做 s2t 转换；zh → 中文原文。
+ */
+export function tx(zhText: string, enText: string, lang: Lang): string {
+  if (lang === 'en') return enText;
+  if (lang === 'zh-Hant') return s2t(zhText);
+  return zhText;
 }
 
 const WEEK_KEYS: Record<number, MsgKey> = {
