@@ -95,15 +95,19 @@ npx vitest run tests/engine/prd-measurements.test.ts   # PRD §7.3 测量可复�
 | 7 | Cookie 同意 Banner | 已完成 | 自研（零第三方请求），同意前不注入 gtag；可撤回 |
 | 8 | OG 分享图 | 已完成 | `public/og-1200x630.png`，`npm run gen:og` 可重出 |
 
-### 上线前必须人工替换的三处（在 `src/data/site.ts`）
+### 上线前必须人工确认的三处（在 `src/data/site.ts`）
 
 ```ts
-entity: 'Zeji Studio',        // ① 与支付平台注册主体一致
-supportEmail: 'support@zeji.app',  // ② 必须可收信（审核方会实际发信）
-jurisdiction: 'Singapore',    // ③ 准据法属地
+entity: 'LuckyTimely',            // ① 与支付平台注册主体一致（已按 Creem 注册主体填）
+supportEmail: 'kris.188h@gmail.com', // ② 必须可收信（审核方会实际发信）
+jurisdiction: 'Singapore',        // ③ 准据法属地
 ```
 
 外加 `.env` 的 `VITE_SITE_URL`（真实域名）与 `VITE_GA4_ID`。
+
+这三项不只作用于法务页：`index.html` 里的 `author`、JSON-LD 的 `Organization.name`
+与 `contactPoint.email` 都是 `__ENTITY__` / `__SUPPORT_EMAIL__` 占位符，构建时由
+`build/site-meta.ts` 从 `SITE` 注入。**换主体或换邮箱只改 `site.ts` 一处**，不会漏。
 
 ### 法务页访问方式
 
@@ -111,6 +115,50 @@ jurisdiction: 'Singapore',    // ③ 准据法属地
 - 直接链接（给审核方 / 放支付平台申请表）：`https://<域名>/?legal=privacy|terms|refund|cookie`
 - 退款政策的关键条款：**未使用 7 日内可退；报告已生成并可查看、或 AI 次数已消耗后不退**；
   欧盟/英国用户在下单时明示同意立即履行即丧失 14 天撤回权（结账页单独一行提示）。
+
+## 部署（Cloudflare Workers 静态资源）
+
+线上地址：`https://zeji-h5.kris-188h.workers.dev`
+
+**为什么是 Workers 而不是 Pages**：Pages 走「连接 Git 仓库 → 填构建命令 → 填输出目录」，
+配置存在云端；Workers 走 `wrangler.toml`，配置在仓库里，一次写对、换人换机器都一样。
+代价是 Workers **没有「构建输出目录」这个概念**——必须用 `[assets]` 显式声明，
+否则它会把仓库根目录当静态资源发布，结果是首页白屏、`/src/main.tsx` 直接 404。
+
+```toml
+# app/wrangler.toml
+name = "zeji-h5"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./dist"
+not_found_handling = "single-page-application"   # 深链回退到 index.html
+```
+
+部署（`wrangler` 已在 devDependencies，无需全局安装）：
+
+```bash
+cd app
+VITE_SITE_URL="https://zeji-h5.kris-188h.workers.dev" npm run build
+CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx npx wrangler deploy
+```
+
+`VITE_SITE_URL` 决定 canonical / OG / sitemap / robots 里的域名。绑了自定义域名后，
+把它换成正式域名重新构建部署即可，源码里没有任何域名硬编码。
+
+**部署后自检五项**（任一不达标说明发的是源码不是产物）：
+
+```bash
+B=https://zeji-h5.kris-188h.workers.dev
+curl -s $B/ | grep -oE '<script[^>]*src="[^"]*"'   # 应为 /assets/index-<hash>.js
+curl -s $B/ | grep -oE '<link rel="canonical"[^>]*>' # 应为真实域名，不能是 __SITE_URL__
+curl -s $B/robots.txt                                 # 应为本项目那份（含 Sitemap 行）
+curl -s -o /dev/null -w '%{http_code}\n' $B/sitemap.xml
+curl -s -o /dev/null -w '%{http_code}\n' $B/og-1200x630.png
+```
+
+GitHub Actions（`.github/workflows/ci.yml`）只做 CI（typecheck + test + build），
+**不负责部署**——部署由上面那条 `wrangler deploy` 完成。
 
 ## 上线前部署项（按优先级）
 
