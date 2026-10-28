@@ -30,6 +30,9 @@ pnpm-debug.log*
 coverage/
 *.tsbuildinfo
 
+# wrangler 本地缓存（部署凭据与构建元数据，不随仓库走）
+.wrangler/
+
 # 设计稿原始文件：含设计工具注入标记（data-page-node-id / inject.js），
 # 属设计资产而非源码，且绝不能进入上线产物
 .wb-lib/

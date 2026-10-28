@@ -18,6 +18,7 @@
 import type { Plugin } from 'vite';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { SITE } from '../src/data/site';
 
 const FALLBACK_URL = 'https://zeji.app';
 
@@ -87,7 +88,12 @@ export function siteMeta(): Plugin {
     transformIndexHtml(html) {
       // 占位符刻意不用 %VITE_XXX% 语法：Vite 内建的 HTML env 替换会在本插件之前
       // 抢先处理它，遇到未定义变量时还会因 URI 解码失败中断构建。
-      return html.replaceAll('__SITE_URL__', siteUrl);
+      // 邮箱与主体名同样走占位符 —— 支付平台审核会读 JSON-LD 里的 contactPoint，
+      // 硬编码在 index.html 里等于绕过了 site.ts 这个唯一真源。
+      return html
+        .replaceAll('__SITE_URL__', siteUrl)
+        .replaceAll('__SUPPORT_EMAIL__', SITE.supportEmail)
+        .replaceAll('__ENTITY__', SITE.entity);
     },
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
