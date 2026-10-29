@@ -96,14 +96,14 @@ describe('Creem 类目红线 ③ — 首屏免责声明在场', () => {
   it('启动页（轮盘）含中英免责声明', () => {
     const splash = read('src/components/compass-intro.tsx');
     expect(splash).toContain('免责声明');
-    expect(splash).toContain('Not a fortune-telling or spiritual service');
-    expect(splash).toContain('No prediction of outcomes');
+    expect(splash).toContain('No predictions, consulting, or spiritual guidance');
+    expect(splash).toContain('仅供文化学习与研究参考');
   });
 
   it('首页第一屏含常驻免责一行', () => {
     const home = read('src/screens/home-screen.tsx');
-    expect(home).toContain('不构成命理预测');
-    expect(home).toContain('No fortune-telling or predictions');
+    expect(home).toContain('不提供任何预测、咨询或灵性指导');
+    expect(home).toContain('No predictions, consulting, or spiritual guidance');
   });
 
   it('法务免责声明存在且明确「非专业意见」', () => {
@@ -114,9 +114,42 @@ describe('Creem 类目红线 ③ — 首屏免责声明在场', () => {
 
 describe('Creem 类目红线 ④ — 产品定位一致', () => {
   it('产品名与标语已去玄学化', () => {
-    expect(PACKS.en).toContain("'app.name': 'Chinese Date Planner'");
-    expect(PACKS.en).toContain('traditional Chinese calendar context');
-    expect(PACKS.zh).toContain("'app.name': '中华历法'");
+    expect(PACKS.en).toContain("'app.name': 'CalenRef'");
+    expect(PACKS.en).toContain('Traditional Chinese Almanac Reference Tool');
+    expect(PACKS.zh).toContain("'app.name': '历知'");
+  });
+
+  /**
+   * 2026-10-30 追加：Creem 的 Generative AI 属 Restricted 类目，首审要求前服务商
+   * 记录、拒付率与 track record —— 首次提交拿不出来，效果等同 Prohibited。
+   * 所以产品表述里不能出现 AI 卖点，也不能用「知识图谱」这类语义网术语把自己
+   * 归到 AI 类目。这条测试防的是「下次改文案又把它加回来」。
+   */
+  it('不出现 AI 卖点与知识图谱表述（Restricted 类目红线）', () => {
+    const banned = ['AI-powered', 'AI 解读', 'AI reading', 'AI readings', 'AI 驱动', 'AI 驅動', 'knowledge graph', 'Knowledge graph', '知识图谱', '知識圖譜', 'CalenAI'];
+    // CalenRef 是最终英文名（方案 2.2），Calen 是中间态，两者都不能残留在正文里
+    for (const pack of ['zh', 'en'] as const) {
+      for (const w of banned) {
+        expect(PACKS[pack]).not.toContain(w);
+      }
+    }
+    expect(read('index.html')).not.toContain('CalenAI');
+    expect(read('index.html')).not.toContain('AI-powered');
+    expect(read('index.html')).toContain('CalenRef');
+  });
+
+  /**
+   * 2026-10-30 追加：法务四页的正文不在 i18n 包里，上一轮只扫了 i18n 与 index.html，
+   * 结果退款条款里「未消耗 AI 解读次数」一路漏到线上。法务文案同样是审核员会逐页
+   * 阅读的正文，必须一起锁。
+   */
+  it('法务文案不含以 AI 为卖点的表述', () => {
+    const legal = read('src/data/legal.ts');
+    // 独立的 AI 词（前后不接字母），覆盖「AI 解读」「AI credits」「AI-powered」等写法
+    expect(legal).not.toMatch(/(?<![A-Za-z])AI(?![A-Za-z])/);
+    for (const w of ['知识图谱', '知識圖譜', 'knowledge graph', 'CalenAI']) {
+      expect(legal).not.toContain(w);
+    }
   });
 
   it('PWA manifest 名称不含 Zeji / 择吉', () => {

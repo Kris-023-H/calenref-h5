@@ -11,10 +11,10 @@ const l = (zh: string, en: string, zhHant: string): L10n => ({ zh, en, zhHant })
 export const EVENT_GROUPS: EventGroup[] = ['经营择日', '工程择日', '家庭择日', '生命礼'];
 
 export const GROUP_LABEL: Record<EventGroup, L10n> = {
-  经营择日: l('经营事务', 'Business matters', '經營事務'),
-  工程择日: l('工程事务', 'Construction matters', '工程事務'),
-  家庭择日: l('家庭事务', 'Family matters', '家庭事務'),
-  生命礼: l('生命礼俗', 'Life milestones', '生命禮俗'),
+  经营择日: l('商业与工作场景', 'Business & work', '商業與工作場景'),
+  工程择日: l('建筑与装修场景', 'Building & renovation', '建築與裝修場景'),
+  家庭择日: l('家庭与生活场景', 'Family & life', '家庭與生活場景'),
+  生命礼: l('人生重要节点场景', 'Life milestones', '人生重要節點場景'),
 };
 
 /** 取分组显示名：EventGroup 内部 key 仅作标识符，界面一律走本表 */
@@ -26,24 +26,24 @@ export function groupText(group: EventGroup, lang: Lang): string {
 
 export const GROUP_DESC: Record<EventGroup, L10n> = {
   经营择日: l(
-    '以负责人出生资料为体，业态属性为用，定开市、签约、发市之期',
-    "Led by the principal's birth details, attributed through the industry's attribute — for openings, signings, and launches.",
-    '以負責人出生資料為體，業態屬性為用，定開市、簽約、發市之期',
+    '输入当事人出生年份参考，系统检索传统历法中商业开业、签约等场景的对应规则',
+    "Enter the principal's birth year for reference; the system looks up traditional calendar rules for openings, signings and similar business scenarios.",
+    '輸入當事人出生年份參考，系統檢索傳統曆法中商業開業、簽約等場景的對應規則',
   ),
   工程择日: l(
-    '以业主出生资料配建筑朝向，重方位与山运，定破土、上梁、进店之期',
-    "Owner's birth details paired with the sitting orientation — direction and site setting for groundbreaking, beam-setting, and fit-out.",
-    '以業主出生資料配建築朝向，重方位與山運，定破土、上梁、進店之期',
+    '输入业主出生年份与建筑朝向，检索传统历法中破土、上梁、装修等场景的对应规则',
+    "Enter the owner's birth year and the building's orientation; the system looks up traditional calendar rules for groundbreaking, beam-setting and fit-out.",
+    '輸入業主出生年份與建築朝向，檢索傳統曆法中破土、上梁、裝修等場景的對應規則',
   ),
   家庭择日: l(
-    '以传统婚月与户主出生年为纲，定嫁娶、入宅之期',
-    "Guided by traditional marriage months and the household head's birth year — for weddings and moving in.",
-    '以傳統婚月與戶主出生年為綱，定嫁娶、入宅之期',
+    '输入户主出生年份，检索传统历法中婚嫁、迁居等场景的对应规则',
+    "Enter the household head's birth year; the system looks up traditional calendar rules for weddings and relocation.",
+    '輸入戶主出生年份，檢索傳統曆法中婚嫁、遷居等場景的對應規則',
   ),
   生命礼: l(
-    '以母亲预产期与婴儿出生时刻为限，时间窗最窄，须逐时辰推',
-    "Bounded by the mother's birth details and the infant's birth hour — the narrowest window, resolved hour by hour.",
-    '以母親預產期與嬰兒出生時刻為限，時間窗最窄，須逐時辰推',
+    '输入母亲预产期与婴儿出生时刻，检索传统历法中生产择期相关的规则与医学安全窗提示',
+    "Enter the mother's due date and the infant's birth hour; the system looks up traditional calendar rules for scheduled delivery, within medical safety windows.",
+    '輸入母親預產期與嬰兒出生時刻，檢索傳統曆法中生產擇期相關的規則與醫學安全窗提示',
   ),
 };
 

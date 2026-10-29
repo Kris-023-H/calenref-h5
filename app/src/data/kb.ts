@@ -26,7 +26,7 @@ export interface KbArticle {
 export const KB_ARTICLES: KbArticle[] = [
   {
     id: 1,
-    title: l('通书、黄历、历法参考：三个词不是一件事', 'Almanac, Huangli, and Calendar Reference: Three Different Things', '通書、黃曆、曆法參考：三個詞不是一件事'),
+    title: l('通书、黄历、历法参考：三个词不是一件事', "Almanac, Yellow Calendar, and Calendar Reference: What's the Difference?", '通書、黃曆、曆法參考：三個詞不是一件事'),
     category: 'term.kbcat.xueli',
     minutes: 3,
     books: ['《协纪辨方书》'],

@@ -52,6 +52,8 @@ min-height:100vh;color:var(--ink);font:15px/1.85 -apple-system,BlinkMacSystemFon
 box-shadow:0 1px 0 rgba(255,255,255,.7) inset,0 8px 24px rgba(60,48,24,.06)}
 h1{font-size:22px;letter-spacing:.06em;margin:0 0 6px}
 .meta{font-size:11.5px;color:var(--muted);letter-spacing:.04em;margin-bottom:14px}
+.notice{font-size:13px;color:var(--ink);background:rgba(178,58,43,.055);border-left:3px solid #B23A2B;
+  padding:11px 14px;border-radius:0 8px 8px 0;margin:0 0 14px;line-height:1.8}
 .lead{font-size:14px;color:var(--ink2);background:rgba(140,106,63,.07);border-left:3px solid var(--accent);
 padding:10px 14px;border-radius:0 8px 8px 0;margin:0 0 22px}
 h2{font-size:15px;margin:26px 0 8px;letter-spacing:.02em}
@@ -89,6 +91,7 @@ function renderDoc(doc: LegalDoc, lang: 'zh' | 'en'): string {
   return `
     <h1>${esc(doc.title)}</h1>
     <div class="meta">${esc(updated)}</div>
+    ${doc.notice ? `<p class="notice">${esc(doc.notice)}</p>` : ''}
     <p class="lead">${esc(doc.lead)}</p>
     ${secs}
     <div class="contact">
@@ -129,7 +132,7 @@ export function legalPageHtml(page: LegalPage, siteUrl: string): string {
 <body>
 <div class="wrap">
   <div class="top">
-    <div class="brand">中 华 历 法<small>CHINESE DATE PLANNER</small></div>
+    <div class="brand">历 知<small>CALENREF</small></div>
     <a class="back" href="/">← ${esc(t('legal.backHome', 'zh'))} / ${esc(t('legal.backHome', 'en'))}</a>
   </div>
 
@@ -168,7 +171,7 @@ function devPathToPage(path: string): LegalPage | null {
 
 export function legalPages(siteUrl: string): Plugin {
   return {
-    name: 'zeji-legal-pages',
+    name: 'calenref-legal-pages',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         const path = (req.url ?? '').split('?')[0];

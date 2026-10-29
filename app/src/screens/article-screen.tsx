@@ -39,7 +39,7 @@ export function ArticleScreen(): JSX.Element {
 
       <div className="bib" style={{ marginBottom: 16 }}>
         <div className="bib-t">
-          <b>{tx('本课出处', 'Source', lang)}</b>
+          <b>{tx('本文出处', 'Source', lang)}</b>
           <em>{a.books.join('　')}</em>
           <span>{tx('可核', 'verifiable', lang)}</span>
         </div>
@@ -67,10 +67,10 @@ export function ArticleScreen(): JSX.Element {
           {tx('试推一次', 'TRY A READING', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>
-          {tx('录出生资料，推演一次看看', 'Enter birth details, run a reading', lang)}
+          {tx('录出生资料，查询一次看看', 'Enter birth details, run a reading', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
-          {tx('90 天区间 · 逐层推演 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}
+          {tx('90 天区间 · 逐层检索 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}
         </div>
       </div>
 

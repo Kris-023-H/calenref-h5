@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # 测试环境部署 + 自检（独立 Worker，接 Creem 测试环境）
-# 令牌从 ~/.cf-zeji-token 读（cfk_ = Global API Key，走 X-Auth-Email + X-Auth-Key）
+# 令牌从 ~/.cf-calenref-token 读（cfk_ = Global API Key，走 X-Auth-Email + X-Auth-Key）
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-TOKEN_FILE="${CF_TOKEN_FILE:-$HOME/.cf-zeji-token}"
+TOKEN_FILE="${CF_TOKEN_FILE:-$HOME/.cf-calenref-token}"
 ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID:-bbd93e37b6abc18544496250c33bfde7}"
-SITE_URL="https://zeji-h5-test.kris-188h.workers.dev"
+SITE_URL="https://calenref-test.kris-188h.workers.dev"
 
 if [ ! -f "$TOKEN_FILE" ]; then
   echo "缺少令牌文件：$TOKEN_FILE"
@@ -31,7 +31,7 @@ esac
 echo "==> 1/3 构建到 dist-test（VITE_SITE_URL=$SITE_URL）"
 VITE_SITE_URL="$SITE_URL" npx vite build --outDir dist-test
 
-echo "==> 2/3 部署 zeji-h5-test"
+echo "==> 2/3 部署 calenref-test"
 CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler deploy --config wrangler.test.toml
 
 echo "==> 3/3 等 60s 后自检"

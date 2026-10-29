@@ -34,7 +34,7 @@ export const SKUS: Sku[] = ['once', 'ai10', 'pair', 'year'];
 /**
  * 首审上架的商品面（Creem 首次提交只报这两个）。
  *
- * 为什么收缩：ai10（AI 解读次数包）会直接触发 Creem 的
+ * 为什么收缩：ai10（释义摘要次数包）会直接触发 Creem 的
  * 「Generative AI = Restricted」审查项 —— 需要提供前服务商记录、拒付率与
  * track record，而我们是首次提交，这三样都拿不出来，等于自己给自己加一道
  * 必不过的门。pair（双人对照）则容易被读成「替两个人算合不合」，与

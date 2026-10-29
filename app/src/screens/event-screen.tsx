@@ -1,6 +1,6 @@
 /**
- * screens/event-screen.tsx — 用事选择（四组 18 项 + 本课取用摘要）。
- * 选事后进入 info 录出生资料；页面底部给出本课的层数组装。
+ * screens/event-screen.tsx — 场景选择（四组 18 项 + 本次查询规则摘要）。
+ * 选场景后进入 info 输入查询条件；页面底部列出本次查询应用的历法规则。
  */
 
 import { useSettings } from '../store/settings-store';
@@ -46,9 +46,9 @@ export function EventScreen(): JSX.Element {
         }
       />
       <h2 className="tt">
-        {tx('所办何事？', 'What is the matter?', lang)}
+        {tx('你想查询哪类场景的历法参考？', 'Which scenario would you like to look up in the almanac?', lang)}
         <small>
-          {tx('用事决定取哪一套条目。同一个当日，宜开市不必宜嫁娶——这是传统历法取用的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
+          {tx('不同场景对应不同的传统历法规则体系，这是中国传统历法文化的基本特点。', 'Different scenarios map to different sets of traditional calendar rules — a defining feature of Chinese calendar culture.', lang)}
         </small>
       </h2>
 
@@ -83,16 +83,16 @@ export function EventScreen(): JSX.Element {
       })}
 
       <div className="rule-h">
-        <span>{tx('本课取用', 'This lesson takes', lang)}</span>
+        <span>{tx('本次查询规则', 'Rules applied to this query', lang)}</span>
         <i />
       </div>
       <div className="card flat">
         <div style={{ fontSize: 11.5, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {tx('用事', 'Matter', lang)}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
+          {tx('场景', 'Scenario', lang)}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
           <br />
           {t('event.needLabel', lang)}　{ev.need[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}
           <br />
-          {tx('条目', 'Layers', lang)}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
+          {tx('历法规则', 'Calendar rules', lang)}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
           <br />
           {t('event.actsLabel', lang)}　{ev.acts.map((a) => a[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']).join(' → ')}
           {ev.twoPerson && (
@@ -106,7 +106,7 @@ export function EventScreen(): JSX.Element {
 
       <div className="ctabar">
         <Btn block onClick={() => push('info')}>
-          {t('nav.next', lang)} · {tx('录当事人出生资料', 'enter pillars', lang)}
+          {t('nav.next', lang)} · {tx('输入查询条件', 'query details', lang)}
         </Btn>
       </div>
     </div>

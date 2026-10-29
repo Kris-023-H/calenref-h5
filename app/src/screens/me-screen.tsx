@@ -56,7 +56,7 @@ export function MeScreen(): JSX.Element {
     {
       icon: 'doc',
       label: t('me.reports', lang),
-      sub: `${scans.length} ${tx('份推演', 'readings', lang)}`,
+      sub: `${scans.length} ${tx('份查询', 'queries', lang)}`,
       onClick: () => push('reports'),
     },
     {

@@ -1,5 +1,5 @@
 /**
- * screens/report-screen.tsx — 九章推演报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI / 附则）。
+ * screens/report-screen.tsx — 九章查询报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / 释义摘要 / 附则）。
  * 报告正文由 session.result 现场组装；未解锁时引导至 pay 屏（权益由 license.repo 判定）。
  */
 
@@ -88,7 +88,7 @@ export function ReportScreen(): JSX.Element {
           </div>
           <div className="serif" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.4, margin: '2px 0 4px' }}>
             {termText(ev.name, lang)}
-            {tx('推演报告', ' reading report', lang)}
+            {tx('查询报告', ' reading report', lang)}
           </div>
           <div style={{ fontSize: 11, color: 'var(--gold-2)', letterSpacing: '.1em', marginBottom: 10 }}>
             {termText(ind.name, lang)} ／ {termText(ind.category, lang)}
@@ -99,7 +99,7 @@ export function ReportScreen(): JSX.Element {
               ? readings.map((r) => `${r.name}（${r.zodiac}${tx('年·', ' · ', lang)}${r.trueTime}）`).join('　')
               : `${t('scan.generic', lang)} · ${tx('未录出生资料', 'no birth details', lang)}`}
             <br />
-            {tx('推演', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
+            {tx('查询区间', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
             <br />
             {tx('坐向', 'Facing', lang)}　　{ZHI[sit.zhi]}
             {tx('方', ' bearing', lang)}
@@ -169,10 +169,10 @@ export function ReportScreen(): JSX.Element {
       )}
 
       {/* 二 用事与取用 */}
-      <SectionHead index="二" title={t('report.ch3', lang)} note={tx('取用变量', 'variables', lang)} />
+      <SectionHead index="二" title={t('report.ch3', lang)} note={tx('规则变量', 'variables', lang)} />
       <div className="rtab">
         <div className="rtab-row">
-          <div>{tx('用事', 'Matter', lang)}</div>
+          <div>{tx('场景', 'Scenario', lang)}</div>
           <div>
             <b>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
           </div>
@@ -292,7 +292,7 @@ export function ReportScreen(): JSX.Element {
           </div>
         ))}
         <div style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.75, marginTop: 9 }}>
-          {tx('出局不等于「不吉」，是不合本套取用的条件。日辰冲出生年、月内破日、冲朝向为硬性出局；评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. A day clashing a birth year, month-break days and an orientation clash are hard vetoes; score below threshold is relaxable.', lang)}
+          {tx('出局不等于「不吉」，是不合本套规则的条件。日辰冲出生年、月内破日、冲朝向为硬性出局；评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. A day clashing a birth year, month-break days and an orientation clash are hard vetoes; score below threshold is relaxable.', lang)}
         </div>
       </div>
 
@@ -313,7 +313,7 @@ export function ReportScreen(): JSX.Element {
         })}
       </div>
       <div className="hint" style={{ fontSize: 10 }}>
-        {tx('动作时点以时辰为准。若时辰与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的取用。', 'Action hours follow favourable hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.', lang)}
+        {tx('动作时点以时辰为准。若时辰与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的规则。', 'Action hours follow favourable hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.', lang)}
       </div>
 
       {/* 七 节奏 */}
@@ -342,19 +342,19 @@ export function ReportScreen(): JSX.Element {
           : `此为${termText(ind.name, lang)}的通行开市节奏，与当日无关，但同样影响「开市」这件事的完成度。`}
       </div>
 
-      {/* 八 AI */}
-      <SectionHead index="八" title={tx('AI 解读', 'AI reading', lang)} note={tx('限次解读', 'limited', lang)} />
+      {/* 八 释义摘要 */}
+      <SectionHead index="八" title={tx('释义摘要', 'Summary', lang)} note={tx('限次生成', 'limited', lang)} />
       {aiSections.length === 4 ? (
         <>
           <div className="aicard">
             <div className="ai-h">
               <b>{t('ai.sec1', lang)}</b>
-              <span>AI</span>
+              <span>{tx('释义', 'SUM', lang)}</span>
             </div>
             <div className="ai-p" dangerouslySetInnerHTML={{ __html: aiSections[0] }} />
           </div>
           <Btn variant="ghost" onClick={() => push('ai')}>
-            {tx('查看完整解读', 'Full reading & follow-ups', lang)}
+            {tx('查看完整释义', 'Full summary & follow-ups', lang)}
           </Btn>
         </>
       ) : (
@@ -364,13 +364,13 @@ export function ReportScreen(): JSX.Element {
               <Icon name="ai" size={14} />
             </div>
             <div className="ab-t">
-              <b>{tx('AI 解读本课', 'AI reads this lesson', lang)}</b>
+              <b>{tx('本次查询的释义摘要', 'Summary for this query', lang)}</b>
               <span>{tx('引规则出处 · 可追问 · 每月 3 次', 'cites rules · askable · 3/month', lang)}</span>
             </div>
             <div className="ab-q">{quotaLeft()}</div>
           </div>
           <Btn variant="gold" onClick={() => push('ai')}>
-            {tx('生成 AI 解读', 'Generate reading', lang)}
+            {tx('生成释义摘要', 'Generate summary', lang)}
           </Btn>
         </>
       )}
@@ -379,7 +379,7 @@ export function ReportScreen(): JSX.Element {
       <SectionHead index="九" title={t('report.ch9', lang)} note={tx('边界声明', 'boundaries', lang)} />
       <div className="card flat">
         <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {tx('本报告逐层给出取用依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与朝向相冲依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。', 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, orientation and orientation clash to the Yingzao Fashi and the Luban Jing.', lang)}
+          {tx('本报告逐层给出规则依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与朝向相冲依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。', 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, orientation and orientation clash to the Yingzao Fashi and the Luban Jing.', lang)}
         </div>
       </div>
 
@@ -393,7 +393,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 9.5, color: 'var(--muted)', lineHeight: 1.8, marginTop: 16, paddingTop: 12, borderTop: '1px dashed var(--line)' }}>
-        {tx('本报告依《协纪辨方书》《星历考原》取用次第，参《营造法式》《鲁班经匠家镜》《天工开物》等行业专书，属传统民俗参考，不构成任何结果保证，不涉及医疗与投资建议。', 'Compiled per the Xieji Bianfang Shu and Xingli Kaoyuan, with trade references from the Yingzao Fashi and Tiangong Kaiwu. Traditional folk reference only — no guarantee of outcomes, no medical or investment advice.', lang)}
+        {tx('本报告依《协纪辨方书》《星历考原》规则次第，参《营造法式》《鲁班经匠家镜》《天工开物》等行业专书，属传统民俗参考，不构成任何结果保证，不涉及医疗与投资建议。', 'Compiled per the Xieji Bianfang Shu and Xingli Kaoyuan, with trade references from the Yingzao Fashi and Tiangong Kaiwu. Traditional folk reference only — no guarantee of outcomes, no medical or investment advice.', lang)}
         <br />
         {t('app.ruleVersion', lang)} {RULE_VERSION} ／ {tx('出具于 ', 'issued ', lang)}
         {new Date().getFullYear()}.{String(new Date().getMonth() + 1).padStart(2, '0')}.{String(new Date().getDate()).padStart(2, '0')}

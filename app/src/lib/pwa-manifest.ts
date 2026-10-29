@@ -27,9 +27,9 @@ export interface WebManifest {
 }
 
 const NAMES: Record<Lang, { name: string; short: string; desc: string }> = {
-  zh: { name: '中华历法 · 历法参考', short: '中华历法', desc: '中国传统历法文化参考工具：人·事·日三层，八重取用，本机演算，不构成命理预测。' },
-  en: { name: 'Chinese Date Planner', short: 'Date Planner', desc: 'A traditional Chinese calendar reference for planning dates — computed on device, no fortune-telling.' },
-  'zh-Hant': { name: '中華曆法 · 曆法參考', short: '中華曆法', desc: '中國傳統曆法文化參考工具：人·事·日三層，八重取用，本機演算，不構成命理預測。' },
+  zh: { name: '历知 CalenRef', short: '历知', desc: '中国传统历法文化参考工具：按场景查阅历法规则与日期参考，全部计算在本机完成，不提供预测。' },
+  en: { name: 'CalenRef', short: 'CalenRef', desc: 'A traditional Chinese almanac reference tool — cultural reference only, computed on device.' },
+  'zh-Hant': { name: '曆知 CalenRef', short: '曆知', desc: '中國傳統曆法文化參考工具：按場景查閱曆法規則與日期參考，全部計算在本機完成，不提供預測。' },
 };
 
 const ICONS: ManifestIcon[] = [

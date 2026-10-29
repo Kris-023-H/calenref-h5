@@ -270,7 +270,7 @@ async function handleHealth(env: Env): Promise<Response> {
   const received = env.ORDERS ? Number((await env.ORDERS.get('stat:webhook')) ?? '0') || 0 : 0;
   return json({
     ok: true,
-    service: 'chinese-date-planner',
+    service: 'calenref',
     time: Date.now(),
     checkout: {
       configured: Boolean(env.CREEM_API_KEY && env.ORDERS),

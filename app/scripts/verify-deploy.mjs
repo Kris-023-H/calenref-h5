@@ -1,7 +1,7 @@
 /**
  * 部署后自检：不能只看接口 200，必须确认页面真的能渲染。
  *
- * 用法：node scripts/verify-deploy.mjs https://zeji-h5.kris-188h.workers.dev
+ * 用法：node scripts/verify-deploy.mjs https://calenref.kris-188h.workers.dev
  * 退出码：0 全通过 / 1 有失败项（CI 会红）
  *
  * 检查项（源自 2026-10-28 线上白屏事故 + 2026-10-29 Creem 二次复核）：

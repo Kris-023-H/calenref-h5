@@ -237,7 +237,7 @@ export function PeopleScreen(): JSX.Element {
       />
       <h2 className="tt">
         {t('person.list', lang)}
-        <small>{tx('出生资料录一次，往后每次推演直接取用，不必重填。', 'Enter birth details once; reuse them in every reading.', lang)}</small>
+        <small>{tx('出生资料录一次，往后每次查询直接调用，不必重填。', 'Enter birth details once; reuse them in every reading.', lang)}</small>
       </h2>
       {selectFor && (
         <div className="whybar" style={{ marginBottom: 12 }}>
@@ -261,7 +261,7 @@ export function PeopleScreen(): JSX.Element {
         </div>
         <div>
           <b>{people.filter(inUse).length}</b>
-          <span>{tx('本课在用', 'in this lesson', lang)}</span>
+          <span>{tx('本次查询在用', 'in this query', lang)}</span>
         </div>
         <div>
           <b>{people.filter((p) => p.sex === 'f').length}</b>
@@ -303,7 +303,7 @@ export function PeopleScreen(): JSX.Element {
                 <div className="pa-b">
                   <div className="pa-n">
                     {p.name || t('common.unknown', lang)}
-                    {use && <em>{tx('本课在用', 'in use', lang)}</em>}
+                    {use && <em>{tx('本次查询在用', 'in use', lang)}</em>}
                   </div>
                   <div className="pa-m">
                     {p.sex === 'f' ? t('person.female', lang) : t('person.male', lang)} · {p.birthDate.replace(/-/g, '.')} {p.birthTime} ·{' '}

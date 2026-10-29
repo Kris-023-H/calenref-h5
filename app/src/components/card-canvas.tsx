@@ -37,7 +37,7 @@ export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme 
   const { lang } = data;
   const dateText = `${data.date.y}.${String(data.date.m).padStart(2, '0')}.${String(data.date.d).padStart(2, '0')}`;
   const rows: Array<[string, string]> = [
-    [tx('用事', 'Matter', lang), `${data.eventName}（${data.industryName}）`],
+    [tx('场景', 'Scenario', lang), `${data.eventName}（${data.industryName}）`],
     [tx('出生资料', 'Birth details', lang), `${data.pillars.year} ${data.pillars.month} ${data.pillars.day} ${data.pillars.hour}`],
     [tx('坐向', 'Facing', lang), data.sitDeg],
     [tx('时辰', 'Hour', lang), `${data.hourName}（${data.hourRange}）`],
@@ -46,8 +46,8 @@ export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme 
     <div className={`gcard ${theme}`} id="gcard">
       <div className="gc-inner">
         <div className="gc-top">
-          <div className="gc-eyebrow">{tx('择 吉 · 吉 日 课 帖', 'ZEJI · DAY CARD', lang)}</div>
-          <div className="gc-seal">吉</div>
+          <div className="gc-eyebrow">{tx('历 知 · 历 法 参 考 卡', 'CALENREF · ALMANAC CARD', lang)}</div>
+          <div className="gc-seal">历</div>
         </div>
         <div className="gc-date">{dateText}</div>
         <div className="gc-gz">

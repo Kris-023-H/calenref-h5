@@ -549,6 +549,18 @@
   padding: 10px 11px;
   margin: 0 0 16px;
 }
+/* 页首免责段：Creem 要求隐私政策/条款开头明示「非占卜、非咨询」。
+   用朱色左边框而不是金色，是为了让它比下面的摘要更先被看到。 */
+.legal-notice {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink);
+  background: rgba(178, 58, 43, 0.055);
+  border-left: 2px solid var(--verm);
+  border-radius: 0 8px 8px 0;
+  padding: 11px 12px;
+  margin: 0 0 14px;
+}
 .legal-sec {
   margin-bottom: 16px;
 }

@@ -1,6 +1,7 @@
 /**
- * screens/onboard-screen.tsx — 首次引导（4 步：通书口径 / 三元 / 交付物 / 业态）。
- * 复刻原型 arts 图示（对比 / 三元 / 交付 / 业态网格）；第 4 步可选业态。
+ * screens/onboard-screen.tsx — 首次引导（4 步：典籍索引 / 场景检索 / 交付物 / 业态）。
+ * 按第三轮定位重写：这一屏是新用户对产品的第一印象，必须读起来像知识工具，
+ * 而不是「按出生年算命」的择日器。
  */
 
 import { useState } from 'react';
@@ -16,9 +17,9 @@ import { WX_LABEL } from './ui-helpers';
 import { useNav } from './types';
 
 const STEP_LABELS: Record<Lang, string[]> = {
-  zh: ['通书口径', '三元定课', '交付物', '业态'],
-  en: ['Almanac', 'Threefold', 'Deliverables', 'Industry'],
-  'zh-Hant': ['通書口徑', '三元定課', '交付物', '業態'],
+  zh: ['典籍索引', '场景检索', '交付物', '业态'],
+  en: ['Sources', 'Scenario lookup', 'Deliverables', 'Industry'],
+  'zh-Hant': ['典籍索引', '場景檢索', '交付物', '業態'],
 };
 
 export function OnboardScreen(): JSX.Element {
@@ -33,47 +34,47 @@ export function OnboardScreen(): JSX.Element {
   const arts: JSX.Element[] = [
     <div className="cmpv" key="a0">
       <div className="cmpv-row">
-        <div className="cv-t">{tx('通书', 'ALMANAC', lang)}</div>
+        <div className="cv-t">{tx('通用日历', 'ALMANAC', lang)}</div>
         <div className="cv-b">
           <em>{tx('宜纳财栽种 · 忌开市出行', 'Same for everyone', lang)}</em>
           <span>{tx('对所有人一样', 'One answer for all', lang)}</span>
         </div>
       </div>
       <div className="cmpv-row own">
-        <div className="cv-t">{tx('你的', 'YOURS', lang)}</div>
+        <div className="cv-t">{tx('场景查询', 'YOUR QUERY', lang)}</div>
         <div className="cv-b">
-          <em>{tx('只对你成立', 'Only true for you', lang)}</em>
-          <span>{tx('按你的出生年干支', 'By your own birth details', lang)}</span>
+          <em>{tx('按场景检索规则', 'Rules by scenario', lang)}</em>
+          <span>{tx('结合你的出生年与条件', 'With your birth year and conditions', lang)}</span>
         </div>
       </div>
     </div>,
     <div className="tri" key="a1">
       <div className="tri-cell">
         <b>{tx('人', 'Person', lang)}</b>
-        <span>{tx('出生年干支', 'Birth details', lang)}</span>
+        <span>{tx('出生年参考', 'Birth year', lang)}</span>
       </div>
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
         <b>{tx('事', 'Matter', lang)}</b>
-        <span>{tx('用事 / 业态', 'Event / trade', lang)}</span>
+        <span>{tx('场景 / 业态', 'Scenario / trade', lang)}</span>
       </div>
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
         <b>{tx('日', 'Day', lang)}</b>
-        <span>{tx('月建当日', 'Day lesson', lang)}</span>
+        <span>{tx('当日历法条目', 'Day entries', lang)}</span>
       </div>
     </div>,
     <div className="deliv" key="a2">
       <div className="hi">
-        <b>{tx('推演报告', 'Report', lang)}</b>
+        <b>{tx('查询报告', 'Report', lang)}</b>
         <span>{tx('九章 · 可导出', '9 chapters', lang)}</span>
       </div>
       <div>
-        <b>{tx('吉当日帖', 'Day card', lang)}</b>
+        <b>{tx('当日历帖', 'Day card', lang)}</b>
         <span>{tx('五版式 · 可传', '5 themes', lang)}</span>
       </div>
       <div>
-        <b>{tx('知库', 'Library', lang)}</b>
+        <b>{tx('知识库', 'Library', lang)}</b>
         <span>{tx('典籍与规则', 'Rules & books', lang)}</span>
       </div>
     </div>,
@@ -96,32 +97,32 @@ export function OnboardScreen(): JSX.Element {
 
   const steps: Array<{ h: string; p: string; n: string }> = [
     {
-      h: tx('通书给你的<br>是「这一天」', 'The almanac answers\n"how is today"', lang),
+      h: tx('26 部经典文献<br>整理成可查的条目', '26 classical texts,\nindexed as entries', lang),
       p:
-        tx('黄历上的宜忌，是按建除十二值日排的<b>通用口径</b>——同一天，对所有人都一样。可你要办的是你自己的事，用的是你自己的出生年。', 'Almanac yi/ji follow the twelve jianchu officers — the same for everyone. But your matter uses your own pillars.', lang),
+        tx('《协纪辨方书》《星历考原》《营造法式》……系统把散落在各书里的历法规则整理成可检索的条目，每条都能回溯到书名与卷次。', 'Rules scattered across classical texts become searchable entries, each traceable to a title and chapter.', lang),
       n:
-        tx('通书答「今天怎么样」，条目答「今天对你这件事怎么样」。两句都对，只是层级不同。', 'The almanac answers "how is today"; the entry set answers "how is today for your matter".', lang),
+        tx('不是凭经验给答案，而是先把文献整理成结构。', 'Not experience-based guesswork — the texts come first.', lang),
     },
     {
-      h: tx('三层定一次', 'Person + Matter + Day', lang),
+      h: tx('输入场景<br>检索对应规则', 'Enter a scenario,\nlook up the rules', lang),
       p:
-        tx('本工具的本体是<b>人 · 事 · 日</b>三元：先看人（出生年干支），再看事（用事与业态），最后才落到当日。三层不合，日子再好也无用。', 'First the person (birth details), then the matter (event & trade), and only then the day lesson. Without all three, even a "yellow dao" day is useless.', lang),
+        tx('开业、签约、上梁、嫁娶——不同场景对应不同的规则体系。系统按场景检索相关条目，再结合你填的出生年与场地条件给出日期参考。', 'Openings, signings, beam-settings, weddings — each scenario maps to its own rule set. The system retrieves matching entries, then weighs your birth year and site conditions.', lang),
       n:
-        tx('同一天，宜开市不必宜嫁娶——这是传统历法取用的基本前提，也是通用黄历给不了的。', 'The same day suits opening a shop but not a wedding — the premise of day selection.', lang),
+        tx('同一天，开业与嫁娶适用的条目不同——这是传统历法文化的基本特点。', 'The same day applies different entries to an opening and a wedding — a defining feature of Chinese calendar culture.', lang),
     },
     {
-      h: tx('交付的是一份推演，<br>不是一句话', 'A full reading,\nnot one word', lang),
+      h: tx('交付的是一份<br>可回溯的查询报告', 'A traceable report,\nnot one line', lang),
       p:
-        tx('我们出具<b>推演报告</b>：九章结构，逐层给依据，每一层都可回溯。另有吉当日帖可传、知库可核。', 'We issue a nine-chapter lesson report — every layer traceable — plus a shareable day card and a verifiable library.', lang),
+        tx('我们出具<b>九章查询报告</b>：逐层列出应用的规则与依据，每一条都可回溯。另有当日参考卡可分享、知识库可核对。', 'A nine-chapter query report lists the rules applied at every layer, each traceable — plus a shareable day card and a verifiable knowledge base.', lang),
       n:
-        tx('报告九章 · 当日帖五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
+        tx('报告九章 · 当日卡五版式 · 知识库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
     },
     {
       h: tx('先定你的业态', 'Pick your trade', lang),
       p:
-        tx('业态决定行业属性取用与关键动作时点。做餐饮与做珠宝，同一个日子的条目不同。<b>可跳过</b>，之后在生辰页再选。', 'Your trade decides the attribute taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.', lang),
+        tx('业态决定行业属性参考与关键动作时点。做餐饮与做珠宝，同一个日子的条目不同。<b>可跳过</b>，之后在资料页再选。', 'Your trade sets the industry-attribute reference and the key action hours. Catering and jewellery read differently on the same day. You can skip and pick later.', lang),
       n:
-        tx('业态只影响营生与工程类用事。嫁娶、入宅不看行业属性，看的是传统婚月与朝向。', 'Trade affects business & engineering matters only. Marriage and moving-in read the traditional marriage-month table and orientation instead.', lang),
+        tx('业态只影响商业与工程类场景。婚嫁、迁居不看行业属性，看的是传统婚月与朝向。', 'Trade affects business and engineering scenarios only. Weddings and relocation read the traditional marriage-month table and orientation instead.', lang),
     },
   ];
 
@@ -167,7 +168,7 @@ export function OnboardScreen(): JSX.Element {
             }
           }}
         >
-          {step < 3 ? t('nav.next', lang) : tx('进入应用', 'Enter Zeji', lang)}
+          {step < 3 ? t('nav.next', lang) : tx('进入应用', 'Get started', lang)}
         </Btn>
       </div>
     </div>

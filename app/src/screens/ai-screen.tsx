@@ -1,5 +1,9 @@
 /**
- * screens/ai-screen.tsx — AI 解读页（配额条 + 四段生成 + 追问 + 边界声明）。
+ * screens/ai-screen.tsx — 释义摘要页（配额条 + 四段拼装 + 追问 + 边界声明）。
+ *
+ * 命名说明：这个功能由本地规则模板拼装，不调用任何生成式模型。
+ * 界面与商品权益一律称「释义摘要」，不出现 AI —— 生成式 AI 在 Creem 属 Restricted 类目，
+ * 首审要求前服务商记录与拒付率，首次提交拿不出来。
  * 生成走 app-store.generateAi（runAiReading 编排：缓存 → 付费 → 免费 → 本地/远程生成）。
  */
 
@@ -20,9 +24,9 @@ const AI_QA: Record<'zh' | 'en' | 'zh-Hant', string[]> = {
 };
 
 const SECTION_TITLES: Record<'zh' | 'en' | 'zh-Hant', string[]> = {
-  zh: ['一、这一日的基本盘', '二、八重取用说了什么', '三、对这件事的意味', '四、落地建议'],
+  zh: ['一、这一日的基本盘', '二、八层规则说了什么', '三、对这件事的意味', '四、落地建议'],
   en: ['1. The day at a glance', '2. What the eight layers say', '3. What it means for this matter', '4. Practical advice'],
-  'zh-Hant': ['一、這一日的基本盤', '二、八重取用說了什麼', '三、對這件事的意味', '四、落地建議'],
+  'zh-Hant': ['一、這一日的基本盤', '二、八层规则說了什麼', '三、對這件事的意味', '四、落地建議'],
 };
 
 export function AiScreen(): JSX.Element {
@@ -51,7 +55,7 @@ export function AiScreen(): JSX.Element {
       <h2 className="tt">
         {t('ai.title', lang)}
         <small>
-          {tx('解读不是重新算一遍，是把已算出的八重依据，按你的业态与用事串成可执行的一段话。每条都引规则出处。', 'A reading does not recompute — it strings the computed layers into actionable prose for your trade and matter. Every line cites its rule.', lang)}
+          {tx('解读不是重新算一遍，是把已算出的八重依据，按你的业态与场景串成可执行的一段话。每条都引规则出处。', 'A reading does not recompute — it strings the computed layers into actionable prose for your trade and matter. Every line cites its rule.', lang)}
         </small>
       </h2>
 
@@ -83,7 +87,7 @@ export function AiScreen(): JSX.Element {
           <div className="aicard" key={i}>
             <div className="ai-h">
               <b>{titles[i]}</b>
-              <span>{tx('智能解读', 'AI', lang)}</span>
+              <span>{tx('白话释义', 'Summary', lang)}</span>
             </div>
             <div className="ai-p" dangerouslySetInnerHTML={{ __html: sec }} />
           </div>
@@ -93,9 +97,9 @@ export function AiScreen(): JSX.Element {
       ) : left > 0 ? (
         <EmptyState
           mark="ai"
-          title={tx('尚未生成解读', 'No reading yet', lang)}
+          title={tx('尚未生成释义', 'No summary yet', lang)}
           body={
-            tx('点下方生成，AI 会按「结论口径 → 业态适配 → 风险与调整 → 执行建议」四段展开，每段引规则出处。', 'Tap generate — the reading unfolds in four sections, each citing its rule source.', lang)
+            tx('点下方生成，释义按「结论口径 → 业态适配 → 风险与调整 → 执行建议」四段展开，每段引规则出处。由本机模板按已算出的依据拼装。', 'Tap generate — the summary unfolds in four sections, each citing its rule source. Assembled on-device from the computed basis.', lang)
           }
           action={
             <Btn variant="gold" onClick={() => void generateAi()}>
@@ -110,7 +114,7 @@ export function AiScreen(): JSX.Element {
             className="ap-s"
             dangerouslySetInnerHTML={{
               __html: tx(
-                'AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。<br>推演筛选与逐层依据始终免费，不受影响。',
+                '释义摘要按次计。可购买摘要包（10 次不清零），或升级年卡享无限次。<br>查询筛选与逐层依据始终免费，不受影响。',
                 'Readings count per use. Buy the 10-pack (never expires) or go yearly for unlimited.<br>Screening and per-layer basis stay free.',
                 lang,
               ),
@@ -185,7 +189,7 @@ export function AiScreen(): JSX.Element {
             </button>
           </div>
           <div className="hint" style={{ fontSize: 10, marginTop: 10 }}>
-            {tx('追问计 1 次。AI 只依据本次已算出的依据作答，不引入未纳入的传统条目，也不预测经营结果。', 'Follow-ups count 1 each. The AI answers only from this reading’s computed basis — it introduces no new sha and predicts no business results.', lang)}
+            {tx('追问计 1 次。答复只依据本次已算出的依据，不引入未纳入的传统条目，也不预测经营结果。', 'Follow-ups count 1 each. Answers draw only on this summary’s computed basis — no new entries, no predictions of business results.', lang)}
           </div>
         </>
       )}
@@ -229,7 +233,7 @@ function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
   if (q.includes('避') || q.includes('avoid') || q.includes('风险')) {
     const bad = day.layers.filter((l) => l.cls === 'warn' || l.cls === 'bad');
     if (bad.length === 0) {
-      return tx('本课无次级煞，唯一要注意的是「不要改时」。', 'No secondary sha — just do not move the hour.', lang);
+      return tx('本次查询无次级煞，唯一要注意的是「不要改时」。', 'No secondary sha — just do not move the hour.', lang);
     }
     return tx(
       `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。调整之法是把关键动作移入时辰、核心环节在室内完成。`,
@@ -238,7 +242,7 @@ function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
     );
   }
   return tx(
-    '本课的可核依据已在报告第二至六章列出。若不在八重条目之内，不会替你补一层。',
+    '本次查询的可核依据已在报告第二至六章列出。若不在八重条目之内，不会替你补一层。',
     'Verifiable basis is listed in report chapters 2–6. Anything outside the eight layers is not invented.',
     lang,
   );

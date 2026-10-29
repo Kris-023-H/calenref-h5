@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { SITE } from '../src/data/site';
 
-const FALLBACK_URL = 'https://zeji.app';
+const FALLBACK_URL = 'https://calenref.kris-188h.workers.dev';
 
 /** 法务页真 URL（审核方会直接打开；必须可直达，不能只挂查询串） */
 const LEGAL_PATHS = ['/privacy', '/terms', '/refund', '/cookies'];
@@ -45,7 +45,7 @@ export function readSiteUrl(root: string): string {
 
 function robotsTxt(siteUrl: string): string {
   return [
-    '# Chinese Date Planner',
+    '# CalenRef',
     `# ${siteUrl}`,
     '',
     'User-agent: *',
@@ -85,9 +85,9 @@ function sitemapXml(siteUrl: string, today: string): string {
 function webManifest(siteUrl: string): string {
   return JSON.stringify(
     {
-      name: '中华历法 · Chinese Date Planner',
-      short_name: '中华历法',
-      description: '中国传统历法文化参考工具：人 · 事 · 日三层，八重取用，本机演算，不构成命理预测。',
+      name: '历知 CalenRef',
+      short_name: '历知',
+      description: '中国传统历法文化参考工具：按场景查阅历法规则与日期参考，全部计算在本机完成，不提供预测。',
       lang: 'zh-CN',
       start_url: `${siteUrl}/`,
       scope: `${siteUrl}/`,
@@ -111,7 +111,7 @@ export function siteMeta(): Plugin {
   let today = '';
 
   return {
-    name: 'zeji-site-meta',
+    name: 'calenref-site-meta',
     configResolved(config) {
       siteUrl = readSiteUrl(config.root);
       today = new Date().toISOString().slice(0, 10);

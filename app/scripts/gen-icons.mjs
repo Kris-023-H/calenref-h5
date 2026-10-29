@@ -1,13 +1,19 @@
 /**
- * scripts/gen-icons.mjs — 生成 PWA / favicon 图标（圭表 Logo，零依赖纯 Node）。
+ * scripts/gen-icons.mjs — 生成 PWA / favicon 图标（历书 Logo，零依赖纯 Node）。
  *
  * 用法：node scripts/gen-icons.mjs
  * 输出：public/icons/ 下 icon.svg、icon-96/192/512.png、icon-maskable-512.png、
  *       apple-touch-icon.png（manifest 引用见 src/lib/pwa-manifest.ts）。
  *
+ * 第三轮改版（Calen / 历知）：
+ *   第一版是「圭表 + 日影」（立柱 + 地平线 + 太阳）—— 传统测日工具，读起来是择日器。
+ *   第二版是「环形知识图谱」—— 又滑向 AI 科技图，与数字内容产品的定位错位。
+ *   这一版是**历书页 + 日期徽标**：一页写着条目的参考、角上一枚日期标记。
+ *   没有放射线、没有刻度环、没有节点网络 —— 它看起来就是一本可查的历书。
+ *
  * 实现说明：无 sharp/canvas 依赖——内置最小软光栅化器（src-over 混合 +
  * 圆形笔刷描线）与最小 PNG 编码器（zlib + CRC32）。Logo 与
- * src/components/icons.tsx 的 GuibiaoLogo 逐路径一致（viewBox 40×40）。
+ * src/components/icons.tsx 的 AlmanacLogo 逐路径一致（viewBox 40×40）。
  */
 
 import { deflateSync } from 'node:zlib';
@@ -112,6 +118,25 @@ function strokeLine(buf, size, x0, y0, x1, y1, w, color, alpha = 1) {
   }
 }
 
+/**
+ * 圆周描线（可指定角度区间与虚线节距）。
+ * 外圈刻度与内圈图谱边都用它；虚线按弧长切分，避免角度越小、节距越密的畸变。
+ */
+function strokeArc(buf, size, cx, cy, r, w, color, { alpha = 1, from = 0, to = 360, dash = 0, gap = 0 } = {}) {
+  const span = to - from;
+  const steps = Math.max(12, Math.ceil((span / 360) * r * 10));
+  for (let i = 0; i <= steps; i += 1) {
+    const deg = from + (span * i) / steps;
+    if (dash > 0) {
+      // 弧长是像素，dash/gap 是用户单位 → 先换算再取模，否则在 512px 下会退化成锯齿
+      const arcLen = ((deg - from) * Math.PI * r) / 180;
+      if (arcLen % (dash + gap) > dash) continue;
+    }
+    const rad = (deg * Math.PI) / 180;
+    fillCircle(buf, size, cx + r * Math.cos(rad), cy + r * Math.sin(rad), Math.max(0.45, w / 2), color, alpha);
+  }
+}
+
 function fillRoundRect(buf, size, x0, y0, x1, y1, r, color, alpha = 1) {
   const [er, eg, eb] = hexRgb(color);
   for (let y = Math.floor(y0); y < Math.ceil(y1); y += 1) {
@@ -125,52 +150,107 @@ function fillRoundRect(buf, size, x0, y0, x1, y1, r, color, alpha = 1) {
   }
 }
 
-// ---------------------------------------------------------------- 圭表 Logo
+// ---------------------------------------------------------------- 历书 Logo
 
 /**
- * 绘制圭表（viewBox 40×40，与 GuibiaoLogo 一致）。
- * @param scale Logo 缩放（1 = 占满画布）
- * @param detailed 是否绘外环点线（小尺寸省略，等效组件 size>=26 分支）
+ * 日历格几何（用户单位，40×40 画布）。
+ *
+ * 五个版本的取舍都写在这里，免得下次又绕回去：
+ *   ① 圭表 + 日影        → 传统测日工具，读起来是择日器（类目风险最高）；
+ *   ② 节点 + 边          → 科技拓扑图，滑向 AI 视觉（Restricted 风险）；
+ *   ③ 文档页 + 三条目录行 → 干净但像备忘录，没有历法特征；
+ *   ④ 日历格 + 单个圆点   → 96px 下退化成「卡片 + 镜头」，像相机；
+ *   ⑤ 日历格 + 日期格阵（当前）→ 顶部月份条 + 3×3 日期格，首格朱色标当日。
+ *      零科技符号、零刻度环，它说的是「这是一本可查的历法」。
+ *      格用圆角方块而非圆点：圆点在 2×3 排布下读成骰子/键盘，方块才是日期格。
  */
-function drawGuibiao(buf, size, { scale = 1, detailed = true, color = GOLD }) {
-  const s = (size / 40) * scale;
-  const u = (n) => n * s; // 用户单位 → 像素
-  if (detailed) {
-    // 外环点线（dasharray 1.2 8.01 → 点珠近似）
-    const rOut = u(17.6);
-    for (let a = 0; a < 360; a += 9.4) {
-      const rad = (a * Math.PI) / 180;
-      fillCircle(buf, size, 20 * s + rOut * Math.cos(rad), 20 * s + rOut * Math.sin(rad), Math.max(0.6, u(0.55)), color, 0.3);
-    }
-  }
-  // 内环（圆周盖印描线）
-  const rIn = u(detailed ? 15.2 : 16.4);
-  const stepsIn = 720;
-  for (let i = 0; i <= stepsIn; i += 1) {
-    const rad = (i / stepsIn) * Math.PI * 2;
-    fillCircle(buf, size, 20 * s + rIn * Math.cos(rad), 20 * s + rIn * Math.sin(rad), Math.max(0.5, u(0.5)), color, 0.16);
-  }
-  // 圭面（地平）
-  strokeLine(buf, size, u(6.4), u(29.2), u(33.6), u(29.2), u(1.7), color, 1);
-  // 表（立柱）
-  strokeLine(buf, size, u(16.6), u(10.4), u(16.6), u(29.2), u(2.1), color, 1);
-  // 表影（透明度 0.4）
-  strokeLine(buf, size, u(16.6), u(29.2), u(26.4), u(29.2), u(3.6), color, 0.4);
-  // 日（实心点）
-  fillCircle(buf, size, u(28.2), u(12.2), u(3.1), color, 1);
+const CAL = { x0: 10.8, y0: 9.6, x1: 29.2, y1: 30.4, r: 3.2 };
+const STROKE_W = 1.5;
+/** 顶部月份条的下沿 */
+const HEAD_Y = 14.4;
+/** 日期格阵：3×3 方格，首格为「当日」朱色标记 */
+const GRID = { cell: 2.35, gapX: 2.45, gapY: 2.1, r: 0.5, cols: 3, rows: 3 };
+const VERM = '#B23A2B';
+
+/**
+ * 日期格阵的左上角与步距（用户单位）；格阵在内框里水平/垂直居中。
+ * 行距比列距略紧：内框 15.4×14.5 近方，等距会让上下留白不足 1.5 单位，
+ * 44px 下格阵会贴住外框（实测像素级粘连），所以纵向单独收一档。
+ */
+function gridBox() {
+  const inner = {
+    x0: CAL.x0 + STROKE_W,
+    x1: CAL.x1 - STROKE_W,
+    y0: HEAD_Y,
+    y1: CAL.y1 - STROKE_W,
+  };
+  const pitchX = GRID.cell + GRID.gapX;
+  const pitchY = GRID.cell + GRID.gapY;
+  const spanX = GRID.cell * GRID.cols + GRID.gapX * (GRID.cols - 1);
+  const spanY = GRID.cell * GRID.rows + GRID.gapY * (GRID.rows - 1);
+  return {
+    pitchX,
+    pitchY,
+    x: inner.x0 + (inner.x1 - inner.x0 - spanX) / 2,
+    y: inner.y0 + (inner.y1 - inner.y0 - spanY) / 2,
+  };
 }
 
-/** 标准图标：漆底圆角方 + 金 Logo（小尺寸省略外环、加粗描边） */
+/**
+ * 绘制日历格（viewBox 40×40，与 AlmanacLogo 一致）。
+ * @param scale Logo 缩放（1 = 占满画布）
+ * @param detailed 小尺寸（<26）把描边与标记加粗一档，抵消缩小时的灰化
+ */
+function drawCard(buf, size, { scale = 1, detailed = true, color = GOLD } = {}) {
+  const s = (size / 40) * scale;
+  /** 长度（描边宽、圆角半径）—— 不带偏移 */
+  const u = (n) => n * s;
+  /** 坐标 —— 带居中偏移；maskable 缩到 0.62 时靠它把图案摆回正中 */
+  const off = (size - 40 * s) / 2;
+  const p = (n) => off + n * s;
+  const boost = detailed ? 1 : 1.22;
+  const sw = u(STROKE_W * boost);
+
+  // ① 铺金整块 → ② 漆色内缩挖出描边（圆角严格同心）
+  fillRoundRect(buf, size, p(CAL.x0), p(CAL.y0), p(CAL.x1), p(CAL.y1), u(CAL.r), color, 1);
+  fillRoundRect(
+    buf, size,
+    p(CAL.x0) + sw, p(CAL.y0) + sw, p(CAL.x1) - sw, p(CAL.y1) - sw,
+    Math.max(0, u(CAL.r) - sw), LACQUER, 1,
+  );
+
+  // ③ 顶部月份条：上沿跟随外框圆角，下沿切平
+  fillRoundRect(buf, size, p(CAL.x0), p(CAL.y0), p(CAL.x1), p(HEAD_Y), u(CAL.r), color, 1);
+  fillRoundRect(buf, size, p(CAL.x0), p(CAL.y0 + CAL.r), p(CAL.x1), p(HEAD_Y), 0, color, 1);
+
+  // ④ 日期格阵；首格朱色，标「当日」
+  const box = gridBox();
+  for (let ri = 0; ri < GRID.rows; ri += 1) {
+    for (let ci = 0; ci < GRID.cols; ci += 1) {
+      const x = box.x + ci * box.pitchX;
+      const y = box.y + ri * box.pitchY;
+      const today = ri === 0 && ci === 0;
+      fillRoundRect(
+        buf, size,
+        p(x), p(y), p(x + GRID.cell), p(y + GRID.cell), u(GRID.r),
+        today ? VERM : color, 1,
+      );
+    }
+  }
+}
+
+/** 标准图标：漆底圆角方 + 金 Logo（小尺寸省略外圈、加粗描边） */
 function renderIcon(size, { maskable = false } = {}) {
   const buf = Buffer.alloc(size * size * 4, 0);
   if (maskable) {
-    // maskable：全出血方底，Logo 收进 60% 安全区
+    // maskable：全出血方底，Logo 收进安全区。安全区是中央 80% 的圆（半径 40%），
+    // 本图案半对角线 = √(9.2²+10.4²) ≈ 13.9/40，故 scale 0.92 时只占 32%，留足余量。
     fillRoundRect(buf, size, 0, 0, size, size, 0, LACQUER, 1);
-    drawGuibiao(buf, size, { scale: 0.62, detailed: size >= 96 });
+    drawCard(buf, size, { scale: 0.92, detailed: size >= 96 });
   } else {
     const radius = size * 0.22;
     fillRoundRect(buf, size, 0, 0, size, size, radius, LACQUER, 1);
-    drawGuibiao(buf, size, { scale: 1, detailed: size >= 26 });
+    drawCard(buf, size, { scale: 1, detailed: size >= 26 });
   }
   return encodePNG(size, size, buf);
 }
@@ -193,16 +273,27 @@ for (const [name, size, opts] of outputs) {
   console.log(`✓ ${name} (${size}×${size}, ${(png.length / 1024).toFixed(1)} KB)`);
 }
 
-// 矢量 favicon（与 GuibiaoLogo 同路径，漆底圆角方）
+// 矢量 favicon（与 AlmanacLogo 同几何，漆底圆角方）
+const gbox = gridBox();
+const gridCells = [];
+for (let ri = 0; ri < GRID.rows; ri += 1) {
+  for (let ci = 0; ci < GRID.cols; ci += 1) {
+    const x = gbox.x + ci * gbox.pitchX;
+    const y = gbox.y + ri * gbox.pitchY;
+    const today = ri === 0 && ci === 0;
+    gridCells.push(
+      `<rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${GRID.cell}" height="${GRID.cell}" rx="${GRID.r}" fill="${today ? VERM : GOLD}"/>`,
+    );
+  }
+}
+
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" width="40" height="40">
   <rect width="40" height="40" rx="9" fill="${LACQUER}"/>
-  <g fill="none" stroke="${GOLD}" stroke-width="1.4" stroke-linecap="round">
-    <circle cx="20" cy="20" r="15.2" stroke-opacity=".16"/>
-    <path d="M6.4 29.2h27.2" stroke-width="1.7"/>
-    <path d="M16.6 10.4v18.8" stroke-width="2.1"/>
-    <path d="M16.6 29.2h9.8" stroke-width="3.6" stroke-opacity=".4"/>
-  </g>
-  <circle cx="28.2" cy="12.2" r="3.1" fill="${GOLD}"/>
+  <rect x="${CAL.x0}" y="${CAL.y0}" width="${(CAL.x1 - CAL.x0).toFixed(1)}" height="${(CAL.y1 - CAL.y0).toFixed(1)}" rx="${CAL.r}"
+        fill="none" stroke="${GOLD}" stroke-width="${STROKE_W}"/>
+  <path d="M${CAL.x0} ${HEAD_Y}V${CAL.y0 + CAL.r}A${CAL.r} ${CAL.r} 0 0 1 ${CAL.x0 + CAL.r} ${CAL.y0}H${CAL.x1 - CAL.r}A${CAL.r} ${CAL.r} 0 0 1 ${CAL.x1} ${CAL.y0 + CAL.r}V${HEAD_Y}Z"
+        fill="${GOLD}"/>
+  ${gridCells.join('\n  ')}
 </svg>
 `;
 writeFileSync(join(OUT_DIR, 'icon.svg'), svg.trim() + '\n');

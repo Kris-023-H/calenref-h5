@@ -1,10 +1,10 @@
 /**
- * components/compass-intro.tsx — 启动页罗盘（同心圆 + 十二支 glyph + 圭表核心，2.4s 进入）。
+ * components/compass-intro.tsx — 启动页罗盘（同心圆 + 十二支 glyph + 品牌图标核心，2.4s 进入）。
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ZHI } from '../engine/calendar/sexagenary';
-import { GuibiaoLogo } from './icons';
+import { AlmanacLogo } from './icons';
 import { t, tx } from '../i18n';
 import type { Lang } from '../engine/types';
 
@@ -47,16 +47,16 @@ export function CompassIntro({
           ))}
         </div>
         <div className="core">
-          <GuibiaoLogo size={44} tone="light" />
+          <AlmanacLogo size={44} tone="light" />
         </div>
       </div>
-      <div className={`brand${lang === 'en' ? ' en' : ''}`}>{tx('中 华 历 法', 'CHINESE DATE PLANNER', lang)}</div>
+      <div className={`brand${lang === 'en' ? ' en' : ''}`}>{tx('历 知', 'CALENREF', lang)}</div>
       <div className="sub">{t('app.slogan', lang)}</div>
       <div className="line" />
       <div className="disc">
         {tx(
-          '免责声明：本产品为中国传统历法文化参考工具，仅供学习娱乐，不构成命理预测或灵性指导。',
-          'Disclaimer: Traditional Chinese cultural calendar reference for educational use. Not a fortune-telling or spiritual service. No prediction of outcomes.',
+          '免责声明：本产品为传统历法文化参考工具，仅供文化学习与研究参考，不提供任何预测、咨询或灵性指导。',
+          'Disclaimer: A traditional Chinese almanac reference tool for cultural study and research only. No predictions, consulting, or spiritual guidance.',
           lang,
         )}
       </div>

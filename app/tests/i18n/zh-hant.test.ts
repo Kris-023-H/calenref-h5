@@ -8,15 +8,15 @@ describe('zh-Hant conversion spot checks', () => {
     expect(zhHant['person.birthDate']).toBe('出生日期');
     expect(zhHant['person.readingRaw']).toBe('原始鐘錶');
     expect(zhHant['lang.calGreg']).toBe('公曆');
-    expect(zhHant['event.title']).toBe('選擇用事');
+    expect(zhHant['event.title']).toBe('選擇查詢場景');
     expect(zhHant['common.copy']).toBe('複製');
     expect(zhHant['scan.generic']).toBe('通用模式');
     expect(zhHant['eng.jianchu.po']).toContain('破日');
     expect(zhHant['onboard.s1Title']).toBe('為重要的日子\n做傳統曆法參考');
   });
   it('simplified originals differ', () => {
-    expect(zh['home.cta']).toBe('开始推演');
-    expect(zhHant['home.cta']).toBe('開始推演');
+    expect(zh['home.cta']).toBe('新建查询');
+    expect(zhHant['home.cta']).toBe('新建查詢');
   });
 });
 

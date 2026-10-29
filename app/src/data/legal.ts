@@ -37,6 +37,12 @@ export interface LegalSection {
 export interface LegalDoc {
   title: string;
   updated: string;
+  /**
+   * 页首免责段（Creem 整改方案 4.2 的硬性要求）：
+   * 隐私政策与服务条款**开头**必须明示「非占卜、非占星、非咨询、非灵性指导，
+   * 不作预测或结果承诺」。放正文里不够——审核员按页首判断。
+   */
+  notice?: string;
   /** 摘要（页首一句，审核方第一眼看到的东西） */
   lead: string;
   sections: LegalSection[];
@@ -54,6 +60,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
   privacy: {
     title: '隐私政策',
     updated: UPDATED,
+    notice: '本产品仅为教育与研究目的提供中国传统历法与文化参考信息，不提供占卜、占星、咨询或灵性指导服务，不作任何预测、保证或结果承诺。全部内容仅供文化参考与历史研究。',
     lead: `本政策说明 ${ENTITY} 在「本应用」中如何处理你的信息。核心一句话：你的出生资料与历法参考记录保存在你自己的设备上，我们收不到。`,
     sections: [
       {
@@ -71,7 +78,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         ],
         list: [
           '人物档案：姓名或称呼、出生日期与时辰、出生地、性别（用于出生资料与真太阳时校正）',
-          '历法参考记录：用事类型、行业、坐向、筛选结果、生成的报告与当日帖',
+          '历法参考记录：场景类型、行业、坐向、筛选结果、生成的报告与当日帖',
           '本机偏好：语言、时区、币种、历法口径、匿名统计开关',
           '购买凭证：兑换码与解锁状态（不含任何银行卡信息）',
         ],
@@ -80,7 +87,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         h: '3. 出生资料的处理位置',
         p: [
           '全部历法计算在你的设备本地完成，出生资料不经过网络传输，我们无法读取、也无法导出。',
-          '默认的 AI 白话解读同样在本机用模板生成，不联网。如未来提供云端解读，我们会在使用前单独征求你的同意，并先更新本政策。',
+          '默认的白话释义同样在本机用模板生成，不联网。如未来提供云端释义，我们会在使用前单独征求你的同意，并先更新本政策。',
           '因此，清除浏览器数据、更换设备或卸载应用，都会导致本机资料与购买凭证消失。请用「我的 → 导出备份」自行留存。',
         ],
       },
@@ -88,7 +95,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         h: '4. Cookie 与统计分析',
         p: [
           '我们使用必要存储记住你的语言与设置，这类存储始终开启，否则应用无法正常工作。',
-          '经你同意后，我们使用 Google Analytics 4 统计页面访问与三个关键操作（发起推演、开始 AI 解读、点击购买）。统计事件不含姓名、出生资料或任何可识别个人的内容，也不记录完整 IP 地址。',
+          '经你同意后，我们使用 Google Analytics 4 统计页面访问与三个关键操作（发起查询、开始生成摘要、点击购买）。统计事件不含姓名、出生资料或任何可识别个人的内容，也不记录完整 IP 地址。',
           '你可以随时在「我的 → Cookie 与统计偏好」中撤回同意。撤回后我们不再加载统计脚本，已产生的统计数据为聚合结果，无法回溯删除。详见《Cookie 政策》。',
         ],
       },
@@ -139,6 +146,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
   terms: {
     title: '服务条款',
     updated: UPDATED,
+    notice: '本产品仅为教育与研究目的提供中国传统历法与文化参考信息，不提供占卜、占星、咨询或灵性指导服务，不作任何预测、保证或结果承诺。全部内容仅供文化参考与历史研究。',
     lead: '使用「本应用」即表示你接受本条款。请特别阅读第 2 条（服务性质）与第 7 条（责任限制）。',
     sections: [
       {
@@ -150,7 +158,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '2. 服务性质：文化参考工具，不是专业意见',
         p: [
-          '本服务依据传统历法、历法文献与民俗规则，对日期与用事作出参考性评估。它是一项文化与民俗工具，不是科学预测，也不保证任何结果。',
+          '本服务依据传统历法、历法文献与民俗规则，对日期与场景作出参考性评估。它是一项文化与民俗工具，不是科学预测，也不保证任何结果。',
           '本服务不构成医疗、法律、财务、投资、婚姻或任何专业建议。涉及健康、诉讼、大额交易、婚姻登记等重大决定，请咨询相应持牌专业人士。',
           '所有历法参考结论仅供参考，最终决定与后果由你自行承担。',
         ],
@@ -189,7 +197,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '7. 免责与责任限制',
         p: [
-          '本服务按「现状」提供。我们尽力保证推演规则稳定与数据准确，但不保证服务不中断、无错误，或结果符合你的期望。',
+          '本服务按「现状」提供。我们尽力保证规则稳定与数据准确，但不保证服务不中断、无错误，或结果符合你的期望。',
           `在适用法律允许的最大范围内，${ENTITY} 对因使用或无法使用本服务产生的间接、附带、后果性损失不承担责任；就任一订单的直接赔偿责任，以你为该订单实际支付的金额为上限。`,
           '本条不排除或限制依法不可排除的责任，包括因故意或重大过失造成的人身伤害与欺诈责任。',
         ],
@@ -218,12 +226,12 @@ const ZH: Record<LegalPage, LegalDoc> = {
   refund: {
     title: '退款政策',
     updated: UPDATED,
-    lead: '本服务为数字产品，一次性交付、即时生效。未使用的订单可在 7 日内退款；已经生成并查看报告、或已消耗 AI 解读次数的订单不予退款。',
+    lead: '本服务为数字产品，一次性交付、即时生效。未使用的订单可在 7 日内退款；已经生成并查看报告、或已消耗释义摘要次数的订单不予退款。',
     sections: [
       {
         h: '1. 适用范围',
         p: [
-          '本政策适用于通过本服务完成的全部一次性购买（单次报告、AI 解读次数包、双人对照、年度不限次）。',
+          '本政策适用于通过本服务完成的全部一次性购买（单次报告、释义摘要次数包、双人对照、年度不限次）。',
           '本服务不含订阅与自动续费，因此不存在「忘记取消」类争议。',
         ],
       },
@@ -231,7 +239,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         h: '2. 可以退款的情形',
         p: ['符合下列任一情形，请在购买后 7 日内提出，我们核实后退款：'],
         list: [
-          '付费后未生成、未查看任何报告，且未消耗 AI 解读次数',
+          '付费后未生成、未查看任何报告，且未消耗白话释义次数',
           '同一订单被重复扣款（含网络重试导致的重复支付）',
           '因我们的技术故障导致已付费内容无法打开，且我们在 7 日内无法修复',
           '你所在法域的消费者保护法强制赋予的退款权利',
@@ -244,7 +252,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         ],
         list: [
           '报告已生成并可查看（无论是否实际阅读）',
-          'AI 解读次数已部分或全部消耗',
+          '释义摘要次数已部分或全部消耗',
           '已使用兑换码完成解锁',
           '以「历法参考结果不符合预期」「事后认为不准确」为由——本服务是文化参考工具，不承诺结果（见《服务条款》第 2 条）',
           '因你自行清除浏览器数据、更换设备或卸载应用导致凭证丢失（可用订单号申请补发，无需重新付费）',
@@ -341,12 +349,13 @@ const EN: Record<LegalPage, LegalDoc> = {
   privacy: {
     title: 'Privacy Policy',
     updated: UPDATED,
-    lead: `This policy explains how ${ENTITY} handles information in Zeji. In one sentence: your birth data and readings stay on your own device — we never receive them.`,
+    notice: 'This product provides traditional Chinese calendar and cultural reference information for educational and research purposes only. It is not a fortune-telling, astrology, consulting, or spiritual guidance service. No predictions, guarantees, or outcome promises are made. All content is for cultural reference and historical study.',
+    lead: `This policy explains how ${ENTITY} handles information in CalenRef. In one sentence: your birth data and readings stay on your own device — we never receive them.`,
     sections: [
       {
         h: '1. Who processes your information',
         p: [
-          `Zeji (the "Service") is operated by ${ENTITY}, which acts as the data controller for the Service.`,
+          `CalenRef (the "Service") is operated by ${ENTITY}, which acts as the data controller for the Service.`,
           `Privacy contact: ${PRIVACY_EMAIL}. General support: ${EMAIL}. We normally respond within 30 days.`,
         ],
       },
@@ -367,7 +376,7 @@ const EN: Record<LegalPage, LegalDoc> = {
         h: '3. Where birth data is processed',
         p: [
           'Chart casting and scoring run entirely on your device. Birth data is not transmitted over the network, and we cannot read or export it.',
-          'The default AI reading is also generated locally from templates, with no network call. If a cloud-based reading option is ever offered, we will ask for your separate consent before use and update this policy first.',
+          'The default summary is also assembled locally from rule templates, with no network call. If a cloud-based reading option is ever offered, we will ask for your separate consent before use and update this policy first.',
           'As a result, clearing browser data, switching devices or uninstalling the app will erase your on-device records and purchase credentials. Please keep a backup via "Me → Export backup".',
         ],
       },
@@ -375,7 +384,7 @@ const EN: Record<LegalPage, LegalDoc> = {
         h: '4. Cookies and analytics',
         p: [
           'We use essential local storage to remember your language and settings. This storage is always on — the app cannot work without it.',
-          'With your consent, we use Google Analytics 4 to count page visits and three key actions (starting a date check, starting an AI reading, tapping buy). These events contain no name, birth data or other identifiable content, and we do not record full IP addresses.',
+          'With your consent, we use Google Analytics 4 to count page visits and three key actions (starting a date check, starting a summary, tapping buy). These events contain no name, birth data or other identifiable content, and we do not record full IP addresses.',
           'You can withdraw consent at any time under "Me → Cookie & analytics preferences". Once withdrawn we stop loading the analytics script; data already aggregated cannot be traced back and deleted. See the Cookie Policy for details.',
         ],
       },
@@ -422,12 +431,13 @@ const EN: Record<LegalPage, LegalDoc> = {
   terms: {
     title: 'Terms of Service',
     updated: UPDATED,
-    lead: 'By using Zeji you accept these terms. Please read section 2 (nature of the service) and section 7 (limitation of liability) with particular care.',
+    notice: 'This product provides traditional Chinese calendar and cultural reference information for educational and research purposes only. It is not a fortune-telling, astrology, consulting, or spiritual guidance service. No predictions, guarantees, or outcome promises are made. All content is for cultural reference and historical study.',
+    lead: 'By using CalenRef you accept these terms. Please read section 2 (nature of the service) and section 7 (limitation of liability) with particular care.',
     sections: [
       {
         h: '1. Agreement',
         p: [
-          `These terms are an agreement between you and ${ENTITY} regarding your use of Zeji. By accessing or using the Service you confirm that you have read and accept them. If you do not agree, please stop using the Service.`,
+          `These terms are an agreement between you and ${ENTITY} regarding your use of CalenRef. By accessing or using the Service you confirm that you have read and accept them. If you do not agree, please stop using the Service.`,
         ],
       },
       {
@@ -501,12 +511,12 @@ const EN: Record<LegalPage, LegalDoc> = {
   refund: {
     title: 'Refund Policy',
     updated: UPDATED,
-    lead: 'This is a digital product, delivered instantly and irrevocably. Unused orders can be refunded within 7 days; orders where a report has been generated and viewed, or AI credits consumed, are not refundable.',
+    lead: 'This is a digital product, delivered instantly and irrevocably. Unused orders can be refunded within 7 days; orders where a report has been generated and viewed, or summary credits consumed, are not refundable.',
     sections: [
       {
         h: '1. Scope',
         p: [
-          'This policy covers every one-off purchase made through the Service (single report, AI credit pack, two-person combined reading, annual unlimited).',
+          'This policy covers every one-off purchase made through the Service (single report, summary credit pack, two-person combined reading, annual unlimited).',
           'The Service has no subscriptions or auto-renewals, so there are no "forgot to cancel" disputes.',
         ],
       },
@@ -514,7 +524,7 @@ const EN: Record<LegalPage, LegalDoc> = {
         h: '2. When a refund is available',
         p: ['Contact us within 7 days of purchase if any of the following applies, and we will refund after verification:'],
         list: [
-          'No report was generated or viewed after payment, and no AI credits were consumed',
+          'No report was generated or viewed after payment, and no summary credits were consumed',
           'The same order was charged twice (including duplicate payments caused by network retries)',
           'A technical fault on our side made paid content inaccessible and we could not fix it within 7 days',
           'A refund right is mandatorily granted by the consumer law of your jurisdiction',
@@ -525,7 +535,7 @@ const EN: Record<LegalPage, LegalDoc> = {
         p: ['The Service delivers digital content instantly. Refunds are not available in these cases:'],
         list: [
           'A report has been generated and is viewable, whether or not you read it',
-          'AI reading credits have been partly or fully consumed',
+          'Summary credits have been partly or fully consumed',
           'A redemption code has already been used to unlock content',
           'The request is based on "the reading did not match my expectations" or a later view that it was inaccurate — the Service is a cultural reference tool and promises no outcome (see Terms, section 2)',
           'Credentials were lost because you cleared browser data, changed device or uninstalled the app (we will reissue with your order reference at no charge)',

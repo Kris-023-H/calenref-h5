@@ -1,5 +1,5 @@
 /**
- * services/ai/ai-service.ts — AI 解读接口 + 配额/缓存编排。
+ * services/ai/ai-service.ts — 释义摘要接口 + 配额/缓存编排。
  * 双实现：LocalTemplateAiService（默认，离线模板）与 RemoteAiService（默认关闭，
  * 上线前部署推理端点后经 .env 打开）。编排层统一处理配额扣减与缓存命中。
  */

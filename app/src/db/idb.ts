@@ -4,7 +4,7 @@
  * 不可用时由 lib/storage-fallback 的 KV 适配层顶上（同一 AsyncKV 接口）。
  */
 
-export const DB_NAME = 'zeji';
+export const DB_NAME = 'calenref';
 export const DB_VERSION = 1;
 
 export const STORES = [

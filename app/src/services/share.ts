@@ -17,7 +17,7 @@ function shareHost(): string {
   const fromEnv = import.meta.env.VITE_SHARE_HOST;
   if (typeof fromEnv === 'string' && fromEnv.length > 0) return fromEnv.replace(/\/$/, '');
   if (typeof window !== 'undefined' && window.location?.origin) return window.location.origin;
-  return 'https://zeji.app';
+  return 'https://calenref.kris-188h.workers.dev';
 }
 
 export function buildShareUrl(t: ShareTarget): string {

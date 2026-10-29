@@ -149,7 +149,7 @@ export function ScrollX({
   );
 }
 
-/** 横滑卡片行（吉时、报告备选等） */
+/** 横滑卡片行（时辰、报告备选等） */
 export function HScroll({ children }: { children: ReactNode }): JSX.Element {
   return <div className="hours">{children}</div>;
 }

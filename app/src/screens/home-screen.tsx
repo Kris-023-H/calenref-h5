@@ -76,10 +76,10 @@ export function HomeScreen(): JSX.Element {
   };
 
   const quick: Array<[string, string, string]> = [
-    ['open', '開', tx('开业', 'Open', lang)],
-    ['sign', '契', tx('签约', 'Sign', lang)],
-    ['marry', '囍', tx('嫁娶', 'Marry', lang)],
-    ['move', '遷', tx('入宅', 'Move', lang)],
+    ['open', '開', tx('开业参考', 'Opening', lang)],
+    ['sign', '契', tx('签约参考', 'Contract', lang)],
+    ['marry', '囍', tx('婚嫁参考', 'Wedding', lang)],
+    ['move', '遷', tx('迁居参考', 'Relocation', lang)],
   ];
 
   const article = KB_ARTICLES[0];
@@ -92,7 +92,7 @@ export function HomeScreen(): JSX.Element {
             <span className="applogo">
               <BrandMark size={20} tone="gold" />
             </span>
-            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={tx('历法参考', 'Calendar reference', lang)} titleSize={15} />
+            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={tx('历法参考', 'Almanac reference', lang)} titleSize={15} />
           </div>
         }
         actions={
@@ -122,7 +122,7 @@ export function HomeScreen(): JSX.Element {
             {ZHI[(dg.zhi + 6) % 12]}
           </div>
           <div className="hi-cap" role="button" tabIndex={0} onClick={() => openSheet('why')} onKeyDown={(e) => e.key === 'Enter' && openSheet('why')}>
-            {t('home.todayTitle', lang)} · {tx('通用口径', 'general reading', lang)}
+            {tx('今日历法参考', 'Today\'s calendar reference', lang)} · {tx('通用信息', 'general info', lang)}
             <b>?</b>
             <Icon name="right" size={10} />
           </div>
@@ -141,8 +141,8 @@ export function HomeScreen(): JSX.Element {
 
       <div className="home-disc">
         {tx(
-          '中国传统历法文化参考工具 · 仅供学习娱乐，不构成命理预测',
-          'Traditional Chinese calendar reference for educational use · No fortune-telling or predictions',
+          '传统历法文化参考工具 · 仅供文化学习与研究参考，不提供任何预测、咨询或灵性指导',
+          'Traditional Chinese almanac reference tool · For cultural study and research only. No predictions, consulting, or spiritual guidance.',
           lang,
         )}
       </div>
@@ -152,8 +152,8 @@ export function HomeScreen(): JSX.Element {
         <div
           dangerouslySetInnerHTML={{
             __html: tx(
-              '以上为<b>通书宜忌</b>，按建除十二值日排，对所有人一致，<b>不针对你的出生年</b>。你的推演要看人·事·日三元。',
-              'Above is the <b>general almanac reading</b> — same for everyone, <b>not tuned to your birth details</b>. Your reading weighs person · matter · day.',
+              '以上为<b>传统历法通用信息</b>，按建除十二值日排，对所有人一致，<b>不针对你的出生年</b>。具体场景的参考要看人·事·日三层。',
+              'Above is <b>general traditional calendar information</b> — same for everyone, <b>not tuned to your birth details</b>. A scenario query weighs person · matter · day.',
               lang,
             ),
           }}
@@ -196,7 +196,7 @@ export function HomeScreen(): JSX.Element {
             <span>
               {weekdayShort(nextGood.weekday, lang)} ／ {nextGood.dayGZ.text}
               {tx('日', ' Day', lang)} ／ {jianchuName(nextGood.jianchu, lang)}
-              {tx('日', ' Day', lang)} ／ {tx('吉时 ', 'hour ', lang)}
+              {tx('日', ' Day', lang)} ／ {tx('时辰 ', 'hour ', lang)}
               {nextGood.goodHours[0]?.name ?? '—'}
               {tx('时', '', lang)}
             </span>
@@ -206,7 +206,7 @@ export function HomeScreen(): JSX.Element {
       )}
 
       <div className="sect">
-        <h3>{tx('进行中的推演', 'Active readings', lang)}</h3>
+        <h3>{tx('进行中的查询', 'Active queries', lang)}</h3>
         <em>{tx('进行中', 'Active', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('reports')} onKeyDown={(e) => e.key === 'Enter' && switchTab('reports')}>
           {t('common.all', lang)}
@@ -224,7 +224,7 @@ export function HomeScreen(): JSX.Element {
             <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>
               {scans.length > 0
                 ? scans[0].title
-                : `${termText(ev.name, lang)} · ${tx('尚未推演', 'not run yet', lang)}`}
+                : `${termText(ev.name, lang)} · ${tx('尚未查询', 'not queried yet', lang)}`}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>
               {scans.length > 0
@@ -242,8 +242,8 @@ export function HomeScreen(): JSX.Element {
       </div>
 
       <div className="sect">
-        <h3>{tx('起一局', 'Start a reading', lang)}</h3>
-        <em>{tx('新起', 'New', lang)}</em>
+        <h3>{tx('新建查询', 'New query', lang)}</h3>
+        <em>{tx('New Query', 'New Query', lang)}</em>
       </div>
       <div className="quick">
         {quick.map((x) => (
@@ -256,9 +256,9 @@ export function HomeScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('home.kbEntry', lang)}</h3>
-        <em>{tx('历法知识', 'Knowledge', lang)}</em>
+        <em>{tx('典籍索引', 'Sources', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('kb')} onKeyDown={(e) => e.key === 'Enter' && switchTab('kb')}>
-          {t('nav.more', lang)}
+          {tx('浏览全部文章', 'Browse all articles', lang)}
         </a>
       </div>
       <div className="mini-art" role="button" tabIndex={0} onClick={() => push('article', { articleId: String(article.id) })}>

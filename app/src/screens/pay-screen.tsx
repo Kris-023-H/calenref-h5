@@ -130,7 +130,7 @@ export function PayScreen(): JSX.Element {
                 : t('ai.quotaLeft', lang, { n: quota.freeLeft })}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.6 }}>
-              {tx('免费额度：每月 3 次 AI 解读。推演筛选不限次，报告与解读须解锁。', 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.', lang)}
+              {tx('免费额度：每月 3 次释义摘要。查询筛选不限次，报告与摘要须解锁。', 'Free quota: 3 summaries per month. Screening is unlimited; reports and summaries need unlocking.', lang)}
             </div>
           </div>
         </div>
@@ -158,7 +158,7 @@ export function PayScreen(): JSX.Element {
             <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
             <br />
             {k === 'year'
-              ? tx('所有用事不限次 · AI 解读无限 · 知库全解锁 · 当日帖去印记', 'Unlimited matters · unlimited AI · full library · no card watermark', lang)
+              ? tx('所有场景不限次 · 释义摘要无限 · 知识库全解锁 · 当日帖去印记', 'Unlimited scenarios · unlimited summaries · full library · no card watermark', lang)
               : k === 'ai10'
                 ? tx('次数不清零，随用随扣', 'Readings never expire; deduct as you go', lang)
                 : tx('含逐层依据、当日干支、出局归因、关键动作时点与传统条目边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}
@@ -209,7 +209,7 @@ export function PayScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 14, lineHeight: 1.7 }}>
-        {tx('购买即表示你理解：本产品提供传统历法规则的工程化推演，不预测结果、不承诺宜忌、不涉及医疗与投资建议。', 'Buying means you understand: this product engineers the traditional calendar rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.', lang)}
+        {tx('购买即表示你理解：本产品提供传统历法规则的工程化检索，不预测结果、不承诺宜忌、不涉及医疗与投资建议。', 'Buying means you understand: this product engineers the traditional calendar rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.', lang)}
       </div>
 
       <div className="ctabar">

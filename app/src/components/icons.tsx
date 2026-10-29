@@ -99,26 +99,67 @@ export function Icon({ name, size = 16, style, className }: IconProps): JSX.Elem
   );
 }
 
-/** 圭表测影 Logo（原型 LOGO() 的 React 版） */
-export function GuibiaoLogo({ size = 34, tone = 'gold' }: { size?: number; tone?: 'gold' | 'ink' | 'light' }): JSX.Element {
-  const k = Math.max(1, Math.min(2.6, 40 / size));
-  const sw = (n: number): string => (n * k).toFixed(2);
+/**
+ * 品牌图标：历书日历格（与 public/icons/icon.svg 同几何，viewBox 40×40）。
+ *
+ * 五版取舍都写在 scripts/gen-icons.mjs 的注释里，这里只记结论：
+ *   圭表 + 日影 → 像择日器；节点 + 边 → 像 AI；文档页 → 像备忘录；
+ *   日历格 + 单个圆点 → 96px 下像相机；**日历格 + 日期格阵**（当前）。
+ *
+ * 只有三个元素：外框、顶部月份条、3×3 日期格，首格朱色标「当日」。
+ * 没有刻度环、没有放射线、没有节点网络 —— 它说的是「这是一本可查的历法」。
+ *
+ * 小尺寸（<28）只留轮廓 + 月份条：20px 下 3×3 格会糊成一团灰斑。
+ */
+const ALMANAC = {
+  frame: { x: 10.8, y: 9.6, w: 18.4, h: 20.8, r: 3.2 },
+  /** 顶部月份条下沿 */
+  headY: 14.4,
+  /** 日期格：边长 / 圆角 / 列距 / 行距 / 左上角（行距略紧，否则 44px 下贴框） */
+  cell: { size: 2.35, r: 0.5, pitchX: 4.8, pitchY: 4.45, x0: 14.025, y0: 16.025 },
+} as const;
+
+export function AlmanacLogo({ size = 34, tone = 'gold' }: { size?: number; tone?: 'gold' | 'ink' | 'light' }): JSX.Element {
   const color = tone === 'gold' ? 'var(--gold)' : tone === 'ink' ? 'var(--ink)' : 'var(--on-lacquer)';
+  const todayColor = tone === 'light' ? 'var(--verm-2)' : 'var(--verm)';
+  const { frame, headY, cell } = ALMANAC;
+  const compact = size < 28;
+  // 描边居中于路径，故内缩半个线宽，让外沿仍落在 10.8 / 29.2 上
+  const sw = compact ? 2.1 : 1.5;
+  const f = { x: frame.x + sw / 2, y: frame.y + sw / 2, w: frame.w - sw, h: frame.h - sw, r: frame.r - sw / 2 };
+
+  const cells: Array<{ x: number; y: number; today: boolean }> = [];
+  if (!compact) {
+    for (let ri = 0; ri < 3; ri += 1) {
+      for (let ci = 0; ci < 3; ci += 1) {
+        cells.push({ x: cell.x0 + ci * cell.pitchX, y: cell.y0 + ri * cell.pitchY, today: ri === 0 && ci === 0 });
+      }
+    }
+  }
+
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none" aria-hidden="true" style={{ color, display: 'block' }}>
-      {size >= 26 && (
-        <circle cx="20" cy="20" r="17.6" stroke="currentColor" strokeOpacity=".30" strokeWidth={sw(1)} strokeDasharray="1.2 8.01" />
-      )}
-      <circle cx="20" cy="20" r={size >= 26 ? 15.2 : 16.4} stroke="currentColor" strokeOpacity=".16" strokeWidth={sw(1)} />
-      <path d="M6.4 29.2h27.2" stroke="currentColor" strokeWidth={sw(1.7)} strokeLinecap="round" />
-      <path d="M16.6 10.4v18.8" stroke="currentColor" strokeWidth={sw(2.1)} strokeLinecap="round" />
-      <path d="M16.6 29.2h9.8" stroke="currentColor" strokeWidth={sw(3.6)} strokeLinecap="round" strokeOpacity=".40" />
-      <circle cx="28.2" cy="12.2" r={(3.1 * k).toFixed(2)} fill="currentColor" />
+      <rect x={f.x} y={f.y} width={f.w} height={f.h} rx={f.r} stroke="currentColor" strokeWidth={sw} />
+      <path
+        d={`M${frame.x} ${headY}V${frame.y + frame.r}A${frame.r} ${frame.r} 0 0 1 ${frame.x + frame.r} ${frame.y}H${frame.x + frame.w - frame.r}A${frame.r} ${frame.r} 0 0 1 ${frame.x + frame.w} ${frame.y + frame.r}V${headY}Z`}
+        fill="currentColor"
+      />
+      {cells.map((c) => (
+        <rect
+          key={`${c.x}-${c.y}`}
+          x={c.x}
+          y={c.y}
+          width={cell.size}
+          height={cell.size}
+          rx={cell.r}
+          fill={c.today ? todayColor : 'currentColor'}
+        />
+      ))}
     </svg>
   );
 }
 
-/** 品牌字标（图标 + 择吉 + 副标） */
+/** 品牌字标（图标 + 历知 + 副标） */
 export function BrandMark({
   size = 34,
   tone = 'gold',
@@ -137,7 +178,7 @@ export function BrandMark({
   const color = tone === 'gold' ? 'var(--gold)' : tone === 'ink' ? 'var(--ink)' : 'var(--on-lacquer)';
   return (
     <span className="lg" style={{ color }}>
-      {showMark && <GuibiaoLogo size={size} tone={tone} />}
+      {showMark && <AlmanacLogo size={size} tone={tone} />}
       {text && (
         <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <b className="serif" style={{ fontSize: titleSize, letterSpacing: '.14em', lineHeight: 1 }}>

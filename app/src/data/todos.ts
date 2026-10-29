@@ -33,7 +33,7 @@ export const TODOS_BY_GROUP: Record<EventGroup, TodoItem[]> = {
     { title: l('双方父母时间确认', "Confirm both families' availability", '雙方父母時間確認'), note: l('仪程类须先合长辈档期', 'Ceremonies start with the elders\' calendars', '儀程類須先合長輩檔期') },
     { title: l('择定纳采与亲迎两日', 'Set the betrothal and procession days', '擇定納采與親迎兩日'), note: l('六礼中两日最关键，须分定', 'The two decisive rites — set each separately', '六禮中兩日最關鍵，須分定') },
     { title: l('领证预约（如需）', 'Book the registration (if needed)', '領證預約（如需）'), note: l('民政放号提前 30 天', 'Civil-affairs slots open 30 days ahead', '民政放號提前 30 天') },
-    { title: l('场地与宴席锁定', 'Lock venue and banquet', '場地與宴席鎖定'), note: l('按推演区间倒排，先锁场地', 'Work back from the chart window; lock the venue first', '按課期倒排，先鎖場地') },
+    { title: l('场地与宴席锁定', 'Lock venue and banquet', '場地與宴席鎖定'), note: l('按查询区间倒排，先锁场地', 'Work back from the chart window; lock the venue first', '按課期倒排，先鎖場地') },
     { title: l('礼服与妆造试妆', 'Attire fitting and makeup trial', '禮服與妝造試妝'), note: l('提前 10 天', 'Ten days ahead', '提前 10 天') },
     { title: l('请柬发出（电子 + 纸质）', 'Send invitations (digital + paper)', '請柬發出（電子 + 紙質）'), note: l('提前 21 天', 'Twenty-one days ahead', '提前 21 天') },
   ],

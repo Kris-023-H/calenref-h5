@@ -1,5 +1,5 @@
 /**
- * screens/result-screen.tsx — 推演筛选结果（列表 / 历表 + 筛选 + 出局归因 + 报告 CTA）。
+ * screens/result-screen.tsx — 查询筛选结果（列表 / 历表 + 筛选 + 出局归因 + 报告 CTA）。
  * 列表复刻原型 dayCard：首选/备选徽标、干支值神、评分、吉时与层摘要。
  */
 
@@ -106,7 +106,7 @@ export function ResultScreen(): JSX.Element {
           : Object.entries(byReason)
               .map(([k, n]) => `${reasonLabel(k, lang)} ${n}`)
               .join(' · ')}
-        。{tx('出局不等于「不吉」，是不合本套取用的条件。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions.', lang)}
+        。{tx('出局不等于「不吉」，是不合本套规则的条件。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions.', lang)}
       </div>
 
       <ScrollX items={filterItems} activeKey={session.filter} onSelect={(k) => setFilter(k as typeof session.filter)} />
@@ -129,7 +129,7 @@ export function ResultScreen(): JSX.Element {
             action={
               <>
                 <Btn variant="ghost" onClick={() => push('info')}>
-                  {tx('改推演条件', 'Change conditions', lang)}
+                  {tx('改查询条件', 'Change query conditions', lang)}
                 </Btn>
                 <Btn variant="ghost" onClick={() => setDraftGeneric()}>
                   {tx('换口径再看', 'Try generic', lang)}
@@ -144,7 +144,7 @@ export function ResultScreen(): JSX.Element {
             ))}
             {items.length > 12 && (
               <div className="hint" style={{ textAlign: 'center', marginTop: 10 }}>
-                {tx(`另有 ${items.length - 12} 日，完整清单见推演报告`, `${items.length - 12} more in the full report`, lang)}
+                {tx(`另有 ${items.length - 12} 日，完整清单见查询报告`, `${items.length - 12} more in the full report`, lang)}
               </div>
             )}
           </>
@@ -169,7 +169,7 @@ export function ResultScreen(): JSX.Element {
             {tx('改条件', 'Conditions', lang)}
           </Btn>
           <Btn variant="gold" onClick={() => push('pay')}>
-            {tx('出具推演报告', 'Issue report', lang)} · {formatPrice('once', currency)}
+            {tx('出具查询报告', 'Issue query report', lang)} · {formatPrice('once', currency)}
           </Btn>
         </div>
       </div>
@@ -223,7 +223,7 @@ function DayCard({
       </div>
       <div className="why">
         {gradeLabel(day.score, lang)} ／ {okLayers.slice(0, 2).map((l) => `${layerName(l.key, lang)}·${layerResultText(l, lang)}`).join('　')}　
-        {tx('吉时 ', 'hour ', lang)}
+        {tx('时辰 ', 'hour ', lang)}
         {day.goodHours[0]?.name ?? '—'}
         {tx('时', '', lang)}
       </div>

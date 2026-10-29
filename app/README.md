@@ -1,4 +1,4 @@
-# 择吉 · Zeji — 人 · 事 · 日 三元择日 H5（出海版）
+# 历知 CalenRef — 传统历法文化参考 H5（出海版）
 
 一事一议，因事择日。按中国传统择日法则，以当事人四柱为体、用事为用，八重取用逐日推演，
 附三宗派对照、九章报告与可传的吉日课帖。**全部推演在本机完成，档案不离开设备；免登录。**
@@ -25,9 +25,9 @@ npm run typecheck    # 仅类型检查（tsc --noEmit）
 | 变量 | 必填 | 说明 |
 | --- | --- | --- |
 | `VITE_AI_ENDPOINT` | 否 | AI 推理端点。配置后 `RemoteAiService` 生效；未配置时使用 `LocalTemplateAiService` 离线模板解读（默认，不出网） |
-| `VITE_REDEEM_KEY` | 否 | 兑换码离线 HMAC-SHA-256 密钥。默认 `zeji-redeem-dev-key`；生产经构建注入 |
+| `VITE_REDEEM_KEY` | 否 | 兑换码离线 HMAC-SHA-256 密钥。默认 `calenref-redeem-dev-key`；生产经构建注入 |
 | `VITE_SHARE_HOST` | 否 | 分享落地页主机；空则用当前 `window.location.origin` |
-| `VITE_SITE_URL` | 上线必填 | 站点根地址。**canonical / OG / JSON-LD / robots.txt / sitemap.xml 的唯一来源**，换域名只改这一处。默认 `https://zeji.app` |
+| `VITE_SITE_URL` | 上线必填 | 站点根地址。**canonical / OG / JSON-LD / robots.txt / sitemap.xml 的唯一来源**，换域名只改这一处。默认 `https://calenref.kris-188h.workers.dev` |
 | `VITE_GA4_ID` | 上线必填 | GA4 衡量 ID（`G-XXXXXXXXXX`）。留空则完全不加载 GA4；填写后仍只在用户接受 Cookie 统计后才注入脚本 |
 
 ## 目录结构（节选）
@@ -117,7 +117,7 @@ jurisdiction: 'Singapore',        // ③ 准据法属地
 
 ## 部署（Cloudflare Workers 静态资源）
 
-线上地址：`https://zeji-h5.kris-188h.workers.dev`
+线上地址：`https://calenref.kris-188h.workers.dev`
 
 **为什么是 Workers 而不是 Pages**：Pages 走「连接 Git 仓库 → 填构建命令 → 填输出目录」，
 配置存在云端；Workers 走 `wrangler.toml`，配置在仓库里，一次写对、换人换机器都一样。
@@ -126,7 +126,7 @@ jurisdiction: 'Singapore',        // ③ 准据法属地
 
 ```toml
 # app/wrangler.toml
-name = "zeji-h5"
+name = "calenref"
 compatibility_date = "2026-10-01"
 
 [assets]
@@ -138,7 +138,7 @@ not_found_handling = "single-page-application"   # 深链回退到 index.html
 
 ```bash
 cd app
-VITE_SITE_URL="https://zeji-h5.kris-188h.workers.dev" npm run build
+VITE_SITE_URL="https://calenref.kris-188h.workers.dev" npm run build
 CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx npx wrangler deploy
 ```
 
@@ -148,7 +148,7 @@ CLOUDFLARE_API_TOKEN=xxx CLOUDFLARE_ACCOUNT_ID=xxx npx wrangler deploy
 **部署后自检五项**（任一不达标说明发的是源码不是产物）：
 
 ```bash
-B=https://zeji-h5.kris-188h.workers.dev
+B=https://calenref.kris-188h.workers.dev
 curl -s $B/ | grep -oE '<script[^>]*src="[^"]*"'   # 应为 /assets/index-<hash>.js
 curl -s $B/ | grep -oE '<link rel="canonical"[^>]*>' # 应为真实域名，不能是 __SITE_URL__
 curl -s $B/robots.txt                                 # 应为本项目那份（含 Sitemap 行）

@@ -93,8 +93,8 @@ describe('i18n — 三语 key 对齐', () => {
 
   it('zh-Hant 由 zh 派生且不含未转换简体残留', () => {
     // 抽查关键领域词已转换
-    expect(zhHant['event.title']).toBe('選擇用事');
-    expect(zhHant['home.cta']).toBe('開始推演');
+    expect(zhHant['event.title']).toBe('選擇查詢場景');
+    expect(zhHant['home.cta']).toBe('新建查詢');
     expect(zhHant['person.readingRaw']).toBe('原始鐘錶');
     expect(zhHant['lang.calGreg']).toBe('公曆');
     // 占位符保留

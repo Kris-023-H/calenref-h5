@@ -1,6 +1,6 @@
 /**
  * i18n/glossary.ts — 术语表：一概念一译名（zh / en / zh-Hant 三列）。
- * 界面、报告、AI 解读、知库标题四处共用；新术语先入本表再使用。
+ * 界面、报告、释义摘要、知识库标题四处共用；新术语先入本表再使用。
  * 译名原则（出海增量 PRD §2.2）：音译 + 意译双轨；干支保留拼音 + 释义；
  * 释义优先于直译；结果性词汇红线词中英共用同一份禁词清单。
  *
@@ -115,7 +115,7 @@ export const GLOSSARY: GlossaryEntry[] = [
 
   // ---------- 知库门类 kbcat（13） ----------
   { key: 'term.kbcat.all', zh: '全部', en: 'All', zhHant: '全部' },
-  { key: 'term.kbcat.xueli', zh: '学历教育', en: 'Schooling', zhHant: '學歷教育' },
+  { key: 'term.kbcat.xueli', zh: '文化教育', en: 'Culture & education', zhHant: '文化教育' },
   { key: 'term.kbcat.hunjia', zh: '婚嫁', en: 'Weddings', zhHant: '婚嫁' },
   { key: 'term.kbcat.canyin', zh: '餐饮', en: 'Catering', zhHant: '餐飲' },
   { key: 'term.kbcat.lingshou', zh: '零售', en: 'Retail', zhHant: '零售' },

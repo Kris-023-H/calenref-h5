@@ -33,7 +33,7 @@ export function ReportsScreen(): JSX.Element {
       <AppBar title={t('reports.title', lang)} actions={<IconBtn name="grid" onClick={() => openSheet('guide')} />} />
       <h2 className="tt">
         {t('reports.title', lang)}
-        <small>{tx('每一次推演都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
+        <small>{tx('每一次查询都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
       </h2>
 
       <Seg
@@ -58,13 +58,13 @@ export function ReportsScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史推演', 'readings', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史查询', 'readings', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {quota.unlimited ? '∞' : quota.freeLeft}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('AI 解读余次', 'AI left', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('释义摘要余次', 'Summaries left', lang)}</div>
           </div>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function ReportsScreen(): JSX.Element {
           body={t('reports.emptyHint', lang)}
           action={
             <Btn variant="gold" onClick={() => push('event')}>
-              {tx('开始第一次推演', 'Start first reading', lang)}
+              {tx('开始第一次查询', 'Start first query', lang)}
             </Btn>
           }
         />

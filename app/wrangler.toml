@@ -7,7 +7,7 @@
 # name 必须与 Cloudflare 上已有的 Worker 名一致，否则 wrangler 会新建一个 Worker，
 # 域名也会变成新的。
 
-name = "zeji-h5"
+name = "calenref"
 # Worker 入口：只处理 /api/*（Creem 下单与核验），其余全部交给静态资源
 main = "./worker/index.ts"
 compatibility_date = "2026-10-01"

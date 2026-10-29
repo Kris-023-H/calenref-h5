@@ -1,5 +1,5 @@
 /**
- * screens/info-screen.tsx — 录出生资料（当事人 A/B + 时辰待核 + 推演区间 + 宗派 + 业态坐向）。
+ * screens/info-screen.tsx — 录出生资料（当事人 A/B + 时辰待核 + 查询区间 + 宗派 + 业态坐向）。
  * 当事人可「从档案选」跳 people 屏；档案数据来自 app-store。
  */
 
@@ -113,7 +113,7 @@ export function InfoScreen(): JSX.Element {
         <div className="ph">
           <div className="pn">{tx('期', 'P', lang)}</div>
           <div className="pt">
-            {tx('推演区间', 'Date range', lang)}
+            {tx('查询区间', 'Date range', lang)}
             <small>{tx('区间越宽，越可能撞上真正合的日子', 'a wider window meets more fitting days', lang)}</small>
           </div>
         </div>
@@ -131,7 +131,7 @@ export function InfoScreen(): JSX.Element {
             </div>
           </div>
           <div className="fld">
-            <label>{tx('推演天数', 'Window', lang)}</label>
+            <label>{tx('查询天数', 'Window', lang)}</label>
             <div className="unit">
               <select value={String(draft.span)} onChange={(e) => setDraft({ span: Number(e.target.value) })}>
                 {SPANS.map((s) => (
@@ -236,7 +236,7 @@ export function InfoScreen(): JSX.Element {
         <div
           dangerouslySetInnerHTML={{
             __html: tx(
-              '<b>不填生辰也能看</b>　直接取通书口径推演，结果标注「通用模式」，不针对出生年。',
+              '<b>不填生辰也能看</b>　直接按传统历法通用口径检索，结果标注「通用模式」，不针对出生年。',
               '<b>No pillars? Still works.</b> Run in generic mode — flagged, not tuned to your year pillar.',
               lang,
             ),
@@ -264,7 +264,7 @@ export function InfoScreen(): JSX.Element {
             void startScan().then(() => push('calc'));
           }}
         >
-          {tx('推演', 'Run reading', lang)} · {tx(`推演 ${draft.span} 天`, `${draft.span} days`, lang)}
+          {tx('开始查询', 'Run query', lang)} · {tx(`检索 ${draft.span} 天`, `${draft.span} days`, lang)}
         </Btn>
       </div>
     </div>

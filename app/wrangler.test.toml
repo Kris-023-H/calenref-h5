@@ -1,13 +1,13 @@
-# 测试环境专用 Worker 配置（不影响线上 zeji-h5）
+# 测试环境专用 Worker 配置（不影响线上 calenref）
 #
 # 为什么单独一个 Worker：Creem 的测试与生产数据完全隔离（不同 API base、
 # 不同 API key、不同产品）。如果直接改线上配置去联调，测完忘了切回来就是事故。
 # 独立 Worker 的好处是线上始终跑生产配置，测试完把这个 Worker 删掉即可。
 #
 # 部署：npx wrangler deploy --config wrangler.test.toml
-# 地址：https://zeji-h5-test.<account>.workers.dev
+# 地址：https://calenref-test.<account>.workers.dev
 
-name = "zeji-h5-test"
+name = "calenref-test"
 main = "./worker/index.ts"
 compatibility_date = "2026-10-01"
 
@@ -24,7 +24,7 @@ id = "a5a1f6df4ddf4830bf8300360d6ac8f0"
 [vars]
 # Creem 测试环境：付款用测试卡模拟，不产生真实扣款
 CREEM_API_BASE = "https://test-api.creem.io/v1"
-SITE_URL = "https://zeji-h5-test.kris-188h.workers.dev"
+SITE_URL = "https://calenref-test.kris-188h.workers.dev"
 
 # 测试环境的产品 ID（mode=test），与生产是两套独立数据
 CREEM_PRODUCT_ONCE = "prod_2m6OxABkzeQrMyj1adiNf8"

@@ -30,7 +30,7 @@ jobs:
         working-directory: app
         run: npm run build
         env:
-          VITE_SITE_URL: https://zeji-h5.kris-188h.workers.dev
+          VITE_SITE_URL: https://calenref.kris-188h.workers.dev
 
       - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
@@ -46,4 +46,4 @@ jobs:
 
       - name: Verify deployment
         working-directory: app
-        run: node scripts/verify-deploy.mjs https://zeji-h5.kris-188h.workers.dev
+        run: node scripts/verify-deploy.mjs https://calenref.kris-188h.workers.dev

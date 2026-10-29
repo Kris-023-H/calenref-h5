@@ -87,6 +87,7 @@ export function LegalScreen(): JSX.Element {
       <div className="card flat legal-doc">
         <h2 className="legal-h1">{doc.title}</h2>
         <div className="legal-meta">{t('legal.updated', lang, { date: doc.updated })}</div>
+        {doc.notice && <p className="legal-notice">{doc.notice}</p>}
         <p className="legal-lead">{doc.lead}</p>
 
         {doc.sections.map((sec) => (

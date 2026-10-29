@@ -1,5 +1,5 @@
 /**
- * components/tab-bar.tsx — 底部五 Tab（今日 / 排期 / 报告 / 知库 / 我的）。
+ * components/tab-bar.tsx — 底部五 Tab（首页 / 场景库 / 我的查询 / 知识库 / 我的）。
  * 选中态由 nav.tab 驱动；非 Tab 栈顶屏幕时整栏隐藏。
  */
 
@@ -8,18 +8,18 @@ import { Icon, type IconName } from './icons';
 import { t } from '../i18n';
 import type { Lang } from '../engine/types';
 
-const TAB_META: Record<string, { icon: IconName; msgKey: 'tab.home' | 'tab.kb' | 'tab.reports' | 'tab.me' }> = {
+const TAB_META: Record<string, { icon: IconName; msgKey: 'tab.home' | 'tab.scenarios' | 'tab.kb' | 'tab.reports' | 'tab.me' }> = {
   home: { icon: 'home', msgKey: 'tab.home' },
-  event: { icon: 'compass', msgKey: 'tab.kb' },
+  event: { icon: 'compass', msgKey: 'tab.scenarios' },
   reports: { icon: 'doc', msgKey: 'tab.reports' },
   kb: { icon: 'book', msgKey: 'tab.kb' },
   me: { icon: 'user', msgKey: 'tab.me' },
 };
 
-/** 排期 Tab 的文案在语言包中没有专用键，沿用 event.title */
+/** 五个 Tab 各有独立文案键：场景库不能用 event.title（那是页面标题，比 Tab 长） */
 const TAB_LABEL: Record<string, (lang: Lang) => string> = {
   home: (l) => t('tab.home', l),
-  event: (l) => t('event.title', l),
+  event: (l) => t('tab.scenarios', l),
   reports: (l) => t('tab.reports', l),
   kb: (l) => t('tab.kb', l),
   me: (l) => t('tab.me', l),

@@ -40,7 +40,7 @@ export function CalcScreen(): JSX.Element {
 
   return (
     <div className="screen">
-      <AppBar title={t('calc.title', lang)} actions={<Chip>{tx('本机推演', 'on-device', lang)}</Chip>} />
+      <AppBar title={t('calc.title', lang)} actions={<Chip>{tx('本机计算', 'on-device', lang)}</Chip>} />
       <ScanRing
         steps={steps}
         span={draft.span}
