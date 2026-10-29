@@ -621,7 +621,7 @@
   gap: 4px 0;
   margin-top: 10px;
 }
-.legal-links button {
+.legal-links a {
   border: 0;
   background: none;
   font-family: inherit;
@@ -633,7 +633,7 @@
   text-decoration-color: var(--line);
   text-underline-offset: 3px;
 }
-.legal-links button:not(:last-child)::after {
+.legal-links a:not(:last-child)::after {
   content: "·";
   color: var(--muted);
   margin: 0 7px;

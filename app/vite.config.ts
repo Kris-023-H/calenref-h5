@@ -2,7 +2,8 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 import { fileURLToPath, URL } from 'node:url';
-import { siteMeta } from './build/site-meta';
+import { siteMeta, readSiteUrl } from './build/site-meta';
+import { legalPages } from './build/legal-pages';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,6 +12,8 @@ export default defineConfig({
   plugins: [
     react(),
     siteMeta(),
+    // 法务四页预渲染成静态 HTML：审核方抓 /privacy 必须拿到正文，不能是空壳 index.html
+    legalPages(readSiteUrl(process.cwd())),
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: null,

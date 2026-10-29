@@ -22,14 +22,14 @@ import { SITE } from '../src/data/site';
 
 const FALLBACK_URL = 'https://zeji.app';
 
-/** 法务页深链（审核方与搜索平台都会点） */
-const LEGAL_SLUGS = ['privacy', 'terms', 'refund', 'cookie'];
+/** 法务页真 URL（审核方会直接打开；必须可直达，不能只挂查询串） */
+const LEGAL_PATHS = ['/privacy', '/terms', '/refund', '/cookies'];
 
 function normalize(url: string): string {
   return url.trim().replace(/\/+$/, '');
 }
 
-function readSiteUrl(root: string): string {
+export function readSiteUrl(root: string): string {
   if (process.env.VITE_SITE_URL) return normalize(process.env.VITE_SITE_URL);
   // Cloudflare Pages 在构建容器里注入，生产为 https://<project>.pages.dev
   if (process.env.CF_PAGES_URL) return normalize(process.env.CF_PAGES_URL);
@@ -45,7 +45,7 @@ function readSiteUrl(root: string): string {
 
 function robotsTxt(siteUrl: string): string {
   return [
-    '# 择吉 Zeji',
+    '# Chinese Date Planner',
     `# ${siteUrl}`,
     '',
     'User-agent: *',
@@ -64,7 +64,7 @@ function robotsTxt(siteUrl: string): string {
 function sitemapXml(siteUrl: string, today: string): string {
   const urls = [
     { loc: `${siteUrl}/`, priority: '1.0', changefreq: 'weekly' },
-    ...LEGAL_SLUGS.map((s) => ({ loc: `${siteUrl}/?legal=${s}`, priority: '0.2', changefreq: 'yearly' })),
+    ...LEGAL_PATHS.map((p) => ({ loc: `${siteUrl}${p}`, priority: '0.3', changefreq: 'yearly' })),
   ];
   const body = urls
     .map(
@@ -73,6 +73,37 @@ function sitemapXml(siteUrl: string, today: string): string {
     )
     .join('\n');
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`;
+}
+
+/**
+ * 静态 manifest.webmanifest。
+ *
+ * App 运行时按语言注入 blob manifest（多语言安装名），但 blob URL 对爬虫与
+ * 审核方不可见，/manifest.webmanifest 之前直接落到 SPA 兜底返回 HTML。
+ * 这里补一份静态默认值（简体），运行时注入仍会覆盖它。
+ */
+function webManifest(siteUrl: string): string {
+  return JSON.stringify(
+    {
+      name: '中华历法 · Chinese Date Planner',
+      short_name: '中华历法',
+      description: '中国传统历法文化参考工具：人 · 事 · 日三层，八重取用，本机演算，不构成命理预测。',
+      lang: 'zh-CN',
+      start_url: `${siteUrl}/`,
+      scope: `${siteUrl}/`,
+      display: 'standalone',
+      orientation: 'portrait',
+      background_color: '#F8F4EA',
+      theme_color: '#191710',
+      icons: [
+        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+        { src: '/icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      ],
+    },
+    null,
+    2,
+  );
 }
 
 export function siteMeta(): Plugin {
@@ -108,12 +139,18 @@ export function siteMeta(): Plugin {
           res.end(sitemapXml(siteUrl, today || new Date().toISOString().slice(0, 10)));
           return;
         }
+        if (path === '/manifest.webmanifest') {
+          res.setHeader('Content-Type', 'application/manifest+json; charset=utf-8');
+          res.end(webManifest(siteUrl));
+          return;
+        }
         next();
       });
     },
     generateBundle() {
       this.emitFile({ type: 'asset', fileName: 'robots.txt', source: robotsTxt(siteUrl) });
       this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(siteUrl, today) });
+      this.emitFile({ type: 'asset', fileName: 'manifest.webmanifest', source: webManifest(siteUrl) });
     },
   };
 }

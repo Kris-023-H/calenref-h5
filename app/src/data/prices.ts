@@ -31,6 +31,20 @@ export const CURRENCY_META: Record<Currency, { symbol: string; decimals: number 
 
 export const SKUS: Sku[] = ['once', 'ai10', 'pair', 'year'];
 
+/**
+ * 首审上架的商品面（Creem 首次提交只报这两个）。
+ *
+ * 为什么收缩：ai10（AI 解读次数包）会直接触发 Creem 的
+ * 「Generative AI = Restricted」审查项 —— 需要提供前服务商记录、拒付率与
+ * track record，而我们是首次提交，这三样都拿不出来，等于自己给自己加一道
+ * 必不过的门。pair（双人对照）则容易被读成「替两个人算合不合」，与
+ * 「Metaphysical / fortune-telling」类目只差一层解释。
+ *
+ * 两个 SKU 的定义、价格、Creem 产品 ID 全部保留（SKUS / CREEM_PRODUCTS 不动），
+ * 只是不在界面上卖 —— 审核通过后再把 ai10 / pair 加回本数组即可上架。
+ */
+export const OFFERED_SKUS: Sku[] = ['once', 'year'];
+
 /** 购买后权益：left（ai10=次数；once/pair=1；year=-1 不限） */
 export const SKU_LEFT: Record<Sku, number> = {
   once: 1,
@@ -49,7 +63,7 @@ export const SKU_LEFT: Record<Sku, number> = {
 export const CREEM_PRODUCTS: Record<Sku, string> = {
   once: 'prod_6rNtAr8IAgemsoMq0ItQjl', // $6.9 单次完整报告
   ai10: 'prod_5cl5Lk2oBXjz2MpGhSvmGu', // $4.9 十次白话解读
-  pair: 'prod_3YM2m6ekl6Sq5oYllrHmHj', // $11.9 双人合参
+  pair: 'prod_3YM2m6ekl6Sq5oYllrHmHj', // $11.9 双人对照
   year: 'prod_5NW3nkBRZuEuTix2rLOzac', // $39.9 全年不限次
 };
 

@@ -46,6 +46,7 @@ CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler deploy
 # 密钥只从本机文件读，不进 git。
 CREEM_KEY_FILE="${CREEM_KEY_FILE:-$HOME/.zeji-creem-key}"
 REDEEM_KEY_FILE="${REDEEM_KEY_FILE:-$HOME/.zeji-redeem-secret}"
+WEBHOOK_KEY_FILE="${WEBHOOK_KEY_FILE:-$HOME/.zeji-webhook-secret}"
 echo "==> 2.5/3 重挂 secrets"
 if [ -f "$CREEM_KEY_FILE" ]; then
   tr -d '\r\n ' < "$CREEM_KEY_FILE" | CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler secret put CREEM_API_KEY >/dev/null 2>&1 \
@@ -58,6 +59,14 @@ if [ -f "$REDEEM_KEY_FILE" ]; then
     && echo "  REDEEM_SECRET ✓" || echo "  REDEEM_SECRET ✗（检查 $REDEEM_KEY_FILE）"
 else
   echo "  ⚠ 缺少 $REDEEM_KEY_FILE，跳过 REDEEM_SECRET（兑换码会 503）"
+fi
+# Webhook 签名密钥：配了才校验 creem-signature；不配也能落账（按 checkout id 反查）。
+# 建议配，否则任何人构造 POST 就能给某个 checkout 打「已付」标记（有 ref 才能领货，风险有限）。
+if [ -f "$WEBHOOK_KEY_FILE" ]; then
+  tr -d '\r\n ' < "$WEBHOOK_KEY_FILE" | CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler secret put CREEM_WEBHOOK_SECRET >/dev/null 2>&1 \
+    && echo "  CREEM_WEBHOOK_SECRET ✓" || echo "  CREEM_WEBHOOK_SECRET ✗（检查 $WEBHOOK_KEY_FILE）"
+else
+  echo "  ⚠ 缺少 $WEBHOOK_KEY_FILE，跳过 CREEM_WEBHOOK_SECRET（webhook 不校验签名）"
 fi
 
 echo "==> 3/3 等边缘节点传播 90s 后自检"

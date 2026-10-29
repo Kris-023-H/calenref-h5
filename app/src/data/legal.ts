@@ -79,7 +79,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '3. 出生资料的处理位置',
         p: [
-          '排盘与课格推演全部在你的设备本地完成，出生资料不经过网络传输，我们无法读取、也无法导出。',
+          '全部历法计算在你的设备本地完成，出生资料不经过网络传输，我们无法读取、也无法导出。',
           '默认的 AI 白话解读同样在本机用模板生成，不联网。如未来提供云端解读，我们会在使用前单独征求你的同意，并先更新本政策。',
           '因此，清除浏览器数据、更换设备或卸载应用，都会导致本机资料与购买凭证消失。请用「我的 → 导出备份」自行留存。',
         ],
@@ -165,7 +165,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '4. 你的责任',
         p: [
-          '你应确保输入的出生信息已获得当事人同意。为他人做历法参考（如合参双方出生资料）时，你需自行取得对方授权。',
+          '你应确保输入的出生信息已获得当事人同意。为他人做历法参考（如对照双方出生资料）时，你需自行取得对方授权。',
           '你应自行备份本机资料。因清除浏览器数据、更换设备、卸载应用导致的记录与凭证丢失，我们无法恢复。',
         ],
       },
@@ -223,7 +223,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '1. 适用范围',
         p: [
-          '本政策适用于通过本服务完成的全部一次性购买（单次报告、AI 解读次数包、双人合参、年度不限次）。',
+          '本政策适用于通过本服务完成的全部一次性购买（单次报告、AI 解读次数包、双人对照、年度不限次）。',
           '本服务不含订阅与自动续费，因此不存在「忘记取消」类争议。',
         ],
       },
@@ -357,7 +357,7 @@ const EN: Record<LegalPage, LegalDoc> = {
           'The following information you enter is written only to on-device storage (browser IndexedDB and localStorage) and is never uploaded:',
         ],
         list: [
-          'Person profiles: name or label, date and hour of birth, birthplace, sex (used for the four pillars and true-solar-time correction)',
+          'Person profiles: name or label, date and hour of birth, birthplace, sex (used for the calendar calculation and true-solar-time correction)',
           'Readings: event type, industry, sitting direction, screening results, generated reports and day cards',
           'On-device preferences: language, time zone, currency, calendar convention, analytics toggle',
           'Purchase credentials: redemption codes and unlock status (never any card details)',
@@ -657,8 +657,26 @@ export const LEGAL_TITLE_KEY: Record<LegalPage, 'legal.privacy' | 'legal.terms' 
   cookie: 'legal.cookie',
 };
 
+/** pathname → 法务页（/privacy 等真 URL；与 site.ts 的 LEGAL_PATH 一一对应） */
+const PATH_TO_PAGE: Record<string, LegalPage> = {
+  '/privacy': 'privacy',
+  '/terms': 'terms',
+  '/refund': 'refund',
+  '/cookies': 'cookie',
+};
+
 /**
- * 解析 `?legal=privacy` 深链。
+ * 解析 pathname 深链。
+ * Creem 要求隐私政策与服务条款「must be present and accessible」「load without
+ * authentication」——审核员会直接打开 /privacy，所以必须按路径渲染，不能只认查询串。
+ */
+export function parseLegalPath(pathname: string): LegalPage | null {
+  const p = pathname.replace(/\/+$/, '') || '/';
+  return PATH_TO_PAGE[p] ?? null;
+}
+
+/**
+ * 解析 `?legal=privacy` 深链（旧地址，保留兼容）。
  * 支付平台审核会直接点开链接看政策，因此该参数必须可分享、可刷新；
  * 非法值返回 null（不跳转，避免脏参数把用户带进空白页）。
  */

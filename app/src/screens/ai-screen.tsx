@@ -95,7 +95,7 @@ export function AiScreen(): JSX.Element {
           mark="ai"
           title={tx('尚未生成解读', 'No reading yet', lang)}
           body={
-            tx('点下方生成，AI 会按「结论口径 → 业态适配 → 风险与化解 → 执行建议」四段展开，每段引规则出处。', 'Tap generate — the reading unfolds in four sections, each citing its rule source.', lang)
+            tx('点下方生成，AI 会按「结论口径 → 业态适配 → 风险与调整 → 执行建议」四段展开，每段引规则出处。', 'Tap generate — the reading unfolds in four sections, each citing its rule source.', lang)
           }
           action={
             <Btn variant="gold" onClick={() => void generateAi()}>
@@ -238,7 +238,7 @@ function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
     );
   }
   return tx(
-    '本课的可核依据已在报告第二至六章列出。若不在八重课格之内，不会替你补一层。',
+    '本课的可核依据已在报告第二至六章列出。若不在八重条目之内，不会替你补一层。',
     'Verifiable basis is listed in report chapters 2–6. Anything outside the eight layers is not invented.',
     lang,
   );

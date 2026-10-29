@@ -6,7 +6,8 @@
  *   2. app-store.hydrate()（档案/报告/收藏/提醒/凭证 + AI 配额）
  *   3. 分享落地：URL 带 ?lang&ref&k → 直接进 share 屏（受帖者所见）
  *   4. 支付回跳：URL 带 ?pay=success&sku&session_id → 写本机凭证并水合
- *   5. 语言切换 → 刷新 manifest（blob URL，图标与名称随语言）
+ *   5. 法务真路径：/privacy /terms /refund /cookies → 直接进 legal 屏（支付平台审核入口）
+ *   6. 语言切换 → 刷新 manifest（blob URL，图标与名称随语言）
  *
  * 引擎为纯函数；本组件是唯一允许读 URL / 时钟入口的组件层（经 store 注入）。
  */
@@ -19,7 +20,8 @@ import { useSettings } from './store/settings-store';
 import { useUi } from './store/ui-store';
 import { parseShareUrl } from './services/share';
 import { applyPaymentReturn, parsePaymentReturn } from './services/pay/creem';
-import { parseLegalParam } from './data/legal';
+import { parseLegalParam, parseLegalPath } from './data/legal';
+import { legalPath } from './data/site';
 import { applyManifest } from './lib/pwa-manifest';
 import { analytics, EVENTS, loadGtag } from './services/analytics';
 import { isAnalyticsAllowed } from './services/consent';
@@ -66,16 +68,20 @@ export default function App(): JSX.Element | null {
         });
       }
 
-      // 法务深链：?legal=privacy|terms|refund|cookie
-      // 支付平台审核会直接打开这些链接，所以保留查询串（可分享、可刷新），
-      // 并把首页垫在栈底，使「返回」有去处。
-      const legalPage = parseLegalParam(search);
+      // 法务页：/privacy /terms /refund /cookies 是**真 URL**。
+      // 支付平台审核会直接点开这些链接并核对返回体，所以路径命中必须立刻渲染法务正文，
+      // 不能被 splash / 引导页挡住。旧的 ?legal=privacy 深链保留兼容，命中后把地址栏
+      // 纠正为真路径，保证刷新、分享、审核三处看到的是同一个可直达地址。
+      const legalFromPath = parseLegalPath(window.location.pathname);
+      const legalPage = legalFromPath ?? parseLegalParam(search);
       if (!share && legalPage) {
+        // 垫一层底屏，使「返回」有去处（审核方会点返回）
         resetTo(useSettings.getState().onboarded ? 'home' : 'onboard');
         push('legal', { page: legalPage });
+        if (!legalFromPath) window.history.replaceState({}, '', legalPath(legalPage));
       }
 
-      // 清理查询串，避免刷新重复落账/重复跳分享屏（法务深链除外）
+      // 清理查询串，避免刷新重复落账/重复跳分享屏（法务真路径不受影响）
       if (share || pay) {
         window.history.replaceState({}, '', window.location.pathname);
       }

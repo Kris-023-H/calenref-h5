@@ -1,6 +1,6 @@
 /**
- * data/sits.ts — 坐向 8 向（子山午向等，zhi 索引）。
- * 坐山取地支；「X山Y向」文本由 UI 按 ZHI 拼装（子山午向 = 坐子向午）。
+ * data/sits.ts — 建筑朝向 8 向（正南/正北…，zhi 索引）。
+ * 朝向取地支；显示名走术语表（term.sit.*），这里只留地支索引。
  */
 
 import type { TermKey } from '../i18n/glossary';
@@ -8,7 +8,7 @@ import type { TermKey } from '../i18n/glossary';
 export interface SitDef {
   key: string;
   name: TermKey;
-  /** 坐山地支索引（0=子 … 11=亥） */
+  /** 朝向地支索引（0=子 … 11=亥） */
   zhi: number;
 }
 

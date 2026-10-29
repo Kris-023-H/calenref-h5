@@ -1,5 +1,5 @@
 /**
- * screens/ui-helpers.ts — 屏幕共享展示助手（日期/干支/五行/评分的本地化格式）。
+ * screens/ui-helpers.ts — 屏幕共享展示助手（日期/干支/行业属性/评分的本地化格式）。
  * 纯函数，不读时钟；时间一律由调用方传入。
  */
 
@@ -8,7 +8,7 @@ import { t, isoDate, tx } from '../i18n';
 import { ZHI, MONTH_NAME } from '../engine/calendar/sexagenary';
 import { jianchuName, monthName, gradeText } from '../i18n';
 
-/** 五行标签（0 木 1 火 2 土 3 金 4 水） */
+/** 行业属性标签（0 木 1 火 2 土 3 金 4 水） */
 export const WX_LABEL: Record<number, Record<Lang, string>> = {
   0: { zh: '木', en: 'Wood', 'zh-Hant': '木' },
   1: { zh: '火', en: 'Fire', 'zh-Hant': '火' },
@@ -55,12 +55,12 @@ export function jianchuLabel(key: string, lang: Lang): string {
   return jianchuName(key, lang);
 }
 
-/** 课格等级词 */
+/** 评分等级词 */
 export function gradeLabel(score: number, lang: Lang): string {
   return gradeText(score >= 94 ? 'shangji' : score >= 86 ? 'zhongji' : score >= 80 ? 'keyong' : 'buyong', lang);
 }
 
-/** 课格等级 chip 色调 */
+/** 评分等级 chip 色调 */
 export function gradeTone(score: number): 'gold' | 'jade' | 'verm' {
   if (score >= 86) return 'gold';
   if (score >= 80) return 'jade';

@@ -1,6 +1,6 @@
 /**
  * screens/result-screen.tsx — 推演筛选结果（列表 / 历表 + 筛选 + 出局归因 + 报告 CTA）。
- * 列表复刻原型 dayCard：首选/备选徽标、干支值神、课格分、吉时与层摘要。
+ * 列表复刻原型 dayCard：首选/备选徽标、干支值神、评分、吉时与层摘要。
  */
 
 import { useMemo, useState } from 'react';
@@ -57,7 +57,7 @@ export function ResultScreen(): JSX.Element {
 
   const filterItems = [
     { key: 'all', label: `${t('result.filterAll', lang)} ${s.usable.length}` },
-    { key: 'best', label: `${tx('课格 ≥ 85', 'Score ≥ 85', lang)}` },
+    { key: 'best', label: `${tx('评分 ≥ 85', 'Score ≥ 85', lang)}` },
     { key: 'weekend', label: tx('仅周末', 'Weekend', lang) },
     { key: 'hour', label: tx('有合时', 'Has hour', lang) },
   ];
@@ -83,7 +83,7 @@ export function ResultScreen(): JSX.Element {
           {s.usable.length} {tx('日可用', 'usable', lang)}
           <small>
             {tx(`通过 ${layerCount} 重`, `through ${layerCount} layers`, lang)}
-            {s.generic ? (tx('（通书口径）', ' (generic)', lang)) : tx('（课格）', ' (lesson)', lang)} ·{' '}
+            {s.generic ? (tx('（通书口径）', ' (generic)', lang)) : tx('（条目）', ' (entries)', lang)} ·{' '}
             {tx('已出局 ', 'excluded ', lang)}
             {s.total - s.usable.length} {tx('日', 'days', lang)}
           </small>
@@ -229,7 +229,7 @@ function DayCard({
       </div>
       <div className="dmeta">
         <Chip tone={gradeTone(day.score)}>
-          {generic ? (tx('通书分 ', 'almanac ', lang)) : tx('课格 ', 'lesson ', lang)}
+          {generic ? (tx('通书分 ', 'almanac ', lang)) : tx('评分 ', 'score ', lang)}
           {day.score}
         </Chip>
         {okLayers.slice(0, 2).map((l) => (
@@ -328,7 +328,7 @@ function MonthCal({
           })}
         </div>
         <div className="tl-cap" style={{ marginTop: 8, fontSize: 9, color: 'var(--muted)' }}>
-          {tx('金色为课格最高，浅金为可用日。点开任意一天看逐层依据。', 'Gold = highest lesson score, light gold = usable. Tap any day for layer detail.', lang)}
+          {tx('金色为评分最高，浅金为可用日。点开任意一天看逐层依据。', 'Gold = highest lesson score, light gold = usable. Tap any day for layer detail.', lang)}
         </div>
       </div>
       {monthOffset === 0 && (

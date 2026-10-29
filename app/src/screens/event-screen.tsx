@@ -48,7 +48,7 @@ export function EventScreen(): JSX.Element {
       <h2 className="tt">
         {tx('所办何事？', 'What is the matter?', lang)}
         <small>
-          {tx('用事决定取哪一套课格。同一个当日，宜开市不必宜嫁娶——这是传统历法取用的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
+          {tx('用事决定取哪一套条目。同一个当日，宜开市不必宜嫁娶——这是传统历法取用的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
         </small>
       </h2>
 
@@ -92,7 +92,7 @@ export function EventScreen(): JSX.Element {
           <br />
           {t('event.needLabel', lang)}　{ev.need[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}
           <br />
-          {tx('课格', 'Layers', lang)}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
+          {tx('条目', 'Layers', lang)}　{courseLayers(draft.eventKey).map((k) => t(k as 'layer.jianchu', lang)).join(' · ')}
           <br />
           {t('event.actsLabel', lang)}　{ev.acts.map((a) => a[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']).join(' → ')}
           {ev.twoPerson && (

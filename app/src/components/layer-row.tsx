@@ -83,7 +83,7 @@ export function SubShaCard({ layers, lang }: { layers: LayerResult[]; lang: Lang
           <b style={{ color: 'var(--verm)' }}>
             {layerName(l.key, lang)}·{layerResultText(l, lang)}
           </b>
-          　{tx('属可调整的次级因素，可把关键动作移入时辰化解。', 'A secondary factor that can be adjusted — move the key action into a favourable hour.', lang)}
+          　{tx('属可调整的次级因素，可把关键动作移入较优时辰。', 'A secondary factor that can be adjusted — move the key action into a favourable hour.', lang)}
         </div>
       ))}
     </div>

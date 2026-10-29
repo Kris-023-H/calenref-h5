@@ -58,9 +58,9 @@ export const INDUSTRIES: Industry[] = [
     ],
     books: ['《黄帝内经·素问》', '《医宗金鉴》'],
     note: l(
-      '医者属木主生，重「生气」与洁净，忌月厌、四离四绝。',
-      'Medicine belongs to Wood and governs life: vitality and cleanliness lead. Avoid Four Departures & Extremes.',
-      '醫者屬木主生，重「生氣」與潔淨，忌月厭、四離四絕。',
+      '医者属木主生，重「生气」与洁净，忌月厌、节气交界日。',
+      'Medicine belongs to Wood and governs life: vitality and cleanliness lead. Avoid month-avoidance days and solar-term boundaries.',
+      '醫者屬木主生，重「生氣」與潔淨，忌月厭、節氣交界日。',
     ),
   },
   {
@@ -90,9 +90,9 @@ export const INDUSTRIES: Industry[] = [
     acts: [l('破土', 'Break ground', '破土'), l('奠基', 'Lay the foundation', '奠基'), l('首锤', 'First strike', '首錘')],
     books: ['《营造法式》', '《鲁班经匠家镜》'],
     note: l(
-      '土木之业重方位，太岁、岁破方不可动，坐向须合山运。',
-      'Earthworks are about direction: never break ground against the Grand Duke or the Year Breaker; orientation must suit the mountain cycle.',
-      '土木之業重方位，太歲、歲破方不可動，坐向須合山運。',
+      '土木之业重方位，传统年向条目不可动，朝向须合场地条件。',
+      'Earthworks are about direction: avoid the traditional year-direction entries; the orientation should suit the site.',
+      '土木之業重方位，傳統年向條目不可動，朝向須合場地條件。',
     ),
   },
   {
@@ -174,9 +174,9 @@ export const INDUSTRIES: Industry[] = [
     acts: [l('开柜', 'Open the case', '開櫃'), l('首售', 'First sale', '首售'), l('展陈亮灯', 'Light the display', '展陳亮燈')],
     books: ['《格古要论》', '《天工开物·珠玉》'],
     note: l(
-      '珠玉属金主贵，重「藏」与「显」，忌月害、闭日开柜。',
-      'Gems belong to Metal and govern value: concealment and display both matter. Avoid month-harm and Close days.',
-      '珠玉屬金主貴，重「藏」與「顯」，忌月害、閉日開櫃。',
+      '珠玉属金主贵，重「藏」与「显」，忌月支相害、闭日开柜。',
+      'Gems belong to Metal and govern value: concealment and display both matter. Avoid month-branch harm and Close days.',
+      '珠玉屬金主貴，重「藏」與「顯」，忌月支相害、閉日開櫃。',
     ),
   },
   {

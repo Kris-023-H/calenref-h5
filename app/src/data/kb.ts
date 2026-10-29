@@ -42,7 +42,7 @@ export const KB_ARTICLES: KbArticle[] = [
         + '三个词三个层级。拿黄历的「诸事不宜」去否掉一个按你出生年推出来的优选日，或者拿历法参考的结论去质疑历书的节气日期，都是层级错位。本产品把这三件事分得很清：首页「今日通书」是通书口径，对所有人一致；「起一局」出来的推演报告，才是历法参考口径，只对你这件事负责。',
       'The almanac is, at bottom, a calendar book. It answers "what is today\'s date, which solar term are we in, when is the next one" — an astronomical question with a single answer. Get the astronomy wrong and the book is simply wrong.\n'
         + 'The Huangli is a folk print that adds a column of "suitable / avoid" notes to the calendar. It answers "what should people generally do today". Its advice is the same for everyone, because the print is indexed by date alone — it does not know who you are or what matter you have at hand.\n'
-        + 'Date selection is a different discipline. It answers "how is today for your matter". The same opening day can be superior for one person and clash with another\'s year branch. It takes the person\'s Four Pillars as the body and the matter as the use, weighing layer upon layer, so its conclusions vary by person, matter, and place.\n'
+        + 'This calendar reading is a different thing. It answers "how is today for your matter". The same opening day can be superior for one person and clash with another\'s year branch. It takes the person\'s birth details as the body and the matter as the use, weighing layer upon layer, so its conclusions vary by person, matter, and place.\n'
         + 'Three words, three levels. Using a Huangli\'s "avoid everything" to veto a day your own chart ranks superior is a category error — as is questioning the calendar\'s solar terms with a date-selection result. This product keeps the three apart: the home screen\'s "today" reading is the almanac level, identical for everyone; only the lesson report answers for your matter.',
       '通書，本質上是曆書。它回答的問題是「今天是幾月幾號、什麼節氣、下一個節氣在什麼時候」——這是天文與曆法問題，有唯一答案，算錯了就是算錯了。\n'
         + '黃曆，是在曆書基礎上加了「宜忌」欄的民間印本。它回答「今天總體上宜做什麼、忌做什麼」。同一個「宜」，它對所有人都一樣——因為印本只按日期排，不知道你是誰、要辦什麼事。\n'
@@ -59,13 +59,13 @@ export const KB_ARTICLES: KbArticle[] = [
     books: ['《星历考原》'],
     sub: l(
       '同一天，一个说大吉，一个说诸事不宜。不是谁算错了，是它们不在同一层级上取。',
-      'Same day, one says auspicious, the other says avoid everything. Neither is wrong — they select at different levels.',
+      'Same day, one calls it favourable, the other says avoid everything. Neither is wrong — they select at different levels.',
       '同一天，一個說大吉，一個說諸事不宜。不是誰算錯了，是它們不在同一層級上取。',
     ),
     body: l(
       '你手机上的黄历和长辈手里那本，说的常常不是同一件事。\n'
         + '第一层差别在历。老印本用固定节气表，遇到极端年份会差一天；手机软件按真实天文时刻计算，节气在几分几秒都算得出来。这不是谁抄错了谁，是算法精度不同。\n'
-        + '第二层差别在「取」。同样是建除十二值神，有的版本以节气月建起建，有的以农历初一为界；同样是月德、天德，有的按三合局推，有的按节气方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
+        + '第二层差别在「取」。同样是建除十二值神，有的版本以节气月建起建，有的以农历初一为界；同样是德日，有的按三合局推，有的按节气方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
         + '第三层差别在「口径」。老黄历很多按《星历考原》之后的通书体系，默认对「所有人」；而你在本应用 里看到的结果，是按你的出生资料、你要办的事单独推的。一个是广播，一个是点对点。\n'
         + '所以两个 App 打架，先别急着骂谁不准。看清层级：如果争的是「今天几号」，以天文计算为准；如果争的是「今天宜不宜搬家」，先问一句——对谁、办什么事。',
       'Your phone\'s almanac and the one in your elder\'s hands are often not talking about the same thing.\n'
@@ -75,7 +75,7 @@ export const KB_ARTICLES: KbArticle[] = [
         + 'So when two apps disagree, do not rush to call one wrong. Ask which level they are arguing on: if it is "what is today\'s date", trust astronomy; if it is "is today good for moving house", first ask — for whom, and for what matter.',
       '你手機上的黃曆和長輩手裡那本，說得常常不是同一件事。\n'
         + '第一層差別在曆。老印本用固定節氣表，遇到極端年份會差一天；手機軟件按真實天文時刻計算，節氣在幾分幾秒都算得出來。這不是誰抄錯了誰，是算法精度不同。\n'
-        + '第二層差別在「取」。同樣是建除十二值神，有的版本以節氣月建起建，有的以農曆初一為界；同樣是月德、天德，有的按三合局推，有的按節氣方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
+        + '第二層差別在「取」。同樣是建除十二值神，有的版本以節氣月建起建，有的以農曆初一為界；同樣是德日，有的按三合局推，有的按節氣方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
         + '第三層差別在「口徑」。老黃曆很多按《星歷考原》之後的通書體系，默認對「所有人」；而你在本應用裡看到的結果，是按你的出生資料、你要辦的事單獨推的。一個是廣播，一個是點對點。\n'
         + '所以兩個 App 打架，先別急著罵誰不準。看清層級：如果爭的是「今天幾號」，以天文計算為準；如果爭的是「今天宜不宜搬家」，先問一句——對誰、辦什麼事。',
     ),
@@ -83,31 +83,34 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 3,
-    title: l('属兔的人，一年只有两个月适合结婚', 'If You Were Born in the Year of the Rabbit, Two Months a Year Suit Marriage', '屬兔的人，一年只有兩個月適合結婚'),
+    title: l('传统婚嫁月份表是怎么来的', 'Where the Traditional Wedding-Month Tables Came From', '傳統婚嫁月份表是怎麼來的'),
     category: 'term.kbcat.hunjia',
     minutes: 4,
     books: ['《协纪辨方书》'],
     sub: l(
-      '婚月把「哪个月可办」先定下来，剩下的日子才轮到当日去筛。',
-      'Marriage months first settle which months are viable; only then does the day-chart filter the days.',
-      '婚月把「哪個月可辦」先定下來，剩下的日子才輪到日課去篩。',
+      '旧式通书按女方出生年的地支列出一张月表，标注哪些月宜嫁娶。它是一份历史文献，不是对某个人婚姻的判断。',
+      'Old almanacs listed a month table keyed to the bride\'s birth-year branch. It is a historical document, not a verdict on anyone\'s marriage.',
+      '舊式通書按女方出生年的地支列出一張月表，標註哪些月宜嫁娶。它是一份歷史文獻，不是對某個人婚姻的判斷。',
     ),
     body: l(
-      '属兔的人，地支是卯。传统婚月以年支相推：卯年出生，大利月是「正、七月」——正月与七月，一年之中只有这两个月适合办婚事，其余月份或轻或重都有避讳。\n'
-        + '为什么先定月，再定日？因为月的权重远大于日。传统上把月比作「纲」，日是「目」：纲不举则目无张。月份选错，日子再吉也只是「小数」；月份选对，日子稍平也可将就。\n'
-        + '月的规则也有边界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，没有商量余地；翁姑月、女父母月属「不宜」，不同流派宽严不一——这正是本产品给出多口径参考的原因。\n'
-        + '落到操作上：先按女方年支查出大利月与小利月，再在合格月份里跑当日。属兔的女生若日子定在二月或八月，不用看当日也知道不在选项里；定在正月或七月，才值得把九十天的当日逐层推一遍。\n'
-        + '注意：婚月只约束婚嫁与订盟。开业、签约、入宅并不看这套规则，它们看的是当事人的出生年与用事的取用。',
-      'If you were born in the Year of the Rabbit, your earthly branch is Mao. For a bride\'s chart, the marriage months are derived from the year branch: a Mao year has its "great benefit months" in the first and seventh lunar months — the only two months of the year suited to a wedding; the rest carry light or heavy avoidances.\n'
-        + 'Why settle the month before the day? Because the month outweighs the day. Tradition calls the month the "main rope" and the day the "mesh": without the rope lifted, the mesh cannot open. Pick the wrong month and even a superior day is a small gain; pick the right month and an ordinary day can be borne.\n'
-        + 'The month rules have hard edges. The "husband-harming month" (for a Mao year, the seventh and eighth months) is a hard veto — no negotiation. The in-law months are "unsuitable" rather than forbidden, and the three schools differ on how strictly to read them — which is exactly why this product shows all three side by side.\n'
-        + 'In practice: first find the great and small benefit months from the bride\'s year branch, then run the day-chart inside the eligible months. A Rabbit-born bride with a date in the second or eighth month is out of options before any day is examined; a date in the first or seventh month is worth running through ninety days of layered reading.\n'
-        + 'Note: marriage months constrain weddings and engagements only. Openings, signings, and moving in do not follow this rule — they read the principal\'s year branch and the taking of the matter itself.',
-      '屬兔的人，地支是卯。傳統婚月以年支相推：卯年出生，大利月是「正、七月」——正月與七月，一年之中只有這兩個月適合辦婚事，其餘月份或輕或重都有避諱。\n'
-        + '為什麼先定月，再定日？因為月的權重遠大於日。傳統上把月比作「綱」，日是「目」：綱不舉則目無張。月份選錯，日子再吉也只是「小數」；月份選對，日子稍平也可將就。\n'
-        + '月的規則也有邊界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，沒有商量餘地；翁姑月、女父母月屬「不宜」，不同流派寬嚴不一——這正是本產品給出多口徑參考的原因。\n'
-        + '落到操作上：先按女方年支查出大利月與小利月，再在合格月份裡跑日課。屬兔的女生若日子定在二月或八月，不用看日課也知道不在選項裡；定在正月或七月，才值得把九十天的日課逐層推一遍。\n'
-        + '注意：婚月只約束婚嫁與訂盟。開業、簽約、入宅並不看這套規則，它們看的是當事人的出生年與用事的取用。',
+      '「婚月」是传统通书里的一张月表：以女方出生年的地支为索引，把十二个月分成大利月、小利月、不宜月几档。这张表在《协纪辨方书》一系的文献里可以查到，属于历法文献的一部分，不是对具体某个人婚姻前景的判断。\n'
+        + '表怎么读？以卯年（如 1987 年）为例，文献把正月、七月列为大利月，二、八月列为不宜，其余月份分入小利月一档。读法上它是「按月归档」，不是「按人推算」——换一个人、换一年，表上的档位就跟着换。\n'
+        + '为什么旧式文献先定月再定日？因为它们把月看作「纲」、日看作「目」，月的档位在前的逻辑来自文献体例本身：月是大颗粒度的筛选，日是小颗粒度的筛选，先粗后细可以少推很多天。这是一套检索顺序，与结果是否应验无关。\n'
+        + '不同文献对同一张表的宽严并不一致：有的只把「不宜」当参考，有的把它当硬性排除；翁姑月、女父母月这类名目在各本通书里的处理也各不相同。本应用把这几种读法并列展示，是为了让你看到文献本身的差异，而不是替你选定其中一种。\n'
+        + '需要说清楚的一点：以上都是对历史文献的整理与呈现。它描述的是旧时通书的编排方式，不构成对你婚姻的任何预测或建议。真要办婚事，日期之外要考虑的事情——双方家庭、场地、季节、工作安排——都比一张月表重要得多。\n'
+        + '范围也要讲清：这张月表在文献里只对应婚嫁与订盟。开业、签约、入宅并不套用这套规则，它们各自对应别的条目。',
+      'Marriage months are a table in traditional almanacs: keyed to the bride\'s birth-year branch, it sorts the twelve lunar months into "great benefit", "small benefit" and "unsuitable" tiers. The table can be found in the literature around the Xieji Bianfang Shu; it is part of the calendrical record, not a verdict on any particular marriage.\n'
+        + 'How is it read? Take a Mao year (1987, for instance): the literature lists the first and seventh lunar months as great benefit, the second and eighth as unsuitable, and sorts the rest into the small-benefit tier. It works by filing months into categories, not by judging people — change the person or the year and the tiers change with them.\n'
+        + 'Why did old texts settle the month before the day? Because they treated the month as the "main rope" and the day as the "mesh": the month is the coarse filter, the day the fine one, and coarse-then-fine saves a great deal of computation. It is a search order, not a claim about whether the result comes true.\n'
+        + 'Different texts read the same table with different strictness: some treat "unsuitable" as a note, others as a hard exclusion, and the in-law categories are handled differently from one almanac to the next. This app shows those readings side by side so you can see the disagreement in the literature — not to pick one for you.\n'
+        + 'One thing to be explicit about: everything above is a summary and presentation of historical documents. It describes how old almanacs were organised. It is not a prediction about your marriage and not advice about it. For an actual wedding, the things that matter — both families, the venue, the season, work schedules — outweigh any month table.\n'
+        + 'Scope matters too: in the literature this table applies to weddings and engagements only. Openings, signings and moving in follow other entries, not this one.',
+      '「婚月」是傳統通書裡的一張月表：以女方出生年的地支為索引，把十二個月分成大利月、小利月、不宜月幾檔。這張表在《協紀辨方書》一系的文獻裡可以查到，屬於曆法文獻的一部分，不是對具體某個人婚姻前景的判斷。\n'
+        + '表怎麼讀？以卯年（如 1987 年）為例，文獻把正月、七月列為大利月，二、八月列為不宜，其餘月份分入小利月一檔。讀法上它是「按月歸檔」，不是「按人推算」——換一個人、換一年，表上的檔位就跟著換。\n'
+        + '為什麼舊式文獻先定月再定日？因為它們把月看作「綱」、日看作「目」，月的檔位在前的邏輯來自文獻體例本身：月是大顆粒度的篩選，日是小顆粒度的篩選，先粗後細可以少推很多天。這是一套檢索順序，與結果是否應驗無關。\n'
+        + '不同文獻對同一張表的寬嚴並不一樣：有的只把「不宜」當參考，有的把它當硬性排除；翁姑月、女父母月這類名目在各本通書裡的處理也各不相同。本應用把這幾種讀法並列展示，是為了讓你看到文獻本身的差異，而不是替你選定其中一種。\n'
+        + '需要說清楚的一點：以上都是對歷史文獻的整理與呈現。它描述的是舊時通書的編排方式，不構成對你婚姻的任何預測或建議。真要辦婚事，日期之外要考慮的事情——雙方家庭、場地、季節、工作安排——都比一張月表重要得多。\n'
+        + '範圍也要講清：這張月表在文獻裡只對應婚嫁與訂盟。開業、簽約、入宅並不套用這套規則，它們各自對應別的條目。',
     ),
     translated: true,
   },
@@ -139,14 +142,14 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 6,
-    title: l('工地动土先看山：冲山为何是硬忌', 'Earthworks Look at the Mountain First: Why Mountain-Clash Is Absolute', '工地動土先看山：沖山為何是硬忌'),
+    title: l('工地动土先看朝向：相冲为何是硬性排除', 'Earthworks and Orientation: Why a Direct Clash Is Absolute', '工地動土先看朝向：相衝為何是硬性排除'),
     category: 'term.kbcat.gongcheng',
     minutes: 5,
     books: ['《营造法式》', '《鲁班经匠家镜》'],
     sub: l(
-      '日支冲坐山，为冲山。不是「不太顺」，是传统直接列为一票否决。',
-      'When the day branch clashes with the sitting mountain, tradition excludes the day outright — not a minor blemish.',
-      '日支沖坐山，為沖山。不是「不太順」，是傳統直接列為一票否決。',
+      '日支冲建筑朝向，即朝向相冲。不是「不太顺」，是传统直接列为一票否决。',
+      'When the day branch clashes with the building orientation, the literature excludes the day outright — not a minor blemish.',
+      '日支沖建築朝向，即朝向相沖。不是「不太順」，是傳統直接列為一票否決。',
     ),
     translated: true,
   },
@@ -183,9 +186,9 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 3,
     books: ['《黄帝内经·素问》'],
     sub: l(
-      '医者属木主生。开诊取生气之日，忌月厌与四离四绝。',
-      'Medicine belongs to Wood and governs life: open on vital days, avoiding the Four Departures & Extremes.',
-      '醫者屬木主生。開診取生氣之日，忌月厭與四離四絕。',
+      '医者属木主生。开诊取生气之日，忌月厌与节气交界日。',
+      'Medicine belongs to Wood and governs life: open on vital days, avoiding month-avoidance days and solar-term boundaries.',
+      '醫者屬木主生。開診取生氣之日，忌月厭與節氣交界日。',
     ),
     translated: true,
   },
@@ -196,9 +199,9 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 3,
     books: ['《格古要论》'],
     sub: l(
-      '珠玉属金主贵。开柜取「显」，忌闭日与月害——藏而不显，客不至。',
-      'Gems belong to Metal and govern value: open for display, avoiding Close days and month-harm.',
-      '珠玉屬金主貴。開櫃取「顯」，忌閉日與月害——藏而不顯，客不至。',
+      '珠玉属金主贵。开柜取「显」，忌闭日与月支相害——藏而不显，客不至。',
+      'Gems belong to Metal and govern value: open for display, avoiding Close days and month-branch harm.',
+      '珠玉屬金主貴。開櫃取「顯」，忌閉日與月支相害——藏而不顯，客不至。',
     ),
     translated: true,
   },
@@ -287,9 +290,9 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 2,
     books: ['《三命通会》'],
     sub: l(
-      '值太岁不等于不能办事。要看的是冲、刑、害，而不是「同支」。',
+      '与当年地支相同，不等于不能办事。要看的是冲、刑、害，而不是「同支」。',
       'Sharing a branch with the year is not a bar. What matters is clash, punishment, and harm — not sameness.',
-      '值太歲不等於不能辦事。要看的是沖、刑、害，而不是「同支」。',
+      '與當年地支相同，不等於不能辦事。要看的是沖、刑、害，而不是「同支」。',
     ),
     translated: false,
   },

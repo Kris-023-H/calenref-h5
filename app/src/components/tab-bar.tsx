@@ -1,5 +1,5 @@
 /**
- * components/tab-bar.tsx — 底部五 Tab（今日 / 择日 / 报告 / 知库 / 我的）。
+ * components/tab-bar.tsx — 底部五 Tab（今日 / 排期 / 报告 / 知库 / 我的）。
  * 选中态由 nav.tab 驱动；非 Tab 栈顶屏幕时整栏隐藏。
  */
 
@@ -16,7 +16,7 @@ const TAB_META: Record<string, { icon: IconName; msgKey: 'tab.home' | 'tab.kb' |
   me: { icon: 'user', msgKey: 'tab.me' },
 };
 
-/** 择日 Tab 的文案在语言包中没有专用键，沿用 event.title */
+/** 排期 Tab 的文案在语言包中没有专用键，沿用 event.title */
 const TAB_LABEL: Record<string, (lang: Lang) => string> = {
   home: (l) => t('tab.home', l),
   event: (l) => t('event.title', l),

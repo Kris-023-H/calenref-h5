@@ -49,14 +49,14 @@ export const GLOSSARY: GlossaryEntry[] = [
   { key: 'term.jq.dongzhi', zh: '冬至', en: 'Winter Solstice', zhHant: '冬至', pinyin: 'Dōngzhì' },
 
   // ---------- 坐向 sit（8） ----------
-  { key: 'term.sit.ziwu', zh: '子山午向', en: 'Zi Mountain, Wu Facing (due south)', zhHant: '子山午向', pinyin: 'Zǐ shān wǔ xiàng' },
-  { key: 'term.sit.wuzi', zh: '午山子向', en: 'Wu Mountain, Zi Facing (due north)', zhHant: '午山子向', pinyin: 'Wǔ shān zǐ xiàng' },
-  { key: 'term.sit.maoyou', zh: '卯山酉向', en: 'Mao Mountain, You Facing (due west)', zhHant: '卯山酉向', pinyin: 'Mǎo shān yǒu xiàng' },
-  { key: 'term.sit.youmao', zh: '酉山卯向', en: 'You Mountain, Mao Facing (due east)', zhHant: '酉山卯向', pinyin: 'Yǒu shān mǎo xiàng' },
-  { key: 'term.sit.genkun', zh: '艮山坤向', en: 'Gen Mountain, Kun Facing (southwest)', zhHant: '艮山坤向', pinyin: 'Gèn shān kūn xiàng' },
-  { key: 'term.sit.kungen', zh: '坤山艮向', en: 'Kun Mountain, Gen Facing (northeast)', zhHant: '坤山艮向', pinyin: 'Kūn shān gèn xiàng' },
-  { key: 'term.sit.xunqian', zh: '巽山乾向', en: 'Xun Mountain, Qian Facing (northwest)', zhHant: '巽山乾向', pinyin: 'Xùn shān qián xiàng' },
-  { key: 'term.sit.qianxun', zh: '乾山巽向', en: 'Qian Mountain, Xun Facing (southeast)', zhHant: '乾山巽向', pinyin: 'Qián shān xùn xiàng' },
+  { key: 'term.sit.ziwu', zh: '正南', en: 'Due south', zhHant: '正南', pinyin: 'Zhèngnán' },
+  { key: 'term.sit.wuzi', zh: '正北', en: 'Due north', zhHant: '正北', pinyin: 'Zhèngběi' },
+  { key: 'term.sit.maoyou', zh: '正西', en: 'Due west', zhHant: '正西', pinyin: 'Zhèngxī' },
+  { key: 'term.sit.youmao', zh: '正东', en: 'Due east', zhHant: '正東', pinyin: 'Zhèngdōng' },
+  { key: 'term.sit.genkun', zh: '西南', en: 'Southwest', zhHant: '西南', pinyin: 'Xīnán' },
+  { key: 'term.sit.kungen', zh: '东北', en: 'Northeast', zhHant: '東北', pinyin: 'Dōngběi' },
+  { key: 'term.sit.xunqian', zh: '西北', en: 'Northwest', zhHant: '西北', pinyin: 'Xīběi' },
+  { key: 'term.sit.qianxun', zh: '东南', en: 'Southeast', zhHant: '東南', pinyin: 'Dōngnán' },
 
   // ---------- 业态 ind（12） ----------
   { key: 'term.ind.catering', zh: '餐饮', en: 'Catering & dining', zhHant: '餐飲' },
@@ -106,12 +106,12 @@ export const GLOSSARY: GlossaryEntry[] = [
   { key: 'term.ev.rite', zh: '寿诞祭祀', en: 'Birthdays & rites', zhHant: '壽誕祭祀' },
 
   // ---------- 取用核心 core（6） ----------
-  { key: 'term.core.wuxing', zh: '五行', en: 'Five Phases', zhHant: '五行', pinyin: 'Wǔxíng', note: '木火土金水；业态取用之主轴' },
-  { key: 'term.core.taijing', zh: '太岁', en: 'Tai Sui (Grand Duke of the Year)', zhHant: '太歲', pinyin: 'Tàisuì', note: '岁君；岁破方与岁破日之忌所出' },
+  { key: 'term.core.wuxing', zh: '行业属性', en: 'Industry attribute', zhHant: '行業屬性', pinyin: 'Hángyè shǔxìng', note: '按行业门类归入木火土金水五类，用于取用对照' },
+  { key: 'term.core.taijing', zh: '当年地支', en: 'Year branch', zhHant: '當年地支', pinyin: 'Dāngnián dìzhī', note: '与出生年地支相同的年份；旧时通书列为需要留意的年份' },
   { key: 'term.core.marry', zh: '传统婚月', en: 'Traditional marriage months', zhHant: '傳統婚月', pinyin: 'Chuántǒng hūnyuè', note: '传统婚期月；婚嫁取用之纲' },
   { key: 'term.core.chongming', zh: '日辰冲年', en: 'Day clashing a birth year', zhHant: '日辰沖年', pinyin: 'Rìchén chōng nián', note: '日支与出生年相冲，硬排除项' },
-  { key: 'term.core.shanxiang', zh: '山向', en: 'Mountain & facing', zhHant: '山向', pinyin: 'Shānxiàng', note: '坐山与朝向；工程取用之体' },
-  { key: 'term.core.sit', zh: '坐向', en: 'Sitting orientation', zhHant: '坐向', pinyin: 'Zuòxiàng', note: '宅穴坐山所向；八山三合取用' },
+  { key: 'term.core.shanxiang', zh: '朝向', en: 'Orientation', zhHant: '朝向', pinyin: 'Cháoxiàng', note: '宅院正面所对方向；工程类条目取用' },
+  { key: 'term.core.sit', zh: '坐向', en: 'Sitting & facing', zhHant: '坐向', pinyin: 'Zuòxiàng', note: '宅院背面与正面所指方向' },
 
   // ---------- 知库门类 kbcat（13） ----------
   { key: 'term.kbcat.all', zh: '全部', en: 'All', zhHant: '全部' },

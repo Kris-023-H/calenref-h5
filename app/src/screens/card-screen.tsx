@@ -52,7 +52,7 @@ export function CardScreen(): JSX.Element {
     eventName: termText(ev.name, lang),
     industryName: termText(ind.name, lang),
     pillars: fp,
-    sitDeg: `${ZHI[sit.zhi]}${tx('山', ' mountain', lang)}`,
+    sitDeg: `${ZHI[sit.zhi]}${tx('方', ' bearing', lang)}`,
     hourName: hour?.name ?? '—',
     hourRange: hour?.range ?? '',
     lang,

@@ -1,7 +1,7 @@
 import { tx } from '../../i18n';
 /**
  * services/ai/local-template-ai.ts — LocalTemplateAiService：离线模板四段解读。
- * 结构固定（PRD v3.5 §8）：结论口径 / 业态适配 / 风险与化解 / 执行建议。
+ * 结构固定（PRD v3.5 §8）：结论口径 / 业态适配 / 风险与调整 / 执行建议。
  * 五硬边界：不重新推演、不引入未纳入的传统条目、不输出结果性预测、不涉医疗投资、
  * 每条可指向报告章节——模板只引用已算出的层结果，天然满足。
  */
@@ -56,16 +56,16 @@ export function buildLocalReading(req: AiRequest): string[] {
     lang === 'en'
       ? `This reading answers one question: whether <b>${day.dayGZ.text} day (${jcText})</b> fits <b>${evName}</b> for the charts of ${peopleText(scan, 'en')}. Score ${day.score} — ${grade}. It does not predict how business will go; it only says whether the day fits this rule set.`
       : tx(
-          `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}出生年为约束的当日，结论是<b>${day.dayGZ.text}日可用</b>，课格评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`,
+          `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}出生年为约束的当日，结论是<b>${day.dayGZ.text}日可用</b>，评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`,
           '',
           lang,
         );
 
   const sec2 =
     lang === 'en'
-      ? `${indName ? `"${indName}" belongs to ${industry ? WX_NAMES[industry.wuxing] : ''}; ` : ''}the day stem is ${day.dayGZ.text[0]}. ${wxLayer ? layerResultText(wxLayer, 'en') : 'This occasion does not take the industry five-phase layer.'} ${industry ? industry.note.en : ''}`
+      ? `${indName ? `"${indName}" belongs to ${industry ? WX_NAMES[industry.wuxing] : ''}; ` : ''}the day stem is ${day.dayGZ.text[0]}. ${wxLayer ? layerResultText(wxLayer, 'en') : 'This occasion does not use the industry-attribute layer.'} ${industry ? industry.note.en : ''}`
       : tx(
-          `${indName ? `「${indName}」属${industry ? WX_NAMES[industry.wuxing] : ''}，` : ''}本日日干${day.dayGZ.text[0]}，${wxLayer ? layerResultText(wxLayer, lang) : '此用事不取业态五行层'}。${industry ? industry.note.zh : ''}`,
+          `${indName ? `「${indName}」属${industry ? WX_NAMES[industry.wuxing] : ''}，` : ''}本日日干${day.dayGZ.text[0]}，${wxLayer ? layerResultText(wxLayer, lang) : '此用事不取行业属性层'}。${industry ? industry.note.zh : ''}`,
           '',
           lang,
         );
@@ -73,7 +73,7 @@ export function buildLocalReading(req: AiRequest): string[] {
   const sec3 =
     lang === 'en'
       ? bad.length
-        ? `Secondary factors: <b>${bad.map((b) => `${layerName(b.key, 'en')} · ${layerResultText(b, 'en')}`).join('; ')}</b>. These are not reasons to move the date — the traditional remedy is to place the first key action inside an auspicious hour, keep the core step indoors, and do a dry run the day before.`
+        ? `Secondary factors: <b>${bad.map((b) => `${layerName(b.key, 'en')} · ${layerResultText(b, 'en')}`).join('; ')}</b>. These are not reasons to move the date — the traditional remedy is to place the first key action inside a favourable hour, keep the core step indoors, and do a dry run the day before.`
         : `All layers run clean — a rare day. Lock it in; do not let “wait and see” cost it.`
       : tx(
           bad.length

@@ -171,8 +171,8 @@ export function InfoScreen(): JSX.Element {
               {tx('业态与坐向', 'Trade & facing', lang)}
               <small>
                 {hasWuxingLayer(draft.eventKey)
-                  ? tx('取业态五行与坐向，是营生课的第二组变量', 'trade five-phase and facing are the second variable set', lang)
-                  : tx('重方位与山运，坐向冲山即为硬忌', 'facing matters; a clash with the mountain is a hard veto', lang)}
+                  ? tx('取行业属性与朝向，是营生类条目的第二组变量', 'industry attribute and orientation are the second variable set', lang)
+                  : tx('重方位与场地条件，朝向相冲即为硬性排除', 'facing matters; a clash with the orientation is a hard exclusion', lang)}
               </small>
             </div>
           </div>
@@ -198,7 +198,7 @@ export function InfoScreen(): JSX.Element {
                   {SITS.map((x) => (
                     <option key={x.key} value={x.key}>
                       {termText(x.name, lang)}（{ZHI[x.zhi]}
-                      {tx('山', ' mountain', lang)}）
+                      {tx('方', ' bearing', lang)}）
                     </option>
                   ))}
                 </select>

@@ -28,9 +28,9 @@ export const BOOKS: BookDef[] = [
     author: l('清 · 允禄等奉敕撰', 'Qing dynasty, commissioned under Yunlu', '清 · 允祿等奉敕撰'),
     category: 'term.bookcat.zonggang',
     desc: l(
-      '三十六卷，四库全书所收历法第一书。本产品的传统条目取用、建除、天德月德口径均以此为准。',
+      '三十六卷，四库全书所收历法第一书。本产品的传统条目取用、建除、德日口径均以此为准。',
       'Thirty-six volumes — the foremost Qing-era treatise on date selection. This product\'s deity, Jianchu, and virtue rules follow it.',
-      '三十六卷，四庫全書所收曆法第一書。本產品的傳統條目取用、建除、天德月德口徑均以此為準。',
+      '三十六卷，四庫全書所收曆法第一書。本產品的傳統條目取用、建除、德日口徑均以此為準。',
     ),
   },
   {
@@ -68,7 +68,7 @@ export const BOOKS: BookDef[] = [
     category: 'term.bookcat.zhuanjing',
     desc: l(
       '传统历法专经，重营造择时与方位。',
-      'A specialist classic on date selection, emphasizing life-mending and supporting the dragon and mountain.',
+      'A specialist classic on building timing and orientation, covering site setting and directional method.',
       '傳統曆法專經，重營造擇時與方位。',
     ),
   },

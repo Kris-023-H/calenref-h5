@@ -1,5 +1,5 @@
 /**
- * screens/detail-screen.tsx — 当日详解（首选/备选课 + 出生资料 + 逐层依据 + 时辰 + 三派对照 + 制化）。
+ * screens/detail-screen.tsx — 当日详解（首选/备选课 + 出生资料 + 逐层依据 + 时辰 + 三派对照 + 调和）。
  * 层结果文案由 i18n/engine-text 组装；时辰可点选并印入课帖。
  */
 
@@ -127,7 +127,7 @@ export function DetailScreen(): JSX.Element {
         <div className="rtab-row">
           <div>{t('common.score', lang)}</div>
           <div>
-            <b>{day.score}</b>　{tx('（≥94 上吉 · ≥86 中吉 · ≥80 可用）', '≥94 supreme · ≥86 high · ≥80 usable', lang)}
+            <b>{day.score}</b>　{tx('（≥94 优选 · ≥86 良好 · ≥80 可用）', '≥94 preferred · ≥86 good · ≥80 usable', lang)}
           </div>
         </div>
       </div>

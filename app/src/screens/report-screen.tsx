@@ -102,7 +102,7 @@ export function ReportScreen(): JSX.Element {
             {tx('推演', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
             <br />
             {tx('坐向', 'Facing', lang)}　　{ZHI[sit.zhi]}
-            {tx('山', ' mountain', lang)}
+            {tx('方', ' bearing', lang)}
           </div>
           <div className="dh-meta">
             <span>
@@ -273,7 +273,7 @@ export function ReportScreen(): JSX.Element {
       ))}
       {list.length > 8 && (
         <div className="hint" style={{ fontSize: 10, textAlign: 'center' }}>
-          {tx(`其余 ${list.length - 8} 日见附录（按课格降序）`, `${list.length - 8} more in the appendix (score desc)`, lang)}
+          {tx(`其余 ${list.length - 8} 日见附录（按评分降序）`, `${list.length - 8} more in the appendix (score desc)`, lang)}
         </div>
       )}
 
@@ -292,7 +292,7 @@ export function ReportScreen(): JSX.Element {
           </div>
         ))}
         <div style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.75, marginTop: 9 }}>
-          {tx('出局不等于「不吉」，是不合本套取用的条件。日辰冲年、月破、冲山为硬性出局；课格评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. Clash of day/person, month-break and mountain-clash are hard vetoes; score below threshold is relaxable.', lang)}
+          {tx('出局不等于「不吉」，是不合本套取用的条件。日辰冲出生年、月内破日、冲朝向为硬性出局；评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. A day clashing a birth year, month-break days and an orientation clash are hard vetoes; score below threshold is relaxable.', lang)}
         </div>
       </div>
 
@@ -379,7 +379,7 @@ export function ReportScreen(): JSX.Element {
       <SectionHead index="九" title={t('report.ch9', lang)} note={tx('边界声明', 'boundaries', lang)} />
       <div className="card flat">
         <div style={{ fontSize: 11, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {tx('本报告逐层给出取用依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与冲山依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。', 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, facing and mountain-clash to the Yingzao Fashi and the Luban Jing.', lang)}
+          {tx('本报告逐层给出取用依据，每一层均可回溯至具体典籍：月建与建除依《协纪辨方书》，节气月依《星历考原》，坐向与朝向相冲依《营造法式》《鲁班经匠家镜》，业态取用参该业专书。', 'Every layer of this report is traceable to a specific book: month branch and jianchu to the Xieji Bianfang Shu, solar-term months to the Xingli Kaoyuan, orientation and orientation clash to the Yingzao Fashi and the Luban Jing.', lang)}
         </div>
       </div>
 

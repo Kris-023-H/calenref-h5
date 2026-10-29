@@ -41,7 +41,20 @@ export function mailto(email: string, subject?: string): string {
   return subject ? `mailto:${email}?subject=${encodeURIComponent(subject)}` : `mailto:${email}`;
 }
 
-/** 法务页绝对地址（分享/审核时可直接给链接） */
+/** 法务页 URL 段（唯一事实源；Worker 的 LEGAL_PATHS 与此保持一致） */
+export const LEGAL_PATH: Record<string, string> = {
+  privacy: '/privacy',
+  terms: '/terms',
+  refund: '/refund',
+  cookie: '/cookies',
+};
+
+/** 法务页站内路径（不含域名；地址栏与 canonical 用这个） */
+export function legalPath(page: string): string {
+  return LEGAL_PATH[page] ?? `/${page}`;
+}
+
+/** 法务页绝对地址（分享/审核时可直接给链接，必须是可直达的真 URL） */
 export function legalUrl(page: string): string {
-  return `${SITE.url}/?legal=${page}`;
+  return `${SITE.url}${legalPath(page)}`;
 }

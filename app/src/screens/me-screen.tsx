@@ -11,7 +11,7 @@ import { useUi } from '../store/ui-store';
 import { RULE_VERSION } from '../engine/types';
 import { t, LANG_SELF_NAME, bytesText, tx } from '../i18n';
 import { LEGAL_PAGES, LEGAL_TITLE_KEY } from '../data/legal';
-import { SITE, mailto } from '../data/site';
+import { SITE, legalPath, mailto } from '../data/site';
 import { clearConsent } from '../services/consent';
 import { Btn, Chip, Seg } from '../components/basics';
 import { AppBar } from '../components/app-bar';
@@ -281,12 +281,21 @@ export function MeScreen(): JSX.Element {
           {SITE.tagline}
         </div>
 
-        {/* ---------- 页脚：法务四链 + 版权（支付平台审核会逐页点开） ---------- */}
+        {/* ---------- 页脚：法务四链 + 版权（支付平台审核会逐页点开） ----------
+            用真 <a href> 而不是 button：审核方看源码/爬虫要能读到真实 URL，
+            点击时仍走站内导航（preventDefault），不整页刷新。 */}
         <div className="legal-links">
           {LEGAL_PAGES.map((p) => (
-            <button key={p} type="button" onClick={() => push('legal', { page: p })}>
+            <a
+              key={p}
+              href={legalPath(p)}
+              onClick={(e) => {
+                e.preventDefault();
+                push('legal', { page: p });
+              }}
+            >
               {t(LEGAL_TITLE_KEY[p], lang)}
-            </button>
+            </a>
           ))}
         </div>
         <div style={{ fontSize: 9.5, color: 'var(--muted)', textAlign: 'center', marginTop: 8, lineHeight: 1.7 }}>

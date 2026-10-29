@@ -1,5 +1,6 @@
 /**
- * screens/pay-screen.tsx — 解锁页：四 SKU（USD）+ Creem 结账 + 离线兑换码。
+ * screens/pay-screen.tsx — 解锁页：上架 SKU（USD）+ Creem 结账 + 离线兑换码。
+ * 上架清单见 prices.ts 的 OFFERED_SKUS（首审只报 once / year）。
  * 双路径（主理人拍板）：(a) 经 Worker 建 Creem checkout 后跳转，回跳由 App 核验落账；
  * (b) 兑换码离线 HMAC 校验（services/pay/redeem.ts）。
  */
@@ -8,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
-import { CURRENCIES, formatPrice, SKUS, type Sku, type Currency } from '../data/prices';
+import { CURRENCIES, OFFERED_SKUS, formatPrice, type Sku, type Currency } from '../data/prices';
 import { createCheckout } from '../services/pay/creem';
 import { redeemCode } from '../services/pay/redeem';
 import { licenseRepo } from '../db/repos/license.repo';
@@ -24,7 +25,7 @@ const SKU_DESC: Record<Lang, Record<Sku, string>> = {
   zh: {
     once: '一次完整九章报告',
     ai10: '十次白话解读额度',
-    pair: '双方出生资料合参一报',
+    pair: '双方出生资料对照一报',
     year: '全年不限次报告',
   },
   en: {
@@ -36,7 +37,7 @@ const SKU_DESC: Record<Lang, Record<Sku, string>> = {
   'zh-Hant': {
     once: '一次完整九章報告',
     ai10: '十次白話解讀額度',
-    pair: '雙方出生资料合參一報',
+    pair: '雙方出生資料對照一報',
     year: '全年不限次報告',
   },
 };
@@ -142,7 +143,7 @@ export function PayScreen(): JSX.Element {
         </div>
       )}
 
-      {SKUS.map((k) => (
+      {OFFERED_SKUS.map((k) => (
         <div key={k} className={`plan${sku === k ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => setSku(k)} onKeyDown={(e) => e.key === 'Enter' && setSku(k)}>
           {k === 'ai10' && <div className="badge">{tx('新', 'NEW', lang)}</div>}
           {k === 'year' && <div className="badge">{tx('最超值', 'BEST', lang)}</div>}

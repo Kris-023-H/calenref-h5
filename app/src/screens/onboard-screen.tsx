@@ -100,7 +100,7 @@ export function OnboardScreen(): JSX.Element {
       p:
         tx('黄历上的宜忌，是按建除十二值日排的<b>通用口径</b>——同一天，对所有人都一样。可你要办的是你自己的事，用的是你自己的出生年。', 'Almanac yi/ji follow the twelve jianchu officers — the same for everyone. But your matter uses your own pillars.', lang),
       n:
-        tx('通书答「今天怎么样」，课格答「今天对你这件事怎么样」。两句都对，只是层级不同。', 'The almanac answers "how is today"; a day lesson answers "how is today for your matter".', lang),
+        tx('通书答「今天怎么样」，条目答「今天对你这件事怎么样」。两句都对，只是层级不同。', 'The almanac answers "how is today"; the entry set answers "how is today for your matter".', lang),
     },
     {
       h: tx('三层定一次', 'Person + Matter + Day', lang),
@@ -119,9 +119,9 @@ export function OnboardScreen(): JSX.Element {
     {
       h: tx('先定你的业态', 'Pick your trade', lang),
       p:
-        tx('业态决定五行取用与关键动作时点。做餐饮与做珠宝，同一个日子的课格不同。<b>可跳过</b>，之后在生辰页再选。', 'Your trade decides the five-phase taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.', lang),
+        tx('业态决定行业属性取用与关键动作时点。做餐饮与做珠宝，同一个日子的条目不同。<b>可跳过</b>，之后在生辰页再选。', 'Your trade decides the attribute taking and the key action hours. Catering and jewelry score differently on the same day. You can skip and pick later.', lang),
       n:
-        tx('业态只影响营生与工程类用事。嫁娶、入宅不看业态五行，看的是传统婚月与坐向。', 'Trade affects business & engineering matters only. Marriage and moving-in read the marry-month and facing instead.', lang),
+        tx('业态只影响营生与工程类用事。嫁娶、入宅不看行业属性，看的是传统婚月与朝向。', 'Trade affects business & engineering matters only. Marriage and moving-in read the traditional marriage-month table and orientation instead.', lang),
     },
   ];
 

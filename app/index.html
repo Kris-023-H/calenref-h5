@@ -76,12 +76,12 @@
             "@type": "Offer",
             "price": "6.9",
             "priceCurrency": "USD",
-            "description": "One complete nine-chapter cultural reference report (priced per currency)"
+            "description": "One complete nine-chapter cultural reference report"
           },
           "featureList": [
             "Traditional calendar reference: person, matter and day layers",
             "True solar time correction and precise solar terms",
-            "多口径参考对照",
+            "Cross-checked reference readings",
             "English, Simplified and Traditional Chinese",
             "Works offline, no sign-up or login"
           ]
@@ -98,7 +98,8 @@
     }
   </script>
 
-  <link rel="manifest" id="manifest-link" href="data:application/manifest+json,%7B%7D" />
+  <!-- 静态 manifest（爬虫与审核方可见）；运行时按语言注入 blob 版覆盖它 -->
+  <link rel="manifest" id="manifest-link" href="/manifest.webmanifest" />
   <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
   <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
   <style>
