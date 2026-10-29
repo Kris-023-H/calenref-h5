@@ -41,6 +41,8 @@ export function HomeScreen(): JSX.Element {
   const today = useMemo(() => todayInTz(Date.now(), tz), [tz]);
   const dg = dayGZ(today);
   const jc = jianchuOf(today, eventByKey(draft.eventKey).group);
+  // jc.name 是建除 key（如 'man'）；JC_YI/JC_JI 以值神汉字（如 '满'）为键，需先转汉字再查表
+  const jcChar = jianchuName(jc.name, 'zh');
   const ev = eventByKey(draft.eventKey);
   const ind = industryById(draft.industryId);
 
@@ -127,11 +129,11 @@ export function HomeScreen(): JSX.Element {
           <div className="hrow">
             <div className="hi">
               <em>{t('home.todayYi', lang)}</em>
-              <b>{JC_YI[jc.name] ?? '—'}</b>
+              <b>{JC_YI[jcChar] ?? '—'}</b>
             </div>
             <div className="hi">
               <em>{t('home.todayJi', lang)}</em>
-              <b>{JC_JI[jc.name] ?? '—'}</b>
+              <b>{JC_JI[jcChar] ?? '—'}</b>
             </div>
           </div>
         </div>

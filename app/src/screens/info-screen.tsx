@@ -311,7 +311,11 @@ function PersonSlot({
         <div className="pn">{person.name.slice(0, 1) || '当'}</div>
         <div className="pt">
           {person.name}
-          <small>{title}</small>
+          <small>
+            {person.sex === 'f' ? t('person.female', lang) : t('person.male', lang)}
+            {' · '}
+            {tx('角色', 'Role', lang)}：{title}
+          </small>
         </div>
         <div className="pd">
           <button type="button" className="pkbtn" onClick={onClear}>

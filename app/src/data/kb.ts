@@ -386,6 +386,12 @@ export const KB_ARTICLES: KbArticle[] = [
   },
 ];
 
+/** 按类别筛选知库篇目；'term.kbcat.all' 返回全部。 */
+export function filterKbArticles(cat: TermKey): KbArticle[] {
+  if (cat === 'term.kbcat.all') return KB_ARTICLES;
+  return KB_ARTICLES.filter((a) => a.category === cat);
+}
+
 export const KB_CATS: TermKey[] = [
   'term.kbcat.all',
   'term.kbcat.xueli',

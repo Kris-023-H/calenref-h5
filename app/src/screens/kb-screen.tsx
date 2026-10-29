@@ -2,11 +2,13 @@
  * screens/kb-screen.tsx — 知库（主推 + 分类横滑 + 篇目列表 + 典籍入口）。
  */
 
+import { useState } from 'react';
 import { useSettings } from '../store/settings-store';
 import { useUi } from '../store/ui-store';
-import { KB_ARTICLES, KB_CATS } from '../data/kb';
+import { KB_ARTICLES, KB_CATS, filterKbArticles } from '../data/kb';
 import { BOOKS } from '../data/books';
 import { t, termText, tx } from '../i18n';
+import type { TermKey } from '../engine/types';
 import { Chip } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
 import { Icon } from '../components/icons';
@@ -18,8 +20,9 @@ export function KbScreen(): JSX.Element {
   const openSheet = useUi((s) => s.openSheet);
   const { push } = useNav();
   const loc = (s: string): string => s;
+  const [cat, setCat] = useState<TermKey>(KB_CATS[0]);
   const feat = KB_ARTICLES[0];
-  const list = KB_ARTICLES;
+  const list = filterKbArticles(cat);
 
   return (
     <div className="screen has-tab">
@@ -47,7 +50,7 @@ export function KbScreen(): JSX.Element {
         </div>
       </div>
 
-      <ScrollX items={KB_CATS.map((c) => ({ key: c, label: termText(c, lang) }))} activeKey={KB_CATS[0]} onSelect={() => undefined} />
+      <ScrollX items={KB_CATS.map((c) => ({ key: c, label: termText(c, lang) }))} activeKey={cat} onSelect={(k) => setCat(k as TermKey)} />
 
       <div className="artlist">
         {list.map((a) => (
