@@ -621,7 +621,8 @@ export const zh = {
   'legal.contactTitle': '联系我们',
   'legal.contactBody': '对本政策有任何疑问，或需行使数据权利，请致信 {email}，我们会在 30 日内答复。',
   'legal.entityLine': '运营主体：{entity} · 准据法属地：{jurisdiction}',
-  'legal.disclaimer': '本应用内容源于传统历法与民俗文献，仅供文化参考与个人安排之用，不构成医疗、法律、财务或投资建议。',
+  'legal.disclaimer':
+    '本产品仅提供中国传统历法与文化参考信息，供学习娱乐之用；不构成命理、占星或灵性指导服务，不作任何结果预测，也不构成医疗、法律、财务或投资建议。内容源于传统历法与民俗文献。',
 
   // ---------- 页脚 footer ----------
   'footer.legal': '法务',

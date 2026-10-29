@@ -623,7 +623,7 @@ export const en = {
   'legal.contactBody': 'Questions about this policy, or to exercise your data rights, email {email}. We reply within 30 days.',
   'legal.entityLine': 'Operated by {entity} · Governing jurisdiction: {jurisdiction}',
   'legal.disclaimer':
-    'Readings are derived from traditional calendrical and folk sources for cultural reference and personal scheduling only. They are not medical, legal, financial or investment advice.',
+    'This product provides traditional Chinese calendar and cultural reference information for educational purposes only. It is not a fortune-telling, astrology, or spiritual guidance service. No predictions are made. Nothing here is medical, legal, financial, or investment advice. Content is drawn from classical calendrical and folk sources.',
 
   // ---------- footer ----------
   'footer.legal': 'Legal',
