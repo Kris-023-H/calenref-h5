@@ -189,11 +189,16 @@ export function PayScreen(): JSX.Element {
           {tx('支付方式', 'Payment methods', lang)}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {(lang === 'en'
-            ? ['Cards', 'Apple / Google Pay', 'Alipay', 'WeChat Pay', 'Link', 'Bank redirect']
-            : ['信用卡', 'Apple / Google Pay', '支付宝', '微信支付', 'Link', '银行转账'].map((x) => tx(x, '', lang))
-          ).map((x) => (
-            <Chip key={x}>{x}</Chip>
+          {/* 以 Creem 实际支持为准：卡、PayPal、Apple Pay、Google Pay、支付宝
+              （微信支付尚未上线；银行转账只是提现方式，非买家付款方式） */}
+          {[
+            ['信用卡 / 借记卡', 'Cards'],
+            ['PayPal', 'PayPal'],
+            ['Apple Pay', 'Apple Pay'],
+            ['Google Pay', 'Google Pay'],
+            ['支付宝', 'AliPay'],
+          ].map(([zh, en]) => (
+            <Chip key={en}>{tx(zh, en, lang)}</Chip>
           ))}
         </div>
         <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7, display: 'flex', gap: 6 }}>

@@ -40,7 +40,7 @@ export function KbScreen(): JSX.Element {
         <small>{tx('按业态取课，按典籍立据。十二类业态，每一篇都对应一部可核的出处。', 'Take lessons by trade; stand on books.', lang)}</small>
       </h2>
 
-      <div className="feat" role="button" tabIndex={0} onClick={() => push('article')}>
+      <div className="feat" role="button" tabIndex={0} onClick={() => push('article', { articleId: String(feat.id) })}>
         <div className="fk">
           {tx('本期主推', 'FEATURED', lang)} ／ {termText(feat.category, lang)}
         </div>
@@ -54,7 +54,7 @@ export function KbScreen(): JSX.Element {
 
       <div className="artlist">
         {list.map((a) => (
-          <div key={a.id} className="ai" role="button" tabIndex={0} onClick={() => push('article')}>
+          <div key={a.id} className="ai" role="button" tabIndex={0} onClick={() => push('article', { articleId: String(a.id) })}>
             <div className="an">{String(a.id).padStart(2, '0')}</div>
             <div style={{ flex: 1 }}>
               <div className="at">{a.title[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}</div>

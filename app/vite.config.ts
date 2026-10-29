@@ -12,7 +12,7 @@ export default defineConfig({
     react(),
     siteMeta(),
     VitePWA({
-      registerType: 'prompt',
+      registerType: 'autoUpdate',
       injectRegister: null,
       strategies: 'generateSW',
       manifest: false, // manifest 由 src/lib/pwa-manifest.ts 按语言动态生成（blob URL）

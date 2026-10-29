@@ -253,7 +253,7 @@ export function HomeScreen(): JSX.Element {
           {t('nav.more', lang)}
         </a>
       </div>
-      <div className="mini-art" role="button" tabIndex={0} onClick={() => push('article')}>
+      <div className="mini-art" role="button" tabIndex={0} onClick={() => push('article', { articleId: String(article.id) })}>
         <div className="thumb">
           <i />
           <b>曆</b>

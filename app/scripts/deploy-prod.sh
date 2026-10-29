@@ -41,6 +41,25 @@ VITE_SITE_URL="$SITE_URL" npm run build
 echo "==> 2/3 部署到 Cloudflare Workers"
 CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler deploy
 
+# ⚠️ wrangler 4.x 的 deploy 会把已有 secret 清空（实测 2026-10-29 被冲掉）。
+# 部署后必须重挂，否则 /api/checkout 立刻 503 not_configured。
+# 密钥只从本机文件读，不进 git。
+CREEM_KEY_FILE="${CREEM_KEY_FILE:-$HOME/.zeji-creem-key}"
+REDEEM_KEY_FILE="${REDEEM_KEY_FILE:-$HOME/.zeji-redeem-secret}"
+echo "==> 2.5/3 重挂 secrets"
+if [ -f "$CREEM_KEY_FILE" ]; then
+  tr -d '\r\n ' < "$CREEM_KEY_FILE" | CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler secret put CREEM_API_KEY >/dev/null 2>&1 \
+    && echo "  CREEM_API_KEY ✓" || echo "  CREEM_API_KEY ✗（检查 $CREEM_KEY_FILE）"
+else
+  echo "  ⚠ 缺少 $CREEM_KEY_FILE，跳过 CREEM_API_KEY（支付会 503）"
+fi
+if [ -f "$REDEEM_KEY_FILE" ]; then
+  tr -d '\r\n ' < "$REDEEM_KEY_FILE" | CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler secret put REDEEM_SECRET >/dev/null 2>&1 \
+    && echo "  REDEEM_SECRET ✓" || echo "  REDEEM_SECRET ✗（检查 $REDEEM_KEY_FILE）"
+else
+  echo "  ⚠ 缺少 $REDEEM_KEY_FILE，跳过 REDEEM_SECRET（兑换码会 503）"
+fi
+
 echo "==> 3/3 等边缘节点传播 90s 后自检"
 sleep 90
 node scripts/verify-deploy.mjs "$SITE_URL"

@@ -12,13 +12,15 @@ import { eventByKey } from '../data/events';
 import { t, termText, tx } from '../i18n';
 import { Btn, Chip } from '../components/basics';
 import { AppBar, IconBtn } from '../components/app-bar';
-import { useNav } from './types';
+import { useNav, useNavParams } from './types';
 
 export function ArticleScreen(): JSX.Element {
   const lang = useSettings((s) => s.lang);
   const openSheet = useUi((s) => s.openSheet);
-  const { pop, push } = useNav();
-  const a = KB_ARTICLES[0];
+  const { pop, push, replace } = useNav();
+  const params = useNavParams('article');
+  const articleId = params?.articleId;
+  const a = (articleId ? KB_ARTICLES.find((x) => String(x.id) === articleId) : undefined) ?? KB_ARTICLES[0];
   const loc = lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh';
   const book = BOOKS.find((b) => b.title === a.books[0]) ?? BOOKS[0];
   const ev = eventByKey('open');
@@ -78,7 +80,7 @@ export function ArticleScreen(): JSX.Element {
       </div>
       <div className="artlist">
         {related.map((x) => (
-          <div key={x.id} className="ai" role="button" tabIndex={0} onClick={() => push('article')}>
+          <div key={x.id} className="ai" role="button" tabIndex={0} onClick={() => replace('article', { articleId: String(x.id) })}>
             <div className="an">{String(x.id).padStart(2, '0')}</div>
             <div style={{ flex: 1 }}>
               <div className="at">{x.title[loc]}</div>

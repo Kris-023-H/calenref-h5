@@ -11,7 +11,7 @@ import { useUi } from '../store/ui-store';
 import { RULE_VERSION } from '../engine/types';
 import { t, LANG_SELF_NAME, bytesText, tx } from '../i18n';
 import { LEGAL_PAGES, LEGAL_TITLE_KEY } from '../data/legal';
-import { SITE } from '../data/site';
+import { SITE, mailto } from '../data/site';
 import { clearConsent } from '../services/consent';
 import { Btn, Chip, Seg } from '../components/basics';
 import { AppBar } from '../components/app-bar';
@@ -272,7 +272,7 @@ export function MeScreen(): JSX.Element {
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Icon name="send" size={13} />
           <div style={{ flex: 1, fontSize: 11.5, fontWeight: 700 }}>{t('about.feedback', lang)}</div>
-          <span style={{ fontSize: 10.5, color: 'var(--muted)' }}>{t('about.feedbackBody', lang)}</span>
+          <a href={mailto(SITE.supportEmail)} style={{ fontSize: 10.5, color: 'var(--muted)' }}>{SITE.supportEmail}</a>
         </div>
         <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 12, letterSpacing: '.12em' }}>
           {t('app.name', lang)} · {t('app.nameEn', lang)} · {t('app.slogan', lang)}
