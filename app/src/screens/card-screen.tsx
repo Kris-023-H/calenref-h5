@@ -1,5 +1,5 @@
 /**
- * screens/card-screen.tsx — 吉日课帖（五版式 + 3D 倾斜 + 传帖出口 + 分享落地页预览）。
+ * screens/card-screen.tsx — 吉当日帖（五版式 + 3D 倾斜 + 传帖出口 + 分享落地页预览）。
  */
 
 import { useState } from 'react';
@@ -68,7 +68,7 @@ export function CardScreen(): JSX.Element {
     <div className="screen">
       <AppBar title={t('card.title', lang)} onBack={() => pop()} actions={<Chip>5 {tx('版式', 'themes', lang)}</Chip>} />
       <h2 className="tt">
-        {tx('一纸可传的课帖', 'A card you can pass on', lang)}
+        {tx('一纸可传的当日帖', 'A card you can pass on', lang)}
         <small>{tx('一纸可传，收到帖的人也能排自己的那一天。', 'Whoever receives it can find their own day too.', lang)}</small>
       </h2>
 
@@ -146,7 +146,7 @@ export function CardScreen(): JSX.Element {
 
       <div style={{ height: 12 }} />
       <Btn variant="ghost" block onClick={() => push('pay')}>
-        {t('pay.upgrade', lang)} · {tx('课帖去印记', 'remove watermark', lang)}
+        {t('pay.upgrade', lang)} · {tx('当日帖去印记', 'remove watermark', lang)}
       </Btn>
     </div>
   );

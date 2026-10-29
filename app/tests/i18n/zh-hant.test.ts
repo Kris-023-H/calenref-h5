@@ -12,11 +12,11 @@ describe('zh-Hant conversion spot checks', () => {
     expect(zhHant['common.copy']).toBe('複製');
     expect(zhHant['scan.generic']).toBe('通用模式');
     expect(zhHant['eng.jianchu.po']).toContain('破日');
-    expect(zhHant['onboard.s1Title']).toBe('為每一件大事\n挑一個對的日子');
+    expect(zhHant['onboard.s1Title']).toBe('為重要的日子\n做傳統曆法參考');
   });
   it('simplified originals differ', () => {
-    expect(zh['home.cta']).toBe('开始择日');
-    expect(zhHant['home.cta']).toBe('開始擇日');
+    expect(zh['home.cta']).toBe('开始推演');
+    expect(zhHant['home.cta']).toBe('開始推演');
   });
 });
 

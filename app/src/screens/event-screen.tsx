@@ -1,12 +1,12 @@
 /**
  * screens/event-screen.tsx — 用事选择（四组 18 项 + 本课取用摘要）。
- * 选事后进入 info 录四柱；页面底部给出本课的层数组装。
+ * 选事后进入 info 录出生资料；页面底部给出本课的层数组装。
  */
 
 import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
-import { EVENTS, EVENT_GROUPS, GROUP_DESC, isBizEvent, isEngEvent, hasWuxingLayer, hasSitLayer } from '../data/events';
+import { EVENTS, EVENT_GROUPS, GROUP_DESC, groupText, isBizEvent, isEngEvent, hasWuxingLayer, hasSitLayer } from '../data/events';
 import { industryById } from '../data/industries';
 import { t, termText, tx } from '../i18n';
 import { Chip, Btn } from '../components/basics';
@@ -48,7 +48,7 @@ export function EventScreen(): JSX.Element {
       <h2 className="tt">
         {tx('所办何事？', 'What is the matter?', lang)}
         <small>
-          {tx('用事决定取哪一套课格。同一个日课，宜开市不必宜嫁娶——这是择日学的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
+          {tx('用事决定取哪一套课格。同一个当日，宜开市不必宜嫁娶——这是传统历法取用的基本前提。', 'The matter decides which lesson set applies. The same day suits opening but not marrying.', lang)}
         </small>
       </h2>
 
@@ -57,7 +57,7 @@ export function EventScreen(): JSX.Element {
         return (
           <div className="ev-group" key={g}>
             <div className="gh">
-              <b>{g}</b>
+              <b>{groupText(g, lang)}</b>
               <i />
               <span>
                 {list.length} {tx('项', 'items', lang)}
@@ -88,7 +88,7 @@ export function EventScreen(): JSX.Element {
       </div>
       <div className="card flat">
         <div style={{ fontSize: 11.5, color: 'var(--ink-2)', lineHeight: 1.85 }}>
-          {tx('用事', 'Matter', lang)}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{ev.group}）
+          {tx('用事', 'Matter', lang)}　<b style={{ color: 'var(--verm)' }}>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
           <br />
           {t('event.needLabel', lang)}　{ev.need[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}
           <br />
@@ -106,7 +106,7 @@ export function EventScreen(): JSX.Element {
 
       <div className="ctabar">
         <Btn block onClick={() => push('info')}>
-          {t('nav.next', lang)} · {tx('录当事人四柱', 'enter pillars', lang)}
+          {t('nav.next', lang)} · {tx('录当事人出生资料', 'enter pillars', lang)}
         </Btn>
       </div>
     </div>

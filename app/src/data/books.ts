@@ -1,5 +1,5 @@
 /**
- * data/books.ts — 25+ 部典籍索引（择日总纲 + 行业专书）。
+ * data/books.ts — 25+ 部典籍索引（历法总纲 + 行业专书）。
  * 书目保留中文原名（PRD §2.2：音译 + 英译注），类别走术语表。
  */
 
@@ -28,9 +28,9 @@ export const BOOKS: BookDef[] = [
     author: l('清 · 允禄等奉敕撰', 'Qing dynasty, commissioned under Yunlu', '清 · 允祿等奉敕撰'),
     category: 'term.bookcat.zonggang',
     desc: l(
-      '三十六卷，四库全书所收择日第一书。本产品的神煞取用、建除、天德月德口径均以此为准。',
+      '三十六卷，四库全书所收历法第一书。本产品的传统条目取用、建除、天德月德口径均以此为准。',
       'Thirty-six volumes — the foremost Qing-era treatise on date selection. This product\'s deity, Jianchu, and virtue rules follow it.',
-      '三十六卷，四庫全書所收擇日第一書。本產品的神煞取用、建除、天德月德口徑均以此為準。',
+      '三十六卷，四庫全書所收曆法第一書。本產品的傳統條目取用、建除、天德月德口徑均以此為準。',
     ),
   },
   {
@@ -41,7 +41,7 @@ export const BOOKS: BookDef[] = [
     author: l('清 · 魏鉴', 'Qing dynasty, Wei Jian', '清 · 魏鑑'),
     category: 'term.bookcat.tongshu',
     desc: l(
-      '民间通行最广的通书之一，月表与日课断语多出于此。',
+      '民间通行最广的通书之一，月表与当日断语多出于此。',
       'One of the most widely circulated almanacs; its monthly tables and day-chart verdicts are widely quoted.',
       '民間通行最廣的通書之一，月表與日課斷語多出於此。',
     ),
@@ -67,9 +67,9 @@ export const BOOKS: BookDef[] = [
     author: l('传 · 晋 · 郭璞', 'Attributed to Guo Pu, Jin dynasty', '傳 · 晉 · 郭璞'),
     category: 'term.bookcat.zhuanjing',
     desc: l(
-      '克择（择日）专经，重造命与补龙扶山。',
+      '传统历法专经，重营造择时与方位。',
       'A specialist classic on date selection, emphasizing life-mending and supporting the dragon and mountain.',
-      '克擇（擇日）專經，重造命與補龍扶山。',
+      '傳統曆法專經，重營造擇時與方位。',
     ),
   },
   {
@@ -80,7 +80,7 @@ export const BOOKS: BookDef[] = [
     author: l('明 · 万民英', 'Ming dynasty, Wan Minying', '明 · 萬民英'),
     category: 'term.bookcat.zhuanjing',
     desc: l(
-      '以「造命」为纲，主张日课可补命之不足。',
+      '以「造命」为纲，主张当日可补命之不足。',
       'Takes "shaping the fate" as its thread: a day-chart can supplement what the birth chart lacks.',
       '以「造命」為綱，主張日課可補命之不足。',
     ),
@@ -106,22 +106,22 @@ export const BOOKS: BookDef[] = [
     author: l('传 · 许真君', 'Attributed to Xu Xun', '傳 · 許真君'),
     category: 'term.bookcat.minsu',
     desc: l(
-      '民俗宜忌汇编，多用于日常小事，专业择日仅作参照。',
+      '民俗宜忌汇编，多用于日常小事，专业历法参考仅作参照。',
       'A folk compilation of daily taboos; professional selection treats it as reference only.',
-      '民俗宜忌匯編，多用於日常小事，專業擇日僅作參照。',
+      '民俗宜忌匯編，多用於日常小事，專業曆法參考僅作參照。',
     ),
   },
   {
     id: 'donggong',
-    title: '《董公择日要览》',
+    title: '《董公历法要览》',
     pinyin: 'Donggong Zeri Yaolan',
     en: 'Dong\'s Compendium of Date Selection',
     author: l('清 · 董德彰', 'Qing dynasty, Dong Dezhang', '清 · 董德彰'),
     category: 'term.bookcat.yaojue',
     desc: l(
-      '以简驭繁的择日口诀体系，民间流传极广。',
-      'A mnemonic system that reduces selection to essentials — extremely popular in folk practice.',
-      '以簡馭繁的擇日口訣體系，民間流傳極廣。',
+      '以简驭繁的历法口诀体系，民间流传极广。',
+      'A mnemonic system that reduces calendar reading to essentials — extremely popular in folk practice.',
+      '以簡馭繁的曆法口訣體系，民間流傳極廣。',
     ),
   },
   {
@@ -132,9 +132,9 @@ export const BOOKS: BookDef[] = [
     author: l('明 · 万民英', 'Ming dynasty, Wan Minying', '明 · 萬民英'),
     category: 'term.bookcat.mingli',
     desc: l(
-      '四柱命理总集，用于定当事人年命与用神。',
+      '干支历法总集，用于定当事人出生年与用神。',
       'The comprehensive collection of Four-Pillars theory, used to fix the principal\'s year branch and useful spirits.',
-      '四柱命理總集，用於定當事人年命與用神。',
+      '干支曆法總集，用於定當事人出生年與用神。',
     ),
   },
   {
@@ -145,9 +145,9 @@ export const BOOKS: BookDef[] = [
     author: l('宋 · 徐升', 'Song dynasty, Xu Sheng', '宋 · 徐昇'),
     category: 'term.bookcat.mingli',
     desc: l(
-      '子平术奠基之作，年命与日主旺衰取法于此。',
+      '子平术奠基之作，出生年与日主旺衰取法于此。',
       'The founding text of Ziping methodology: year-branch and day-master strength are derived here.',
-      '子平術奠基之作，年命與日主旺衰取法於此。',
+      '子平術奠基之作，出生年與日主旺衰取法於此。',
     ),
   },
   {
@@ -171,9 +171,9 @@ export const BOOKS: BookDef[] = [
     author: l('明 · 午荣编', 'Ming dynasty, compiled by Wu Rong', '明 · 午榮編'),
     category: 'term.bookcat.jianzhu',
     desc: l(
-      '匠家择日与尺寸法度，上梁、安门、起造的专门依据。',
+      '匠家历法与尺寸法度，上梁、安门、起造的专门依据。',
       'The craftsman\'s standard for dates and measurements — the authority for beams, gates, and foundations.',
-      '匠家擇日與尺寸法度，上梁、安門、起造的專門依據。',
+      '匠家曆法與尺寸法度，上梁、安門、起造的專門依據。',
     ),
   },
   {
@@ -184,9 +184,9 @@ export const BOOKS: BookDef[] = [
     author: l('明 · 王君荣', 'Ming dynasty, Wang Junrong', '明 · 王君榮'),
     category: 'term.bookcat.zhaiye',
     desc: l(
-      '阳宅形法与坐向吉凶，房地产与门店选址的方位依据。',
+      '阳宅形法与坐向宜忌，房地产与门店选址的方位依据。',
       'Form and orientation for yang dwellings — the directional basis for property and store siting.',
-      '陽宅形法與坐向吉凶，房地產與門店選址的方位依據。',
+      '陽宅形法與坐向宜忌，房地產與門店選址的方位依據。',
     ),
   },
   {
@@ -301,9 +301,9 @@ export const BOOKS: BookDef[] = [
     author: l('宋 · 朱熹', 'Song dynasty, Zhu Xi', '宋 · 朱熹'),
     category: 'term.bookcat.lizhi',
     desc: l(
-      '冠婚丧祭四礼程式，家庭择日的礼仪时序依据。',
+      '冠婚丧祭四礼程式，家庭历法参考的礼仪时序依据。',
       'The four family rites — capping, wedding, funeral, sacrifice — and their timing.',
-      '冠婚喪祭四禮程式，家庭擇日的禮儀時序依據。',
+      '冠婚喪祭四禮程式，家庭曆法參考的禮儀時序依據。',
     ),
   },
   {

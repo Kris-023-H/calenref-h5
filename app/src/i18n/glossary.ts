@@ -108,9 +108,9 @@ export const GLOSSARY: GlossaryEntry[] = [
   // ---------- 取用核心 core（6） ----------
   { key: 'term.core.wuxing', zh: '五行', en: 'Five Phases', zhHant: '五行', pinyin: 'Wǔxíng', note: '木火土金水；业态取用之主轴' },
   { key: 'term.core.taijing', zh: '太岁', en: 'Tai Sui (Grand Duke of the Year)', zhHant: '太歲', pinyin: 'Tàisuì', note: '岁君；岁破方与岁破日之忌所出' },
-  { key: 'term.core.marry', zh: '行嫁月', en: 'Marriage months', zhHant: '行嫁月', pinyin: 'Xíngjià yuè', note: '女命大利小利月；婚嫁择日之纲' },
-  { key: 'term.core.chongming', zh: '日辰冲命', en: 'Day pillar clashing the life chart', zhHant: '日辰沖命', pinyin: 'Rìchén chōng mìng', note: '日支与年命相冲，硬排除项' },
-  { key: 'term.core.shanxiang', zh: '山向', en: 'Mountain & facing', zhHant: '山向', pinyin: 'Shānxiàng', note: '坐山与朝向；工程择日之体' },
+  { key: 'term.core.marry', zh: '传统婚月', en: 'Traditional marriage months', zhHant: '傳統婚月', pinyin: 'Chuántǒng hūnyuè', note: '传统婚期月；婚嫁取用之纲' },
+  { key: 'term.core.chongming', zh: '日辰冲年', en: 'Day clashing a birth year', zhHant: '日辰沖年', pinyin: 'Rìchén chōng nián', note: '日支与出生年相冲，硬排除项' },
+  { key: 'term.core.shanxiang', zh: '山向', en: 'Mountain & facing', zhHant: '山向', pinyin: 'Shānxiàng', note: '坐山与朝向；工程取用之体' },
   { key: 'term.core.sit', zh: '坐向', en: 'Sitting orientation', zhHant: '坐向', pinyin: 'Zuòxiàng', note: '宅穴坐山所向；八山三合取用' },
 
   // ---------- 知库门类 kbcat（13） ----------
@@ -129,11 +129,11 @@ export const GLOSSARY: GlossaryEntry[] = [
   { key: 'term.kbcat.dianji', zh: '电竞', en: 'Esports', zhHant: '電競' },
 
   // ---------- 书目门类 bookcat（17） ----------
-  { key: 'term.bookcat.zonggang', zh: '总纲 · 择吉通论', en: 'General principles', zhHant: '總綱 · 擇吉通論' },
+  { key: 'term.bookcat.zonggang', zh: '总纲 · 历法通论', en: 'General principles', zhHant: '總綱 · 曆法通論' },
   { key: 'term.bookcat.lifa', zh: '历法 · 节气历算', en: 'Calendrics', zhHant: '曆法 · 節氣曆算' },
-  { key: 'term.bookcat.tongshu', zh: '通书 · 择吉通书', en: 'Almanacs', zhHant: '通書 · 擇吉通書' },
-  { key: 'term.bookcat.yaojue', zh: '要诀 · 择日口诀', en: 'Key methods', zhHant: '要訣 · 擇日口訣' },
-  { key: 'term.bookcat.mingli', zh: '命理 · 四柱八字', en: 'Four Pillars', zhHant: '命理 · 四柱八字' },
+  { key: 'term.bookcat.tongshu', zh: '通书 · 历法通书', en: 'Almanacs', zhHant: '通書 · 曆法通書' },
+  { key: 'term.bookcat.yaojue', zh: '要诀 · 历法口诀', en: 'Key methods', zhHant: '要訣 · 曆法口訣' },
+  { key: 'term.bookcat.mingli', zh: '历法 · 干支纪年', en: 'Sexagenary cycle', zhHant: '曆法 · 干支紀年' },
   { key: 'term.bookcat.canyin', zh: '饮膳 · 餐饮', en: 'Culinary', zhHant: '飲膳 · 餐飲' },
   { key: 'term.bookcat.shangmao', zh: '商贸 · 经商', en: 'Commerce', zhHant: '商貿 · 經商' },
   { key: 'term.bookcat.jianzhu', zh: '建筑 · 营造', en: 'Architecture', zhHant: '建築 · 營造' },
@@ -149,7 +149,7 @@ export const GLOSSARY: GlossaryEntry[] = [
   { key: 'term.bookcat.lizhi', zh: '励志 · 商道', en: 'Business ethos', zhHant: '勵志 · 商道' },
 
   // ---------- 宗派 school（3） ----------
-  { key: 'term.school.xingjia', zh: '行嫁月派', en: 'Marriage-month school', zhHant: '行嫁月派', pinyin: 'Xíngjià pài' },
+  { key: 'term.school.xingjia', zh: '婚月派', en: 'Marriage-month school', zhHant: '婚月派', pinyin: 'Hūnyuè pài' },
   { key: 'term.school.bujiang', zh: '不将日派', en: 'Bu-jiang day school', zhHant: '不將日派', pinyin: 'Bùjiāng pài' },
   { key: 'term.school.jianchu', zh: '建除派', en: 'Jian-chu school', zhHant: '建除派', pinyin: 'Jiànchú pài' },
 ] as const;

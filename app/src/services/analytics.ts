@@ -9,7 +9,7 @@
  *      比 consent mode 默认拒绝更彻底（连请求都不发）。
  *
  * 三个关键事件（上线投放与转化分析口径）：
- *   date_check   — 发起一次择日推演
+ *   date_check   — 发起一次历法推演
  *   ai_gen_start — 开始生成 AI 白话解读
  *   report_buy   — 点击购买/解锁
  *
@@ -33,7 +33,7 @@ export const EVENTS = {
   appOpen: 'app_open',
   onboardDone: 'onboard_done',
   langChange: 'lang_change',
-  /** 发起择日推演（关键事件 ①） */
+  /** 发起历法推演（关键事件 ①） */
   dateCheck: 'date_check',
   dayView: 'day_view',
   reportSave: 'report_save',

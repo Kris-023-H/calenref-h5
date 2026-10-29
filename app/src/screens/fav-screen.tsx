@@ -1,7 +1,7 @@
 /**
- * screens/fav-screen.tsx — 收藏（日课 + 文章，按收藏时间倒序）。
- * 日课收藏存快照（date/dayGZ/score/grade/eventName），列表免重算；
- * 点开日课：载回对应课期并定位到该日（课期已删则提示）。
+ * screens/fav-screen.tsx — 收藏（当日 + 文章，按收藏时间倒序）。
+ * 当日收藏存快照（date/dayGZ/score/grade/eventName），列表免重算；
+ * 点开当日：载回对应推演并定位到该日（推演已删则提示）。
  */
 
 import { useState } from 'react';

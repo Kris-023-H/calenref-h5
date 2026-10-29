@@ -1,5 +1,5 @@
 /**
- * components/scan-ring.tsx — 排课动画：金色进度环 + 逐重步骤点亮（440ms/步）。
+ * components/scan-ring.tsx — 推演动画：金色进度环 + 逐重步骤点亮（440ms/步）。
  * 推演本身同步完成（< 40ms）；本组件只复演原型的推演节奏。
  */
 

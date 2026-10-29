@@ -26,28 +26,28 @@ export interface KbArticle {
 export const KB_ARTICLES: KbArticle[] = [
   {
     id: 1,
-    title: l('通书、黄历、择日：三个词不是一件事', 'Almanac, Huangli, and Date Selection: Three Different Things', '通書、黃曆、擇日：三個詞不是一件事'),
+    title: l('通书、黄历、历法参考：三个词不是一件事', 'Almanac, Huangli, and Calendar Reference: Three Different Things', '通書、黃曆、曆法參考：三個詞不是一件事'),
     category: 'term.kbcat.xueli',
     minutes: 3,
     books: ['《协纪辨方书》'],
     sub: l(
-      '通书是历书，黄历是民间印本，择日是一门取用之学。混着用，结论必然打架。',
-      'The almanac is a calendar book; the Huangli is a folk print; date selection is an applied art. Mix them and conclusions collide.',
-      '通書是曆書，黃曆是民間印本，擇日是一門取用之學。混著用，結論必然打架。',
+      '通书是历书，黄历是民间印本，历法参考是一门取用之学。混着用，结论必然打架。',
+      'The almanac is a calendar book; the Huangli is a folk print; calendar reference is an applied art. Mix them and conclusions collide.',
+      '通書是曆書，黃曆是民間印本，曆法參考是一門取用之學。混著用，結論必然打架。',
     ),
     body: l(
       '通书，本质上是历书。它回答的问题是「今天是几月几号、什么节气、下一个节气在什么时候」——这是天文与历法问题，有唯一答案，算错了就是算错了。\n'
         + '黄历，是在历书基础上加了「宜忌」栏的民间印本。它回答「今天总体上宜做什么、忌做什么」。同一个「宜」，它对所有人都一样——因为印本只按日期排，不知道你是谁、要办什么事。\n'
-        + '择日，是另一回事。它回答「今天对你要办的这件事怎么样」。同一个开业日，对甲是上吉，对乙可能冲了年命。择日以当事人的四柱为体、以用事为用，一层一层推，结论因人、因事、因地而异。\n'
-        + '三个词三个层级。拿黄历的「诸事不宜」去否掉一个按你年命推出来的上吉日，或者拿择日的结论去质疑历书的节气日期，都是层级错位。本产品把这三件事分得很清：首页「今日通书」是通书口径，对所有人一致；「起一课」出来的课期报告，才是择日口径，只对你这件事负责。',
+        + '历法参考，是另一回事。它回答「今天对你要办的这件事怎么样」。同一个开业日，对甲是优选，对乙可能冲了出生年。历法参考以当事人的出生资料为据、以用事为用，一层一层推，结论因人、因事、因地而异。\n'
+        + '三个词三个层级。拿黄历的「诸事不宜」去否掉一个按你出生年推出来的优选日，或者拿历法参考的结论去质疑历书的节气日期，都是层级错位。本产品把这三件事分得很清：首页「今日通书」是通书口径，对所有人一致；「起一局」出来的推演报告，才是历法参考口径，只对你这件事负责。',
       'The almanac is, at bottom, a calendar book. It answers "what is today\'s date, which solar term are we in, when is the next one" — an astronomical question with a single answer. Get the astronomy wrong and the book is simply wrong.\n'
         + 'The Huangli is a folk print that adds a column of "suitable / avoid" notes to the calendar. It answers "what should people generally do today". Its advice is the same for everyone, because the print is indexed by date alone — it does not know who you are or what matter you have at hand.\n'
         + 'Date selection is a different discipline. It answers "how is today for your matter". The same opening day can be superior for one person and clash with another\'s year branch. It takes the person\'s Four Pillars as the body and the matter as the use, weighing layer upon layer, so its conclusions vary by person, matter, and place.\n'
         + 'Three words, three levels. Using a Huangli\'s "avoid everything" to veto a day your own chart ranks superior is a category error — as is questioning the calendar\'s solar terms with a date-selection result. This product keeps the three apart: the home screen\'s "today" reading is the almanac level, identical for everyone; only the lesson report answers for your matter.',
       '通書，本質上是曆書。它回答的問題是「今天是幾月幾號、什麼節氣、下一個節氣在什麼時候」——這是天文與曆法問題，有唯一答案，算錯了就是算錯了。\n'
         + '黃曆，是在曆書基礎上加了「宜忌」欄的民間印本。它回答「今天總體上宜做什麼、忌做什麼」。同一個「宜」，它對所有人都一樣——因為印本只按日期排，不知道你是誰、要辦什麼事。\n'
-        + '擇日，是另一回事。它回答「今天對你要辦的這件事怎麼樣」。同一個開業日，對甲是上吉，對乙可能沖了年命。擇日以當事人的四柱為體、以用事為用，一層一層推，結論因人、因事、因地而異。\n'
-        + '三個詞三個層級。拿黃曆的「諸事不宜」去否掉一個按你年命推出來的上吉日，或者拿擇日的結論去質疑曆書的節氣日期，都是層級錯位。本產品把這三件事分得很清：首頁「今日通書」是通書口徑，對所有人一致；「起一課」出來的課期報告，才是擇日口徑，只對你這件事負責。',
+        + '曆法參考，是另一回事。它回答「今天對你要辦的這件事怎麼樣」。同一個開業日，對甲是優選，對乙可能沖了出生年。曆法參考以當事人的出生資料為據、以用事為用，一層一層推，結論因人、因事、因地而異。\n'
+        + '三個詞三個層級。拿黃曆的「諸事不宜」去否掉一個按你出生年推出來的優選日，或者拿曆法參考的結論去質疑曆書的節氣日期，都是層級錯位。本產品把這三件事分得很清：首頁「今日通書」是通書口徑，對所有人一致；「起一局」出來的推演報告，才是曆法參考口徑，只對你這件事負責。',
     ),
     translated: true,
   },
@@ -66,7 +66,7 @@ export const KB_ARTICLES: KbArticle[] = [
       '你手机上的黄历和长辈手里那本，说的常常不是同一件事。\n'
         + '第一层差别在历。老印本用固定节气表，遇到极端年份会差一天；手机软件按真实天文时刻计算，节气在几分几秒都算得出来。这不是谁抄错了谁，是算法精度不同。\n'
         + '第二层差别在「取」。同样是建除十二值神，有的版本以节气月建起建，有的以农历初一为界；同样是月德、天德，有的按三合局推，有的按节气方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
-        + '第三层差别在「口径」。老黄历很多按《星历考原》之后的通书体系，默认对「所有人」；而你在择吉 App 里看到的结果，是按你的四柱、你要办的事单独推的。一个是广播，一个是点对点。\n'
+        + '第三层差别在「口径」。老黄历很多按《星历考原》之后的通书体系，默认对「所有人」；而你在本应用 里看到的结果，是按你的出生资料、你要办的事单独推的。一个是广播，一个是点对点。\n'
         + '所以两个 App 打架，先别急着骂谁不准。看清层级：如果争的是「今天几号」，以天文计算为准；如果争的是「今天宜不宜搬家」，先问一句——对谁、办什么事。',
       'Your phone\'s almanac and the one in your elder\'s hands are often not talking about the same thing.\n'
         + 'The first difference is the calendar itself. Old prints use fixed solar-term tables and can be a day off in extreme years; phone software computes the true astronomical instant, down to the minute. Neither copied the other wrong — the precision simply differs.\n'
@@ -76,7 +76,7 @@ export const KB_ARTICLES: KbArticle[] = [
       '你手機上的黃曆和長輩手裡那本，說得常常不是同一件事。\n'
         + '第一層差別在曆。老印本用固定節氣表，遇到極端年份會差一天；手機軟件按真實天文時刻計算，節氣在幾分幾秒都算得出來。這不是誰抄錯了誰，是算法精度不同。\n'
         + '第二層差別在「取」。同樣是建除十二值神，有的版本以節氣月建起建，有的以農曆初一為界；同樣是月德、天德，有的按三合局推，有的按節氣方位推。取法不同，同一天的「值神」就不同，宜忌自然相反。\n'
-        + '第三層差別在「口徑」。老黃曆很多按《星歷考原》之後的通書體系，默認對「所有人」；而你在擇吉 App 裡看到的結果，是按你的四柱、你要辦的事單獨推的。一個是廣播，一個是點對點。\n'
+        + '第三層差別在「口徑」。老黃曆很多按《星歷考原》之後的通書體系，默認對「所有人」；而你在本應用裡看到的結果，是按你的出生資料、你要辦的事單獨推的。一個是廣播，一個是點對點。\n'
         + '所以兩個 App 打架，先別急著罵誰不準。看清層級：如果爭的是「今天幾號」，以天文計算為準；如果爭的是「今天宜不宜搬家」，先問一句——對誰、辦什麼事。',
     ),
     translated: true,
@@ -88,32 +88,32 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 4,
     books: ['《协纪辨方书》'],
     sub: l(
-      '行嫁月把「哪个月可办」先定下来，剩下的日子才轮到日课去筛。',
+      '婚月把「哪个月可办」先定下来，剩下的日子才轮到当日去筛。',
       'Marriage months first settle which months are viable; only then does the day-chart filter the days.',
-      '行嫁月把「哪個月可辦」先定下來，剩下的日子才輪到日課去篩。',
+      '婚月把「哪個月可辦」先定下來，剩下的日子才輪到日課去篩。',
     ),
     body: l(
-      '属兔的人，地支是卯。女命行嫁月以年支相推：卯年出生，大利月是「正、七月」——正月与七月，一年之中只有这两个月适合办婚事，其余月份或轻或重都有避讳。\n'
+      '属兔的人，地支是卯。传统婚月以年支相推：卯年出生，大利月是「正、七月」——正月与七月，一年之中只有这两个月适合办婚事，其余月份或轻或重都有避讳。\n'
         + '为什么先定月，再定日？因为月的权重远大于日。传统上把月比作「纲」，日是「目」：纲不举则目无张。月份选错，日子再吉也只是「小数」；月份选对，日子稍平也可将就。\n'
         + '月的规则也有边界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，没有商量余地；翁姑月、女父母月属「不宜」，不同流派宽严不一——这正是本产品给出多口径参考的原因。\n'
-        + '落到操作上：先按女方年支查出大利月与小利月，再在合格月份里跑日课。属兔的女生若日子定在二月或八月，不用看日课也知道不在选项里；定在正月或七月，才值得把九十天的日课逐层推一遍。\n'
-        + '注意：行嫁月只约束婚嫁与订盟。开业、签约、入宅并不看这套规则，它们看的是当事人的年命与用事的取用。',
+        + '落到操作上：先按女方年支查出大利月与小利月，再在合格月份里跑当日。属兔的女生若日子定在二月或八月，不用看当日也知道不在选项里；定在正月或七月，才值得把九十天的当日逐层推一遍。\n'
+        + '注意：婚月只约束婚嫁与订盟。开业、签约、入宅并不看这套规则，它们看的是当事人的出生年与用事的取用。',
       'If you were born in the Year of the Rabbit, your earthly branch is Mao. For a bride\'s chart, the marriage months are derived from the year branch: a Mao year has its "great benefit months" in the first and seventh lunar months — the only two months of the year suited to a wedding; the rest carry light or heavy avoidances.\n'
         + 'Why settle the month before the day? Because the month outweighs the day. Tradition calls the month the "main rope" and the day the "mesh": without the rope lifted, the mesh cannot open. Pick the wrong month and even a superior day is a small gain; pick the right month and an ordinary day can be borne.\n'
         + 'The month rules have hard edges. The "husband-harming month" (for a Mao year, the seventh and eighth months) is a hard veto — no negotiation. The in-law months are "unsuitable" rather than forbidden, and the three schools differ on how strictly to read them — which is exactly why this product shows all three side by side.\n'
         + 'In practice: first find the great and small benefit months from the bride\'s year branch, then run the day-chart inside the eligible months. A Rabbit-born bride with a date in the second or eighth month is out of options before any day is examined; a date in the first or seventh month is worth running through ninety days of layered reading.\n'
         + 'Note: marriage months constrain weddings and engagements only. Openings, signings, and moving in do not follow this rule — they read the principal\'s year branch and the taking of the matter itself.',
-      '屬兔的人，地支是卯。女命行嫁月以年支相推：卯年出生，大利月是「正、七月」——正月與七月，一年之中只有這兩個月適合辦婚事，其餘月份或輕或重都有避諱。\n'
+      '屬兔的人，地支是卯。傳統婚月以年支相推：卯年出生，大利月是「正、七月」——正月與七月，一年之中只有這兩個月適合辦婚事，其餘月份或輕或重都有避諱。\n'
         + '為什麼先定月，再定日？因為月的權重遠大於日。傳統上把月比作「綱」，日是「目」：綱不舉則目無張。月份選錯，日子再吉也只是「小數」；月份選對，日子稍平也可將就。\n'
         + '月的規則也有邊界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，沒有商量餘地；翁姑月、女父母月屬「不宜」，不同流派寬嚴不一——這正是本產品給出多口徑參考的原因。\n'
         + '落到操作上：先按女方年支查出大利月與小利月，再在合格月份裡跑日課。屬兔的女生若日子定在二月或八月，不用看日課也知道不在選項裡；定在正月或七月，才值得把九十天的日課逐層推一遍。\n'
-        + '注意：行嫁月只約束婚嫁與訂盟。開業、簽約、入宅並不看這套規則，它們看的是當事人的年命與用事的取用。',
+        + '注意：婚月只約束婚嫁與訂盟。開業、簽約、入宅並不看這套規則，它們看的是當事人的出生年與用事的取用。',
     ),
     translated: true,
   },
   {
     id: 4,
-    title: l('1988 年夏天出生的人，四柱可能一直错了一小时', 'Born in a Chinese Summer, 1986–1991? Your Chart May Be Off by an Hour', '1988 年夏天出生的人，四柱可能一直錯了一小時'),
+    title: l('1988 年夏天出生的人，出生时辰可能一直错了一小时', 'Born in a Chinese Summer, 1986–1991? Your Birth Hour May Be Off by an Hour', '1988 年夏天出生的人，出生時辰可能一直錯了一小時'),
     category: 'term.kbcat.xueli',
     minutes: 3,
     books: ['《星历考原》'],
@@ -152,14 +152,14 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 7,
-    title: l('节气月与农历月：一次错位，整月神煞全错', 'Solar-Term Months vs Lunar Months: One Offset, a Month of Errors', '節氣月與農曆月：一次錯位，整月神煞全錯'),
+    title: l('节气月与农历月：一次错位，整月传统条目全错', 'Solar-Term Months vs Lunar Months: One Offset, a Month of Errors', '節氣月與農曆月：一次錯位，整月傳統條目全錯'),
     category: 'term.kbcat.xueli',
     minutes: 4,
     books: ['《星历考原》'],
     sub: l(
-      '按月取的神煞用节气月，不是农历初一。电子黄历最大的错，几乎都出在这里。',
+      '按月取的传统条目用节气月，不是农历初一。电子黄历最大的错，几乎都出在这里。',
       'Month-based spirits follow solar-term months, not the lunar new moon. Most digital almanac errors start here.',
-      '按月取的神煞用節氣月，不是農曆初一。電子黃曆最大的錯，幾乎都出在這裡。',
+      '按月取的傳統條目用節氣月，不是農曆初一。電子黃曆最大的錯，幾乎都出在這裡。',
     ),
     translated: true,
   },
@@ -170,7 +170,7 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 6,
     books: ['《协纪辨方书》'],
     sub: l(
-      '四库全书所收择日第一书。读它要按「本原—义例—宜忌—利用」四段走，不能跳。',
+      '四库全书所收历法第一书。读它要按「本原—义例—宜忌—利用」四段走，不能跳。',
       'The foremost Qing treatise on selection. Read it in four passes — origins, definitions, daily entries, application — never skipping.',
       '四庫全書所收擇日第一書。讀它要按「本原—義例—宜忌—利用」四段走，不能跳。',
     ),
@@ -178,7 +178,7 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 9,
-    title: l('医美机构开诊择日：生气与洁净', 'Opening a Clinic: Vitality and Cleanliness', '醫美機構開診擇日：生氣與潔淨'),
+    title: l('医美机构开诊：生气与洁净', 'Opening a Clinic: Vitality and Cleanliness', '醫美機構開診：生氣與潔淨'),
     category: 'term.kbcat.yimei',
     minutes: 3,
     books: ['《黄帝内经·素问》'],
@@ -300,9 +300,9 @@ export const KB_ARTICLES: KbArticle[] = [
     minutes: 4,
     books: ['《协纪辨方书》'],
     sub: l(
-      '阴阳不将日不重行嫁月，适合不讲究女方月份的家庭。两套结论都给。',
+      '阴阳不将日不重婚月，适合不讲究女方月份的家庭。两套结论都给。',
       'Non-contention days set aside marriage months — for families that don\'t observe them. Both readings are given.',
-      '陰陽不將日不重行嫁月，適合不講究女方月份的家庭。兩套結論都給。',
+      '陰陽不將日不重婚月，適合不講究女方月份的家庭。兩套結論都給。',
     ),
     translated: false,
   },
@@ -321,20 +321,20 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 20,
-    title: l('中国择日与韩国择日：都在躲什么', 'Chinese and Korean Date Selection: What Each Avoids', '中國擇日與韓國擇日：都在躲什麼'),
+    title: l('中国历法与韩国历法：都在躲什么', 'Chinese and Korean Calendars: What Each Avoids', '中國曆法與韓國曆法：都在躲什麼'),
     category: 'term.kbcat.xueli',
     minutes: 5,
     books: ['《协纪辨方书》'],
     sub: l(
-      '韩国人搬家避开 9 和 0 结尾的日子，日本人看六曜，华人看建除与神煞。',
+      '韩国人搬家避开 9 和 0 结尾的日子，日本人看六曜，华人看建除与传统条目。',
       'Koreans avoid days ending in 9 or 0 for moving; Japan reads the six days; Chinese read Jianchu and spirits.',
-      '韓國人搬家避開 9 和 0 結尾的日子，日本人看六曜，華人看建除與神煞。',
+      '韓國人搬家避開 9 和 0 結尾的日子，日本人看六曜，華人看建除與傳統條目。',
     ),
     translated: false,
   },
   {
     id: 21,
-    title: l('日本六曜与东南亚择日传统', 'Japan\'s Six Days and Southeast Asian Traditions', '日本六曜與東南亞擇日傳統'),
+    title: l('日本六曜与东南亚历法传统', 'Japan\'s Six Days and Southeast Asian Traditions', '日本六曜與東南亞曆法傳統'),
     category: 'term.kbcat.xueli',
     minutes: 4,
     books: ['《象吉通书》'],
@@ -360,12 +360,12 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 23,
-    title: l('《天工开物》与百工择日', 'The Tiangong Kaiwu and the Crafts\' Calendar', '《天工開物》與百工擇日'),
+    title: l('《天工开物》与百工历法', 'The Tiangong Kaiwu and the Crafts\' Calendar', '《天工開物》與百工曆法'),
     category: 'term.kbcat.dianji',
     minutes: 4,
     books: ['《天工开物》'],
     sub: l(
-      '宋应星记的是工艺，但每道工序的时令禁忌，恰好是百工择日的底本。',
+      '宋应星记的是工艺，但每道工序的时令禁忌，恰好是百工历法的底本。',
       'Song Yingxing recorded craft processes; their seasonal taboos are the substrate of the crafts\' date selection.',
       '宋應星記的是工藝，但每道工序的時令禁忌，恰好是百工擇日的底本。',
     ),
@@ -373,7 +373,7 @@ export const KB_ARTICLES: KbArticle[] = [
   },
   {
     id: 24,
-    title: l('90 天课期只剩 5 天：一份完整的出局归因', 'Ninety Days Down to Five: A Complete Exclusion Reasoning', '90 天課期只剩 5 天：一份完整的出局歸因'),
+    title: l('90 天区间只剩 5 天：一份完整的出局归因', 'Ninety Days Down to Five: A Complete Exclusion Reasoning', '90 天區間只剩 5 天：一份完整的出局歸因'),
     category: 'term.kbcat.xueli',
     minutes: 4,
     books: ['《选择宗镜》'],

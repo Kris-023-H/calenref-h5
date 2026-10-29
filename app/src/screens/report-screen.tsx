@@ -1,5 +1,5 @@
 /**
- * screens/report-screen.tsx — 九章课期报告（结论 / 取用 / 四柱 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI / 附则）。
+ * screens/report-screen.tsx — 九章推演报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI / 附则）。
  * 报告正文由 session.result 现场组装；未解锁时引导至 pay 屏（权益由 license.repo 判定）。
  */
 
@@ -7,7 +7,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { licenseRepo } from '../db/repos/license.repo';
-import { eventByKey } from '../data/events';
+import { eventByKey, groupText } from '../data/events';
 import { industryById } from '../data/industries';
 import { sitByKey } from '../data/sits';
 import { readPerson } from '../engine/person';
@@ -88,7 +88,7 @@ export function ReportScreen(): JSX.Element {
           </div>
           <div className="serif" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.4, margin: '2px 0 4px' }}>
             {termText(ev.name, lang)}
-            {tx('课期报告', ' lesson report', lang)}
+            {tx('推演报告', ' reading report', lang)}
           </div>
           <div style={{ fontSize: 11, color: 'var(--gold-2)', letterSpacing: '.1em', marginBottom: 10 }}>
             {termText(ind.name, lang)} ／ {termText(ind.category, lang)}
@@ -97,9 +97,9 @@ export function ReportScreen(): JSX.Element {
             {tx('当事人', 'Subjects', lang)}　
             {readings.length > 0
               ? readings.map((r) => `${r.name}（${r.zodiac}${tx('年·', ' · ', lang)}${r.trueTime}）`).join('　')
-              : `${t('scan.generic', lang)} · ${tx('未录四柱', 'no pillars', lang)}`}
+              : `${t('scan.generic', lang)} · ${tx('未录出生资料', 'no birth details', lang)}`}
             <br />
-            {tx('课期', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
+            {tx('推演', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
             <br />
             {tx('坐向', 'Facing', lang)}　　{ZHI[sit.zhi]}
             {tx('山', ' mountain', lang)}
@@ -137,7 +137,7 @@ export function ReportScreen(): JSX.Element {
             <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>
               {top.dayGZ.text}
               {tx('日', ' Day', lang)} · {jianchuName(top.jianchu, lang)}
-              {tx('日', ' Day', lang)} · {tx('吉时 ', 'hour ', lang)}
+              {tx('日', ' Day', lang)} · {tx('时辰 ', 'hour ', lang)}
               {top.goodHours[0]?.name ?? '—'}
               {tx('时', '', lang)}
             </div>
@@ -174,7 +174,7 @@ export function ReportScreen(): JSX.Element {
         <div className="rtab-row">
           <div>{tx('用事', 'Matter', lang)}</div>
           <div>
-            <b>{termText(ev.name, lang)}</b>（{ev.group}）
+            <b>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
           </div>
         </div>
         <div className="rtab-row">
@@ -205,8 +205,8 @@ export function ReportScreen(): JSX.Element {
         </div>
       </div>
 
-      {/* 三 四柱 */}
-      <SectionHead index="三" title={t('report.ch4', lang)} note={tx('四柱排布', 'pillars', lang)} />
+      {/* 三 出生资料 */}
+      <SectionHead index="三" title={t('report.ch4', lang)} note={tx('干支排布', 'birth details', lang)} />
       <div className="rtab">
         <div className="rtab-row">
           <div>{t('detail.pillarYear', lang)}</div>
@@ -231,7 +231,7 @@ export function ReportScreen(): JSX.Element {
         <div className="rtab-row">
           <div>{t('detail.pillarHour', lang)}</div>
           <div>
-            <b>{fp.hour}</b>　{tx('首选吉时 ', 'first hour ', lang)}
+            <b>{fp.hour}</b>　{tx('首选时辰 ', 'first hour ', lang)}
             {top.goodHours[0]?.name ?? '—'}
             {tx(`时（${top.goodHours[0]?.range ?? ''}）`, `（${top.goodHours[0]?.range ?? ''}）`, lang)}
           </div>
@@ -245,7 +245,7 @@ export function ReportScreen(): JSX.Element {
       </div>
 
       {/* 四 可用清单 */}
-      <SectionHead index="四" title={tx('可用课期清单', 'Usable days', lang)} note={`${list.length} ${tx('日', 'days', lang)}`} />
+      <SectionHead index="四" title={tx('可用日期清单', 'Usable days', lang)} note={`${list.length} ${tx('日', 'days', lang)}`} />
       {list.slice(0, 8).map((d, i) => (
         <div key={dottedDate(d.date)} className="rrow" role="button" tabIndex={0} onClick={() => { push('detail'); }}>
           <div className="rrd">
@@ -259,7 +259,7 @@ export function ReportScreen(): JSX.Element {
               {tx('日', ' Day', lang)}
             </b>
             <span>
-              {tx('吉时 ', 'hour ', lang)}
+              {tx('时辰 ', 'hour ', lang)}
               {d.goodHours[0]?.name ?? '—'}
               {tx('时', '', lang)} · {gradeLabel(d.score, lang)}
             </span>
@@ -292,12 +292,12 @@ export function ReportScreen(): JSX.Element {
           </div>
         ))}
         <div style={{ fontSize: 10, color: 'var(--muted)', lineHeight: 1.75, marginTop: 9 }}>
-          {tx('出局不等于「不吉」，是不合本课格的取用条件。日辰冲命、月破、冲山为硬性出局；课格评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. Clash of day/person, month-break and mountain-clash are hard vetoes; score below threshold is relaxable.', lang)}
+          {tx('出局不等于「不吉」，是不合本套取用的条件。日辰冲年、月破、冲山为硬性出局；课格评分不足为可放宽项。', 'Excluded ≠ unlucky — it fails this lesson’s taking conditions. Clash of day/person, month-break and mountain-clash are hard vetoes; score below threshold is relaxable.', lang)}
         </div>
       </div>
 
       {/* 六 动作时点 */}
-      <SectionHead index="六" title={tx('关键动作时点', 'Key action hours', lang)} note={tx('吉时落点', 'good hours', lang)} />
+      <SectionHead index="六" title={tx('关键动作时点', 'Key action hours', lang)} note={tx('时辰落点', 'good hours', lang)} />
       <div className="acts">
         {ev.acts.map((a, i) => {
           const h = top.goodHours[i] ?? top.goodHours[0] ?? top.hours[0];
@@ -313,7 +313,7 @@ export function ReportScreen(): JSX.Element {
         })}
       </div>
       <div className="hint" style={{ fontSize: 10 }}>
-        {tx('动作时点以吉时为准。若吉时与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的取用。', 'Action hours follow good hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.', lang)}
+        {tx('动作时点以时辰为准。若时辰与场地档期冲突，宁可改日，不可改时——改时等于弃掉这一层的取用。', 'Action hours follow favourable hours. If a slot conflicts with venue timing, change the day, not the hour — changing the hour discards this layer.', lang)}
       </div>
 
       {/* 七 节奏 */}
@@ -339,7 +339,7 @@ export function ReportScreen(): JSX.Element {
       <div className="hint" style={{ fontSize: 10, marginTop: 8 }}>
         {lang === 'en'
           ? `This is the common opening rhythm for ${termText(ind.name, lang)} — unrelated to the day lesson, but equally affects the outcome.`
-          : `此为${termText(ind.name, lang)}的通行开市节奏，与日课无关，但同样影响「开市」这件事的完成度。`}
+          : `此为${termText(ind.name, lang)}的通行开市节奏，与当日无关，但同样影响「开市」这件事的完成度。`}
       </div>
 
       {/* 八 AI */}

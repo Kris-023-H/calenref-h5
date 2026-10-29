@@ -1,7 +1,7 @@
 /**
  * screens/share-screen.tsx — 分享落地预览（受帖者所见 + 二维码 + 三个出口）。
  * 链接形态：{host}/?lang=xx&ref=scanId|articleId&k=day|article（services/share.ts）。
- * 日课分享只带日期：受帖者打开可看到该日通书口径，并被引导起自己的课。
+ * 当日分享只带日期：受帖者打开可看到该日通书口径，并被引导起自己的课。
  */
 
 import { useSettings } from '../store/settings-store';
@@ -167,7 +167,7 @@ export function ShareScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 10.5, color: 'var(--muted)', textAlign: 'center', margin: '14px 0 10px', lineHeight: 1.8 }}>
-        {tx('收到链接的人看到同一日，也可由此起自己的一课。', 'Whoever opens the link sees the same day — and can run their own lesson from it.', lang)}
+        {tx('收到链接的人看到同一日，也可由此推演自己的一次。', 'Whoever opens the link sees the same day — and can run their own lesson from it.', lang)}
       </div>
       <Btn variant="ghost" block onClick={() => push('event')}>
         {t('event.start', lang)}

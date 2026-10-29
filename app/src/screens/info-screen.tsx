@@ -1,12 +1,12 @@
 /**
- * screens/info-screen.tsx — 录四柱（当事人 A/B + 时辰待核 + 课期区间 + 宗派 + 业态坐向）。
+ * screens/info-screen.tsx — 录出生资料（当事人 A/B + 时辰待核 + 推演区间 + 宗派 + 业态坐向）。
  * 当事人可「从档案选」跳 people 屏；档案数据来自 app-store。
  */
 
 import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { readPerson } from '../engine/person';
-import { eventByKey, isTwoPerson, PERSON_LABEL, PERSON_LABEL_B, hasWuxingLayer, hasSitLayer } from '../data/events';
+import { eventByKey, groupText, isTwoPerson, PERSON_LABEL, PERSON_LABEL_B, hasWuxingLayer, hasSitLayer } from '../data/events';
 import { cityById } from '../data/cities';
 import { INDUSTRIES, industryById } from '../data/industries';
 import { SITS } from '../data/sits';
@@ -42,20 +42,20 @@ export function InfoScreen(): JSX.Element {
   const personB = people.find((p) => p.id === draft.personIds[1]);
 
   const schoolOptions: Array<{ value: SchoolKey; label: string }> = [
-    { value: 'xingjia', label: tx('行嫁月派', 'Marry-month', lang) },
+    { value: 'xingjia', label: tx('婚月派', 'Marriage-month', lang) },
     { value: 'bujiang', label: tx('不将日派', 'Non-jiang', lang) },
     { value: 'jianchu', label: tx('建除派', 'Jianchu', lang) },
   ];
 
   return (
     <div className="screen">
-      <AppBar title={`${termText(ev.name, lang)} · ${tx('录四柱', 'Pillars', lang)}`} onBack={() => pop()} actions={<Chip>{ev.group}</Chip>} />
+      <AppBar title={`${termText(ev.name, lang)} · ${tx('录出生资料', 'Birth details', lang)}`} onBack={() => pop()} actions={<Chip>{groupText(ev.group, lang)}</Chip>} />
       <h2 className="tt">
-        {two ? (tx('双方四柱', 'Both pillars', lang)) : tx('当事人四柱', 'Subject pillars', lang)}
+        {two ? (tx('双方出生资料', 'Both profiles', lang)) : tx('当事人出生资料', 'Personal context (optional)', lang)}
         <small>
           {two
-            ? tx('嫁娶取课以女命定行嫁月、以男命查日辰冲命，两造皆须。', 'Marriage reads the woman’s marry-month and checks the man’s clash — both required.', lang)
-            : tx('出生地用于真太阳时校正；时刻错一位，时柱即错，四柱全变。', 'Birthplace corrects true solar time; one hour off and the hour pillar changes.', lang)}
+            ? tx('嫁娶以女方定婚月、以男方查日辰冲年，两造皆须。', 'Marriage reads the bride’s marriage months and checks the groom’s day clash — both required.', lang)
+            : tx('出生地用于真太阳时校正；时刻错一位，时柱即错，干支全变。', 'Birthplace corrects true solar time; one hour off and the whole cycle changes.', lang)}
         </small>
       </h2>
 
@@ -63,7 +63,7 @@ export function InfoScreen(): JSX.Element {
         lang={lang}
         person={personA}
         title={PERSON_LABEL[draft.eventKey]?.[loc] ?? t('person.title', lang)}
-        tag={two ? (tx('取月用女命', 'marry-month', lang)) : tx('年命', 'year pillar', lang)}
+        tag={two ? (tx('取月依女方', 'marriage-month', lang)) : tx('出生年', 'birth year', lang)}
         onPick={() => push('people')}
         onClear={() => personA && togglePerson(personA.id)}
       />
@@ -72,7 +72,7 @@ export function InfoScreen(): JSX.Element {
           lang={lang}
           person={personB}
           title={PERSON_LABEL_B[draft.eventKey]?.[loc] ?? t('person.title', lang)}
-          tag={tx('查日辰冲命', 'clash check', lang)}
+          tag={tx('查日辰冲年', 'clash check', lang)}
           onPick={() => push('people')}
           onClear={() => personB && togglePerson(personB.id)}
         />
@@ -113,13 +113,13 @@ export function InfoScreen(): JSX.Element {
         <div className="ph">
           <div className="pn">{tx('期', 'P', lang)}</div>
           <div className="pt">
-            {tx('课期区间', 'Lesson window', lang)}
+            {tx('推演区间', 'Date range', lang)}
             <small>{tx('区间越宽，越可能撞上真正合的日子', 'a wider window meets more fitting days', lang)}</small>
           </div>
         </div>
         <div className="row2">
           <div className="fld">
-            <label>{tx('起课自', 'Start from', lang)}</label>
+            <label>{tx('起算自', 'Start from', lang)}</label>
             <div className="unit">
               <select value={String(draft.startOffset)} onChange={(e) => setDraft({ startOffset: Number(e.target.value) })}>
                 {START_OFFSETS.map((o) => (
@@ -131,7 +131,7 @@ export function InfoScreen(): JSX.Element {
             </div>
           </div>
           <div className="fld">
-            <label>{tx('课期长度', 'Window', lang)}</label>
+            <label>{tx('推演天数', 'Window', lang)}</label>
             <div className="unit">
               <select value={String(draft.span)} onChange={(e) => setDraft({ span: Number(e.target.value) })}>
                 {SPANS.map((s) => (
@@ -156,10 +156,10 @@ export function InfoScreen(): JSX.Element {
         <Seg options={schoolOptions} value={draft.school} onChange={(v) => setDraft({ school: v })} />
         <div style={{ fontSize: 10.5, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7 }}>
           {draft.school === 'xingjia'
-            ? tx('行嫁月派：先按女命年支定「哪几个月可办」，再筛日课。华人婚俗主流，嫁娶与订盟取此。', 'Marry-month school: fix the months by the woman’s year branch first, then screen days.', lang)
+            ? tx('婚月派：先按女方年支定「哪几个月可办」，再筛当日。华人婚俗主流，嫁娶与订盟取此。', 'Marriage-month school: fix the months by the bride’s birth year first, then screen days.', lang)
             : draft.school === 'bujiang'
-              ? tx('不将日派：以阴阳不将日为主，不重行嫁月，适合不讲究女方月份的家庭。', 'Non-jiang school: takes yin-yang non-jiang days, lighter on the marry-month.', lang)
-              : tx('建除派：只取建除十二值神与神煞，不取行嫁月，跨文化适用性最好，营生与工程类多用。', 'Jianchu school: only the twelve officers and sha — best cross-cultural fit, common for business.', lang)}
+              ? tx('不将日派：以阴阳不将日为主，不重婚月，适合不讲究女方月份的家庭。', 'Non-jiang school: takes yin-yang non-jiang days, lighter on the marriage months.', lang)
+              : tx('建除派：只取建除十二值日，不取婚月，跨文化适用性最好，营生与工程类多用。', 'Jianchu school: only the twelve day officers — best cross-cultural fit, common for business.', lang)}
         </div>
       </div>
 
@@ -236,7 +236,7 @@ export function InfoScreen(): JSX.Element {
         <div
           dangerouslySetInnerHTML={{
             __html: tx(
-              '<b>不填生辰也能看</b>　直接取通书口径排课，结果标注「通用模式」，不针对年命。',
+              '<b>不填生辰也能看</b>　直接取通书口径推演，结果标注「通用模式」，不针对出生年。',
               '<b>No pillars? Still works.</b> Run in generic mode — flagged, not tuned to your year pillar.',
               lang,
             ),
@@ -249,7 +249,7 @@ export function InfoScreen(): JSX.Element {
         style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 6, lineHeight: 1.7 }}
         dangerouslySetInnerHTML={{
           __html: tx(
-            '四柱资料仅在本机浏览器内计算，不上传服务器。<br>传统民俗参考，不构成任何结果保证。',
+            '出生资料仅在本机浏览器内计算，不上传服务器。<br>传统民俗参考，不构成任何结果保证。',
             'Pillar data is computed in this browser only, never uploaded.<br>Traditional folk reference; no guarantee of outcomes.',
             lang,
           ),
@@ -264,7 +264,7 @@ export function InfoScreen(): JSX.Element {
             void startScan().then(() => push('calc'));
           }}
         >
-          {tx('排课', 'Run lesson', lang)} · {tx(`课期 ${draft.span} 天`, `${draft.span} days`, lang)}
+          {tx('推演', 'Run reading', lang)} · {tx(`推演 ${draft.span} 天`, `${draft.span} days`, lang)}
         </Btn>
       </div>
     </div>

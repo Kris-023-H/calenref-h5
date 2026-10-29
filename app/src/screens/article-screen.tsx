@@ -64,13 +64,13 @@ export function ArticleScreen(): JSX.Element {
 
       <div className="card lacquer" style={{ marginTop: 18, cursor: 'pointer' }} role="button" tabIndex={0} onClick={() => { push('event'); }}>
         <div style={{ fontSize: 9, letterSpacing: '.2em', color: 'var(--gold-2)', fontWeight: 700, marginBottom: 6 }}>
-          {tx('试排一课', 'TRY A LESSON', lang)}
+          {tx('试推一次', 'TRY A READING', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>
-          {tx('录四柱，排一课看看', 'Enter pillars, run a lesson', lang)}
+          {tx('录出生资料，推演一次看看', 'Enter birth details, run a reading', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
-          {tx('90 天课期 · 逐层推演 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}
+          {tx('90 天区间 · 逐层推演 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}
         </div>
       </div>
 

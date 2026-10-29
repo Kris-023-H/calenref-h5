@@ -1,6 +1,6 @@
 /**
- * screens/detail-screen.tsx — 日课详解（首选/备选课 + 四柱 + 逐层依据 + 吉时 + 三宗派 + 制化）。
- * 层结果文案由 i18n/engine-text 组装；吉时可点选并印入课帖。
+ * screens/detail-screen.tsx — 当日详解（首选/备选课 + 出生资料 + 逐层依据 + 时辰 + 三派对照 + 制化）。
+ * 层结果文案由 i18n/engine-text 组装；时辰可点选并印入课帖。
  */
 
 import { useState } from 'react';
@@ -25,7 +25,7 @@ import { useNav } from './types';
 
 /** 三派名称：中文走 tx 以便繁体同步转换 */
 const SCHOOL_NAMES: Record<'xingjia' | 'bujiang' | 'jianchu', { zh: string; en: string }> = {
-  xingjia: { zh: '行嫁月派', en: 'Marry-month' },
+  xingjia: { zh: '婚月派', en: 'Marriage-month' },
   bujiang: { zh: '不将日派', en: 'Bujiang day' },
   jianchu: { zh: '建除派', en: 'Jianchu' },
 };
@@ -107,7 +107,7 @@ export function DetailScreen(): JSX.Element {
           </span>
           <span>{readings.length > 0 ? readings.map((r) => r.name).join(' & ') : t('scan.generic', lang)}</span>
           <span>
-            {tx('吉时 ', 'hour ', lang)}
+            {tx('时辰 ', 'hour ', lang)}
             {day.goodHours[0]?.name ?? '—'}
             {tx('时', '', lang)}
           </span>
@@ -206,8 +206,8 @@ export function DetailScreen(): JSX.Element {
       </div>
 
       <div className="sect">
-        <h3>{tx('次级煞与制化', 'Secondary sha & remedies', lang)}</h3>
-        <em>{tx('制化', 'Remedy', lang)}</em>
+        <h3>{tx('次级因素与调整', 'Secondary factors & adjustments', lang)}</h3>
+        <em>{tx('调整', 'Adjustment', lang)}</em>
       </div>
       <SubShaCard layers={day.layers.filter((l) => l.cls === 'warn' || l.cls === 'bad')} lang={lang} />
 
@@ -234,7 +234,7 @@ export function DetailScreen(): JSX.Element {
             {t('detail.reportTitle', lang)}
           </Btn>
           <Btn variant="gold" onClick={() => push('card')}>
-            {tx('制吉日课帖', 'Make day card', lang)}
+            {tx('制作当日帖', 'Make day card', lang)}
           </Btn>
         </div>
       </div>

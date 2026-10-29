@@ -50,11 +50,18 @@ export function CompassIntro({
           <GuibiaoLogo size={44} tone="light" />
         </div>
       </div>
-      <div className="brand">{tx('择 吉', 'ZEJI', lang)}</div>
+      <div className={`brand${lang === 'en' ? ' en' : ''}`}>{tx('中 华 历 法', 'CHINESE DATE PLANNER', lang)}</div>
       <div className="sub">{t('app.slogan', lang)}</div>
       <div className="line" />
+      <div className="disc">
+        {tx(
+          '免责声明：本产品为中国传统历法文化参考工具，仅供学习娱乐，不构成命理预测或灵性指导。',
+          'Disclaimer: Traditional Chinese cultural calendar reference for educational use. Not a fortune-telling or spiritual service. No prediction of outcomes.',
+          lang,
+        )}
+      </div>
       <div className="tap">{tx('轻触进入', 'Tap to enter', lang)}</div>
-      <div className="foot">{tx('东北亚 · 东南亚 ／ 三元择日规则引擎', 'NE & SE Asia · Three-fold day selection', lang)}</div>
+      <div className="foot">{tx('东北亚 · 东南亚 ／ 传统历法规则引擎', 'NE & SE Asia · Traditional calendar engine', lang)}</div>
     </div>
   );
 }

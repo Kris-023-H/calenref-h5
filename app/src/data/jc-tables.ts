@@ -49,7 +49,7 @@ export const JC_DESC: Record<string, L10n> = {
     zhHant: '執者執持，主固守。宜捕捉、造屋、收養，不宜開市出行。',
   },
   破: {
-    zh: '破者破败，即月破。主冲破，百事不宜，日课直接出局。',
+    zh: '破者破败，即月破。主冲破，百事不宜，当日直接出局。',
     en: 'Break: rupture — the Month Break. Everything is ill-suited; the day-chart is excluded outright.',
     zhHant: '破者破敗，即月破。主沖破，百事不宜，日課直接出局。',
   },

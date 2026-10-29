@@ -2,7 +2,7 @@ import { tx } from '../../i18n';
 /**
  * services/ai/local-template-ai.ts — LocalTemplateAiService：离线模板四段解读。
  * 结构固定（PRD v3.5 §8）：结论口径 / 业态适配 / 风险与化解 / 执行建议。
- * 五硬边界：不重新排课、不引入未纳入神煞、不输出结果性预测、不涉医疗投资、
+ * 五硬边界：不重新推演、不引入未纳入的传统条目、不输出结果性预测、不涉医疗投资、
  * 每条可指向报告章节——模板只引用已算出的层结果，天然满足。
  */
 
@@ -56,7 +56,7 @@ export function buildLocalReading(req: AiRequest): string[] {
     lang === 'en'
       ? `This reading answers one question: whether <b>${day.dayGZ.text} day (${jcText})</b> fits <b>${evName}</b> for the charts of ${peopleText(scan, 'en')}. Score ${day.score} — ${grade}. It does not predict how business will go; it only says whether the day fits this rule set.`
       : tx(
-          `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}年命为约束的日课，结论是<b>${day.dayGZ.text}日可用</b>，课格评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`,
+          `这份报告算的是「${evName}」这一件事${indName ? `在「${indName}」业态下、` : ''}以${peopleText(scan, lang)}出生年为约束的当日，结论是<b>${day.dayGZ.text}日可用</b>，课格评分 ${day.score}（${grade}）。它不预测生意好坏，只回答「这一天合不合这套规则」。`,
           '',
           lang,
         );
@@ -77,7 +77,7 @@ export function buildLocalReading(req: AiRequest): string[] {
         : `All layers run clean — a rare day. Lock it in; do not let “wait and see” cost it.`
       : tx(
           bad.length
-            ? `次级因素有：<b>${bad.map((b) => `${layerName(b.key, lang)} · ${layerResultText(b, lang)}`).join('、')}</b>。这些不构成改期理由，传统做法是——把「${acts[0] ?? ''}」放在吉时内、在室内完成核心环节、并在前一日先做一次「预演」以应「先动后正」。`
+            ? `次级因素有：<b>${bad.map((b) => `${layerName(b.key, lang)} · ${layerResultText(b, lang)}`).join('、')}</b>。这些不构成改期理由，传统做法是——把「${acts[0] ?? ''}」放在时辰内、在室内完成核心环节、并在前一日先做一次「预演」以应「先动后正」。`
             : '七至八层皆顺，无次级瑕疵。这是少见的好日子，建议直接锁定，不要为了「再等等」错过。',
           '',
           lang,
@@ -89,7 +89,7 @@ export function buildLocalReading(req: AiRequest): string[] {
     lang === 'en'
       ? `Key actions in order: <b>${actSeq}</b>. First-choice hour: ${hourText(first, 'en')}; second choice: ${second ? hourText(second, 'en') : 'none'}. Keep the first week steady rather than heavy on spend — the usual opening rhythm, and just as important as the day itself.`
       : tx(
-          `关键动作按此时序落：<b>${actSeq}</b>。首选吉时为 ${hourText(first, lang)}，次选 ${second ? hourText(second, lang) : '无'}。开市首周不做大额投入，以「稳客」为主——这是开业期的通行节奏，与日课无关，但同样重要。`,
+          `关键动作按此时序落：<b>${actSeq}</b>。首选时辰为 ${hourText(first, lang)}，次选 ${second ? hourText(second, lang) : '无'}。开市首周不做大额投入，以「稳客」为主——这是开业期的通行节奏，与当日无关，但同样重要。`,
           '',
           lang,
         );

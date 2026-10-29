@@ -121,7 +121,7 @@ export function LangScreen(): JSX.Element {
         </div>
       </div>
       <div style={{ fontSize: 10, color: 'var(--muted)', margin: '9px 2px 0', lineHeight: 1.7 }}>
-        {tx('课期与提醒均按此时区计算。首次启动自动探测，可在此修正。', 'Lessons and reminders use this zone. It is auto-detected on first launch and can be corrected here.', lang)}
+        {tx('日期与提醒均按此时区计算。首次启动自动探测，可在此修正。', 'Lessons and reminders use this zone. It is auto-detected on first launch and can be corrected here.', lang)}
       </div>
 
       <div style={{ height: 14 }} />

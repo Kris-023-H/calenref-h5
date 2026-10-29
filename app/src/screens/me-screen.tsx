@@ -56,13 +56,13 @@ export function MeScreen(): JSX.Element {
     {
       icon: 'doc',
       label: t('me.reports', lang),
-      sub: `${scans.length} ${tx('课课期', 'lessons', lang)}`,
+      sub: `${scans.length} ${tx('份推演', 'readings', lang)}`,
       onClick: () => push('reports'),
     },
     {
       icon: 'star',
       label: t('me.fav', lang),
-      sub: tx('日课与文章', 'days & articles', lang),
+      sub: tx('当日与文章', 'days & articles', lang),
       onClick: () => push('fav'),
     },
     {
@@ -276,6 +276,9 @@ export function MeScreen(): JSX.Element {
         </div>
         <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 12, letterSpacing: '.12em' }}>
           {t('app.name', lang)} · {t('app.nameEn', lang)} · {t('app.slogan', lang)}
+        </div>
+        <div style={{ fontSize: 9.5, color: 'var(--muted)', textAlign: 'center', marginTop: 4, letterSpacing: '.04em' }}>
+          {SITE.tagline}
         </div>
 
         {/* ---------- 页脚：法务四链 + 版权（支付平台审核会逐页点开） ---------- */}

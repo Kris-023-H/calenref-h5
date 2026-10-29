@@ -1,5 +1,5 @@
 /**
- * screens/reports-screen.tsx — 课期档案列表（本机报告 + 统计 + 提醒入口）。
+ * screens/reports-screen.tsx — 推演档案列表（本机报告 + 统计 + 提醒入口）。
  */
 
 import { useState } from 'react';
@@ -33,7 +33,7 @@ export function ReportsScreen(): JSX.Element {
       <AppBar title={t('reports.title', lang)} actions={<IconBtn name="grid" onClick={() => openSheet('guide')} />} />
       <h2 className="tt">
         {t('reports.title', lang)}
-        <small>{tx('每一课都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
+        <small>{tx('每一次推演都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
       </h2>
 
       <Seg
@@ -58,7 +58,7 @@ export function ReportsScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史课期', 'lessons', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史推演', 'readings', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
@@ -76,7 +76,7 @@ export function ReportsScreen(): JSX.Element {
           body={t('reports.emptyHint', lang)}
           action={
             <Btn variant="gold" onClick={() => push('event')}>
-              {tx('起第一课', 'Start first lesson', lang)}
+              {tx('开始第一次推演', 'Start first reading', lang)}
             </Btn>
           }
         />
@@ -126,7 +126,7 @@ export function ReportsScreen(): JSX.Element {
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: 12, fontWeight: 700 }}>{tx('仪程倒排清单', 'Countdown checklist', lang)}</div>
-            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{tx('还有 6 项待办 · 按吉时倒排', 'by good hours, backwards', lang)}</div>
+            <div style={{ fontSize: 10, color: 'var(--muted)' }}>{tx('还有 6 项待办 · 按时辰倒排', 'by favourable hours, backwards', lang)}</div>
           </div>
           <Icon name="right" size={13} />
         </div>

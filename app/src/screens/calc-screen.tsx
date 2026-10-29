@@ -1,5 +1,5 @@
 /**
- * screens/calc-screen.tsx — 排课中（金环 + 逐重步骤 440ms/步 → 自动跳 result）。
+ * screens/calc-screen.tsx — 推演中（金环 + 逐重步骤 440ms/步 → 自动跳 result）。
  * 推演本身已在进入本屏前由 app-store.startScan 完成；这里只复演节奏。
  */
 
@@ -54,7 +54,7 @@ export function CalcScreen(): JSX.Element {
         }}
       />
       <div style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.7, maxWidth: 280, margin: '10px auto 0', textAlign: 'center' }}>
-        {termText(ev.name, lang)} ／ {termText(ind.name, lang)} ／ {tx(`起课 ${draft.startOffset} 日后`, `start in ${draft.startOffset}d`, lang)} ／{' '}
+        {termText(ev.name, lang)} ／ {termText(ind.name, lang)} ／ {tx(`自 ${draft.startOffset} 日后起算`, `start in ${draft.startOffset}d`, lang)} ／{' '}
         {tx('真太阳时已校正', 'true solar corrected', lang)}
       </div>
       {session && (

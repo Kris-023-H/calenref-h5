@@ -80,7 +80,7 @@ export function holidayOf(d: CalDate, region: HolidayRegion): HolidayDef | null 
   return null;
 }
 
-/** 课期窗口内的节庆日集合（用于日历标记） */
+/** 推演区间内的节庆日集合（用于日历标记） */
 export function holidaysInRange(start: CalDate, span: number, region: HolidayRegion): Map<string, HolidayDef> {
   const out = new Map<string, HolidayDef>();
   for (let i = 0; i < span; i++) {

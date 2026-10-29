@@ -1,7 +1,7 @@
 /**
- * screens/home-screen.tsx — 今日（通书口径 + 你的课期 + 起一课 + 知库入口）。
+ * screens/home-screen.tsx — 今日（通书口径 + 你的推演 + 起一课 + 知库入口）。
  * 通书宜忌取建除口径（JC_YI/JC_JI 数据层，对所有人一致）；
- * 「最近可用课期」按当前草稿（用事/当事人/业态）推演 120 天取首个可用日。
+ * 「最近可用推演」按当前草稿（用事/当事人/业态）推演 120 天取首个可用日。
  */
 
 import { useMemo } from 'react';
@@ -92,7 +92,7 @@ export function HomeScreen(): JSX.Element {
             <span className="applogo">
               <BrandMark size={20} tone="gold" />
             </span>
-            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={tx('三元择日', 'Threefold', lang)} titleSize={15} />
+            <BrandMark showMark={false} text={t('app.name', lang)} tone="ink" sub={tx('历法参考', 'Calendar reference', lang)} titleSize={15} />
           </div>
         }
         actions={
@@ -139,13 +139,21 @@ export function HomeScreen(): JSX.Element {
         </div>
       </div>
 
+      <div className="home-disc">
+        {tx(
+          '中国传统历法文化参考工具 · 仅供学习娱乐，不构成命理预测',
+          'Traditional Chinese calendar reference for educational use · No fortune-telling or predictions',
+          lang,
+        )}
+      </div>
+
       <div className="whybar" role="button" tabIndex={0} onClick={() => openSheet('why')} onKeyDown={(e) => e.key === 'Enter' && openSheet('why')}>
         <Icon name="info" size={13} />
         <div
           dangerouslySetInnerHTML={{
             __html: tx(
-              '以上为<b>通书宜忌</b>，按建除十二值神排，对所有人一致，<b>不针对你的年命</b>。你的课期要看人·事·日三元。',
-              'Above is the <b>general almanac reading</b> — same for everyone, <b>not tuned to your pillars</b>. Your lesson reads person · matter · day.',
+              '以上为<b>通书宜忌</b>，按建除十二值日排，对所有人一致，<b>不针对你的出生年</b>。你的推演要看人·事·日三元。',
+              'Above is the <b>general almanac reading</b> — same for everyone, <b>not tuned to your birth details</b>. Your reading weighs person · matter · day.',
               lang,
             ),
           }}
@@ -198,7 +206,7 @@ export function HomeScreen(): JSX.Element {
       )}
 
       <div className="sect">
-        <h3>{tx('进行中的课期', 'Active lesson periods', lang)}</h3>
+        <h3>{tx('进行中的推演', 'Active readings', lang)}</h3>
         <em>{tx('进行中', 'Active', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('reports')} onKeyDown={(e) => e.key === 'Enter' && switchTab('reports')}>
           {t('common.all', lang)}
@@ -210,7 +218,7 @@ export function HomeScreen(): JSX.Element {
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 5 }}>
               <Chip tone="gold">{termText(ind.name, lang)}</Chip>
               <Chip>
-                {draft.span} {tx('天课期', 'days', lang)}
+                {draft.span} {tx('天', 'days', lang)}
               </Chip>
             </div>
             <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>
@@ -234,7 +242,7 @@ export function HomeScreen(): JSX.Element {
       </div>
 
       <div className="sect">
-        <h3>{tx('起一课', 'Start a lesson', lang)}</h3>
+        <h3>{tx('起一局', 'Start a reading', lang)}</h3>
         <em>{tx('新起', 'New', lang)}</em>
       </div>
       <div className="quick">
@@ -248,7 +256,7 @@ export function HomeScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('home.kbEntry', lang)}</h3>
-        <em>{tx('知库', 'Library', lang)}</em>
+        <em>{tx('历法知识', 'Knowledge', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('kb')} onKeyDown={(e) => e.key === 'Enter' && switchTab('kb')}>
           {t('nav.more', lang)}
         </a>

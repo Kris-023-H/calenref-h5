@@ -1,5 +1,5 @@
 /**
- * screens/people-screen.tsx — 当事人档案：列表 + 新增/编辑表单（四柱预览）。
+ * screens/people-screen.tsx — 当事人档案：列表 + 新增/编辑表单（出生资料预览）。
  * 选人模式（selectFor）下点「用此人」直接回填 info 屏草稿。
  */
 
@@ -237,7 +237,7 @@ export function PeopleScreen(): JSX.Element {
       />
       <h2 className="tt">
         {t('person.list', lang)}
-        <small>{tx('四柱录一次，往后每起一课直接取用，不必重填。', 'Enter pillars once; reuse them in every lesson.', lang)}</small>
+        <small>{tx('出生资料录一次，往后每次推演直接取用，不必重填。', 'Enter birth details once; reuse them in every reading.', lang)}</small>
       </h2>
       {selectFor && (
         <div className="whybar" style={{ marginBottom: 12 }}>
@@ -265,7 +265,7 @@ export function PeopleScreen(): JSX.Element {
         </div>
         <div>
           <b>{people.filter((p) => p.sex === 'f').length}</b>
-          <span>{tx('女命 · 取月用', 'female', lang)}</span>
+          <span>{tx('女方 · 取月用', 'female', lang)}</span>
         </div>
       </div>
 
@@ -355,7 +355,7 @@ export function PeopleScreen(): JSX.Element {
         className="pe-tip"
         dangerouslySetInnerHTML={{
           __html: tx(
-            '出生资料仅存于本机浏览器，不上传服务器。<br>嫁娶与订盟须录双方：以女命定行嫁月，以男命查日辰冲命。',
+            '出生资料仅存于本机浏览器，不上传服务器。<br>嫁娶与订盟须录双方：以女方定婚月，以男方查日辰冲年。',
             'Birth data stays in this browser; never uploaded.<br>Marriage and engagement need both parties.',
             lang,
           ),

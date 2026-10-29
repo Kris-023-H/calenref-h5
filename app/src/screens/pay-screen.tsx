@@ -24,7 +24,7 @@ const SKU_DESC: Record<Lang, Record<Sku, string>> = {
   zh: {
     once: '一次完整九章报告',
     ai10: '十次白话解读额度',
-    pair: '双方四柱合参一报',
+    pair: '双方出生资料合参一报',
     year: '全年不限次报告',
   },
   en: {
@@ -36,7 +36,7 @@ const SKU_DESC: Record<Lang, Record<Sku, string>> = {
   'zh-Hant': {
     once: '一次完整九章報告',
     ai10: '十次白話解讀額度',
-    pair: '雙方四柱合參一報',
+    pair: '雙方出生资料合參一報',
     year: '全年不限次報告',
   },
 };
@@ -129,7 +129,7 @@ export function PayScreen(): JSX.Element {
                 : t('ai.quotaLeft', lang, { n: quota.freeLeft })}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.6 }}>
-              {tx('免费额度：每月 3 次 AI 解读。课期筛选不限次，报告与解读须解锁。', 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.', lang)}
+              {tx('免费额度：每月 3 次 AI 解读。推演筛选不限次，报告与解读须解锁。', 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.', lang)}
             </div>
           </div>
         </div>
@@ -157,10 +157,10 @@ export function PayScreen(): JSX.Element {
             <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
             <br />
             {k === 'year'
-              ? tx('所有用事不限次 · AI 解读无限 · 知库全解锁 · 课帖去印记', 'Unlimited matters · unlimited AI · full library · no card watermark', lang)
+              ? tx('所有用事不限次 · AI 解读无限 · 知库全解锁 · 当日帖去印记', 'Unlimited matters · unlimited AI · full library · no card watermark', lang)
               : k === 'ai10'
                 ? tx('次数不清零，随用随扣', 'Readings never expire; deduct as you go', lang)
-                : tx('含逐层依据、日课四柱、出局归因、关键动作时点与神煞边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}
+                : tx('含逐层依据、当日干支、出局归因、关键动作时点与传统条目边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}
           </div>
         </div>
       ))}
@@ -208,7 +208,7 @@ export function PayScreen(): JSX.Element {
       </div>
 
       <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', marginTop: 14, lineHeight: 1.7 }}>
-        {tx('购买即表示你理解：本产品提供传统择日规则的工程化推演，不预测结果、不承诺吉凶、不涉及医疗与投资建议。', 'Buying means you understand: this product engineers traditional day-selection rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.', lang)}
+        {tx('购买即表示你理解：本产品提供传统历法规则的工程化推演，不预测结果、不承诺宜忌、不涉及医疗与投资建议。', 'Buying means you understand: this product engineers the traditional calendar rules — it predicts no outcomes, promises no luck, and gives no medical or investment advice.', lang)}
       </div>
 
       <div className="ctabar">

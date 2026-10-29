@@ -1,5 +1,5 @@
 /**
- * components/layer-row.tsx — 逐层依据行（可展开）与吉时行。
+ * components/layer-row.tsx — 逐层依据行（可展开）与时辰行。
  * 层结果文案由 i18n/engine-text 组装，组件只做呈现。
  */
 
@@ -83,7 +83,7 @@ export function SubShaCard({ layers, lang }: { layers: LayerResult[]; lang: Lang
           <b style={{ color: 'var(--verm)' }}>
             {layerName(l.key, lang)}·{layerResultText(l, lang)}
           </b>
-          　{tx('属可制化的次级煞，可把关键动作移入吉时化解。', 'A secondary clash that can be mitigated — move the key action into an auspicious hour.', lang)}
+          　{tx('属可调整的次级因素，可把关键动作移入时辰化解。', 'A secondary factor that can be adjusted — move the key action into a favourable hour.', lang)}
         </div>
       ))}
     </div>

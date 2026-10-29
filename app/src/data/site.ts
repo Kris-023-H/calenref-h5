@@ -19,8 +19,8 @@ function readSiteUrl(): string {
 export const SITE = {
   /** 站点根地址（无尾斜杠） */
   url: readSiteUrl(),
-  nameZh: '择吉',
-  nameEn: 'Zeji',
+  nameZh: '中华历法',
+  nameEn: 'Chinese Date Planner',
   /** 客服邮箱：支付平台审核会实际发信验证，必须是可收信的真实邮箱。
    *  域名到位后换成 support@<域名>，改这一处即可全局生效。 */
   supportEmail: 'kris.188h@gmail.com',
@@ -28,10 +28,12 @@ export const SITE = {
   privacyEmail: 'kris.188h@gmail.com',
   /** 运营主体：须与支付平台（Creem）注册主体一致 */
   entity: 'LuckyTimely',
+  /** 产品一句话说明：支付平台审核要求站点明确「非占卜/灵性服务」 */
+  tagline: 'Traditional culture digital reference',
   /** 准据法属地（首站新加坡，见出海增量 PRD §1） */
   jurisdiction: 'Singapore',
   /** 法务页生效日 */
-  effectiveDate: '2026-10-28',
+  effectiveDate: '2026-10-29',
 } as const;
 
 /** mailto 链接（可选主题） */

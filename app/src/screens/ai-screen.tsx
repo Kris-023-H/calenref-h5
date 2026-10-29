@@ -110,7 +110,7 @@ export function AiScreen(): JSX.Element {
             className="ap-s"
             dangerouslySetInnerHTML={{
               __html: tx(
-                'AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。<br>课期筛选与逐层依据始终免费，不受影响。',
+                'AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。<br>推演筛选与逐层依据始终免费，不受影响。',
                 'Readings count per use. Buy the 10-pack (never expires) or go yearly for unlimited.<br>Screening and per-layer basis stay free.',
                 lang,
               ),
@@ -164,14 +164,14 @@ export function AiScreen(): JSX.Element {
             <input
               type="text"
               value={q}
-              placeholder={tx('就这一课继续问，如「门朝西有影响吗」', 'Ask about this lesson, e.g. “door faces west?”', lang)}
+              placeholder={tx('就本次继续问，如「门朝西有影响吗」', 'Ask about this lesson, e.g. “door faces west?”', lang)}
               onChange={(e) => setQ(e.target.value)}
             />
             <button
               type="button"
               aria-label="send"
               onClick={() => {
-                const question = q.trim() || (tx('这一课还有别的要注意的吗', 'Anything else to note?', lang));
+                const question = q.trim() || (tx('本次还有别的要注意的吗', 'Anything else to note?', lang));
                 if (left <= 0) {
                   showToast(t('ai.noQuota', lang));
                   push('pay');
@@ -185,7 +185,7 @@ export function AiScreen(): JSX.Element {
             </button>
           </div>
           <div className="hint" style={{ fontSize: 10, marginTop: 10 }}>
-            {tx('追问计 1 次。AI 只依据本课已算出的依据作答，不引入新神煞，也不预测经营结果。', 'Follow-ups count 1 each. The AI answers only from this lesson’s computed basis — it introduces no new sha and predicts no business results.', lang)}
+            {tx('追问计 1 次。AI 只依据本次已算出的依据作答，不引入未纳入的传统条目，也不预测经营结果。', 'Follow-ups count 1 each. The AI answers only from this reading’s computed basis — it introduces no new sha and predicts no business results.', lang)}
           </div>
         </>
       )}
@@ -206,7 +206,7 @@ export function AiScreen(): JSX.Element {
   );
 }
 
-/** 追问的本地答复（依据本课已算出的层，不引入新神煞） */
+/** 追问的本地答复（依据本次已算出的层，不引入未纳入的传统条目） */
 function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
   const session = useApp.getState().session;
   const day = session?.result.usable[session.cursor] ?? session?.result.days[0];
@@ -232,8 +232,8 @@ function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
       return tx('本课无次级煞，唯一要注意的是「不要改时」。', 'No secondary sha — just do not move the hour.', lang);
     }
     return tx(
-      `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。制化之法是把关键动作移入吉时、核心环节在室内完成。`,
-      `Avoid: <b>${bad.map((b) => b.resultKey).join(', ')}</b>. Move key actions into good hours.`,
+      `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。调整之法是把关键动作移入时辰、核心环节在室内完成。`,
+      `Avoid: <b>${bad.map((b) => b.resultKey).join(', ')}</b>. Move key actions into favourable hours.`,
       lang,
     );
   }

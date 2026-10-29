@@ -77,7 +77,7 @@ export function monthFullName(monthZhi: number): string {
   return MONTH_NAME[monthZhi];
 }
 
-/** 日课卡头部行：「可用」统计 */
+/** 当日卡头部行：「可用」统计 */
 export function usableStat(day: DayResult, lang: Lang): string {
   return `${day.score} ${tx('分', 'pts', lang)}`;
 }
@@ -90,7 +90,7 @@ export const START_OFFSETS: Array<{ value: number; label: Record<Lang, string> }
   { value: 30, label: { zh: '三十日后', en: 'In 30 days', 'zh-Hant': '三十日後' } },
 ];
 
-/** 课期长度选项 */
+/** 推演天数选项 */
 export const SPANS: number[] = [30, 60, 90, 120];
 
 export { isoDate, t };

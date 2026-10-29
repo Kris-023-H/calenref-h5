@@ -1,5 +1,5 @@
 /**
- * screens/remind-screen.tsx — 择日提醒（本机清单：用事 + 日期 + 备注 + 开关）。
+ * screens/remind-screen.tsx — 日期提醒（本机清单：用事 + 日期 + 备注 + 开关）。
  * 提醒仅存本机（reminder repo）；联网推送为 P1 升级项（PRD 决策）。
  * 默认日期取「今天 + 7 天」——与首页通书口径一致（东八区民用历）。
  */

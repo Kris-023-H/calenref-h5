@@ -27,9 +27,9 @@ export interface WebManifest {
 }
 
 const NAMES: Record<Lang, { name: string; short: string; desc: string }> = {
-  zh: { name: '择吉 · 人·事·日', short: '择吉', desc: '传统择日规则的工程化推演：人·事·日三元，八重取用，本机演算。' },
-  en: { name: 'Zeji · Day Selection', short: 'Zeji', desc: 'Engineered Chinese day selection: person, matter, day — computed on device.' },
-  'zh-Hant': { name: '擇吉 · 人·事·日', short: '擇吉', desc: '傳統擇日規則的工程化推演：人·事·日三元，八重取用，本機演算。' },
+  zh: { name: '中华历法 · 历法参考', short: '中华历法', desc: '中国传统历法文化参考工具：人·事·日三层，八重取用，本机演算，不构成命理预测。' },
+  en: { name: 'Chinese Date Planner', short: 'Date Planner', desc: 'A traditional Chinese calendar reference for planning dates — computed on device, no fortune-telling.' },
+  'zh-Hant': { name: '中華曆法 · 曆法參考', short: '中華曆法', desc: '中國傳統曆法文化參考工具：人·事·日三層，八重取用，本機演算，不構成命理預測。' },
 };
 
 const ICONS: ManifestIcon[] = [
