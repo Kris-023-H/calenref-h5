@@ -58,7 +58,8 @@ for (const p of ['/privacy', '/terms', '/refund', '/cookie']) {
 }
 
 const verify = await get('/api/verify?ref=zj_00000000');
-ok('/api/verify 由 Worker 接管', verify.status === 200, `HTTP ${verify.status}`);
+// 无效 ref 现返回 404 JSON（不再 SPA 回退成 200 HTML）；200/404 都证明 Worker 接管了 /api/*
+ok('/api/verify 由 Worker 接管', verify.status === 200 || verify.status === 404, `HTTP ${verify.status}`);
 
 const failed = results.filter((r) => !r.pass);
 console.log(`\n${results.length - failed.length}/${results.length} 项通过`);

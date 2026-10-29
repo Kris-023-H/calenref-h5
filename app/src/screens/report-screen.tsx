@@ -149,7 +149,7 @@ export function ReportScreen(): JSX.Element {
             .slice(0, 3)
             .map((l) => `「${layerName(l.key, lang)}·${layerResultText(l, lang)}」`)
             .join('　')}
-          。{tx('三派结论方向一致，可用。', 'All three schools agree in direction: usable.', lang)}
+          。{tx('多口径结论方向一致，可用。', 'All approaches agree in direction: usable.', lang)}
         </div>
       </div>
       {list.length > 1 && (

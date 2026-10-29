@@ -12,7 +12,8 @@ import { getBackend, setBackendForTests, STORES } from '../../src/db/backend';
 import { licenseRepo } from '../../src/db/repos/license.repo';
 import { quotaRepo } from '../../src/db/repos/quota.repo';
 import { applyPaymentReturn } from '../../src/services/pay/creem';
-import { generateRedeemCode, redeemCode } from '../../src/services/pay/redeem';
+import { redeemCode } from '../../src/services/pay/redeem';
+import { generateCode, parseCode, verifyCode } from '../../src/services/pay/redeem-crypto';
 import { tzMonthKey } from '../../src/services/timezone';
 
 /**
@@ -90,9 +91,40 @@ describe('applyPaymentReturn — 核验后写凭证 + 防重放', () => {
   });
 });
 
-describe('redeemCode — 兑换码离线校验', () => {
+describe('redeemCode — 服务端验签 + 一次性核销', () => {
+  const SECRET = 'test-redeem-secret';
+
+  /** 模拟 Worker 的 /api/redeem：验签（密钥只在服务端）+ 一码一用 */
+  function mockRedeemServer(): void {
+    const used = new Set<string>();
+    vi.stubGlobal('fetch', async (input: string | URL, init?: RequestInit) => {
+      const url = String(input);
+      if (!url.endsWith('/api/redeem')) {
+        return { ok: false, status: 404, json: async () => ({}) } as Response;
+      }
+      let code = '';
+      try {
+        code = (JSON.parse(String(init?.body ?? '{}')) as { code?: string }).code ?? '';
+      } catch {
+        return { ok: false, status: 400, json: async () => ({ ok: false, error: 'bad_json' }) } as Response;
+      }
+      const parsed = parseCode(code);
+      if (!parsed) return { ok: false, status: 400, json: async () => ({ ok: false, error: 'invalid' }) } as Response;
+      const sku = await verifyCode(parsed, SECRET);
+      if (!sku) return { ok: false, status: 400, json: async () => ({ ok: false, error: 'invalid' }) } as Response;
+      const licenseId = `lic_${parsed.payload}`;
+      if (used.has(licenseId)) {
+        return { ok: false, status: 409, json: async () => ({ ok: false, error: 'used' }) } as Response;
+      }
+      used.add(licenseId);
+      return { ok: true, status: 200, json: async () => ({ ok: true, sku, licenseId }) } as Response;
+    });
+  }
+
+  beforeEach(() => mockRedeemServer());
+
   it('有效 code → 写入正确 SKU 与次数', async () => {
-    const code = await generateRedeemCode('ai10', 12345);
+    const code = await generateCode('ai10', 12345, SECRET);
     const res = await redeemCode(code);
     expect(res.ok).toBe(true);
     if (res.ok) {
@@ -103,26 +135,33 @@ describe('redeemCode — 兑换码离线校验', () => {
   });
 
   it('pair / year 权益正确', async () => {
-    const pair = await redeemCode(await generateRedeemCode('pair', 1));
+    const pair = await redeemCode(await generateCode('pair', 1, SECRET));
     expect(pair.ok && pair.value.left).toBe(1);
-    const year = await redeemCode(await generateRedeemCode('year', 2));
+    const year = await redeemCode(await generateCode('year', 2, SECRET));
     expect(year.ok && year.value.left).toBe(-1);
   });
 
   it('格式错 / sku 码错 / 签名错 → err（不静默失败）', async () => {
     expect((await redeemCode('garbage')).ok).toBe(false);
     expect((await redeemCode('ZJ-Z-AAAA-BBBBB')).ok).toBe(false); // sku 码 Z 非法
-    const good = await generateRedeemCode('once', 7);
+    const good = await generateCode('once', 7, SECRET);
     const tampered = good.slice(0, -1) + (good.slice(-1) === 'A' ? 'B' : 'A');
     expect((await redeemCode(tampered)).ok).toBe(false);
     expect(await licenseRepo.list()).toHaveLength(0); // 无一落库
   });
 
   it('重复使用同一 code → 第二次 err（重放防护）', async () => {
-    const code = await generateRedeemCode('ai10', 999);
+    const code = await generateCode('ai10', 999, SECRET);
     expect((await redeemCode(code)).ok).toBe(true);
     expect((await redeemCode(code)).ok).toBe(false);
     expect(await licenseRepo.list()).toHaveLength(1);
+  });
+
+  it('篡改前缀字母越权（ZJ-D-→ZJ-B-）→ err（SKU 以载荷为准）', async () => {
+    const yearCode = await generateCode('year', 42, SECRET); // ZJ-D-…
+    const forged = 'ZJ-B-' + yearCode.split('-').slice(2).join('-'); // 前缀改 B，载荷仍是 D
+    expect((await redeemCode(forged)).ok).toBe(false);
+    expect(await licenseRepo.list()).toHaveLength(0);
   });
 });
 

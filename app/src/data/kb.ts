@@ -95,7 +95,7 @@ export const KB_ARTICLES: KbArticle[] = [
     body: l(
       '属兔的人，地支是卯。女命行嫁月以年支相推：卯年出生，大利月是「正、七月」——正月与七月，一年之中只有这两个月适合办婚事，其余月份或轻或重都有避讳。\n'
         + '为什么先定月，再定日？因为月的权重远大于日。传统上把月比作「纲」，日是「目」：纲不举则目无张。月份选错，日子再吉也只是「小数」；月份选对，日子稍平也可将就。\n'
-        + '月的规则也有边界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，没有商量余地；翁姑月、女父母月属「不宜」，不同流派宽严不一——这正是本产品给三宗派对照的原因。\n'
+        + '月的规则也有边界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，没有商量余地；翁姑月、女父母月属「不宜」，不同流派宽严不一——这正是本产品给出多口径参考的原因。\n'
         + '落到操作上：先按女方年支查出大利月与小利月，再在合格月份里跑日课。属兔的女生若日子定在二月或八月，不用看日课也知道不在选项里；定在正月或七月，才值得把九十天的日课逐层推一遍。\n'
         + '注意：行嫁月只约束婚嫁与订盟。开业、签约、入宅并不看这套规则，它们看的是当事人的年命与用事的取用。',
       'If you were born in the Year of the Rabbit, your earthly branch is Mao. For a bride\'s chart, the marriage months are derived from the year branch: a Mao year has its "great benefit months" in the first and seventh lunar months — the only two months of the year suited to a wedding; the rest carry light or heavy avoidances.\n'
@@ -105,7 +105,7 @@ export const KB_ARTICLES: KbArticle[] = [
         + 'Note: marriage months constrain weddings and engagements only. Openings, signings, and moving in do not follow this rule — they read the principal\'s year branch and the taking of the matter itself.',
       '屬兔的人，地支是卯。女命行嫁月以年支相推：卯年出生，大利月是「正、七月」——正月與七月，一年之中只有這兩個月適合辦婚事，其餘月份或輕或重都有避諱。\n'
         + '為什麼先定月，再定日？因為月的權重遠大於日。傳統上把月比作「綱」，日是「目」：綱不舉則目無張。月份選錯，日子再吉也只是「小數」；月份選對，日子稍平也可將就。\n'
-        + '月的規則也有邊界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，沒有商量餘地；翁姑月、女父母月屬「不宜」，不同流派寬嚴不一——這正是本產品給三宗派對照的原因。\n'
+        + '月的規則也有邊界。妨夫月（如卯年生的「七八月」）是硬忌，直接出局，沒有商量餘地；翁姑月、女父母月屬「不宜」，不同流派寬嚴不一——這正是本產品給出多口徑參考的原因。\n'
         + '落到操作上：先按女方年支查出大利月與小利月，再在合格月份裡跑日課。屬兔的女生若日子定在二月或八月，不用看日課也知道不在選項裡；定在正月或七月，才值得把九十天的日課逐層推一遍。\n'
         + '注意：行嫁月只約束婚嫁與訂盟。開業、簽約、入宅並不看這套規則，它們看的是當事人的年命與用事的取用。',
     ),

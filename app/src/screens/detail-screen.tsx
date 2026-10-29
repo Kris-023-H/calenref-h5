@@ -186,7 +186,7 @@ export function DetailScreen(): JSX.Element {
 
       <div className="sect">
         <h3>{t('detail.schoolsTitle', lang)}</h3>
-        <em>{tx('三派', '3 schools', lang)}</em>
+        <em>{tx('多口径', 'multi-approach', lang)}</em>
       </div>
       <div className="schools">
         {readings3.map((r) => (

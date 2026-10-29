@@ -171,11 +171,11 @@ export const zh = {
   'sit.zhiLabel': '坐山',
 
   // ---------- 宗派 school ----------
-  'school.title': '三宗派对照',
-  'school.adviceConsistent': '三派同过阈值，取之可决',
-  'school.adviceConservative': '三派有分歧，宜取交集再议',
-  'school.adviceAggressive': '三派皆未过阈值，此日不宜',
-  'school.defaultHint': '默认宗派：婚嫁取行嫁月派，经营工程取建除派',
+  'school.title': '多口径对照',
+  'school.adviceConsistent': '多口径同过阈值，取之可决',
+  'school.adviceConservative': '多口径有分歧，宜取交集再议',
+  'school.adviceAggressive': '多口径皆未过阈值，此日不宜',
+  'school.defaultHint': '主口径：婚嫁取行嫁月派，经营工程取建除派；其余为经验修正参考',
   'school.scoreOf': '{school}：{score} 分',
 
   // ---------- 推演设置 scan ----------
@@ -195,7 +195,7 @@ export const zh = {
   'calc.step2': '查建除十二值神',
   'calc.step3': '校五行生克取用',
   'calc.step4': '避太岁冲山破日',
-  'calc.step5': '配吉时 · 合三宗派',
+  'calc.step5': '配吉时 · 合多口径',
   'calc.step6': '汇总可用之日',
   'calc.done': '推演完成',
   'calc.elapsed': '耗时 {ms} 毫秒',
@@ -240,13 +240,13 @@ export const zh = {
   'detail.layerDelta': '{delta} 分',
   'detail.hoursTitle': '吉凶时辰',
   'detail.hoursHint': '时辰按真太阳时推，为东八区口径（旅居海外请按所在时区换算）；日用事宜，时用不宜，两般兼取为上。',
-  'detail.schoolsTitle': '三宗派对照',
+  'detail.schoolsTitle': '多口径对照',
   'detail.yiTitle': '宜',
   'detail.jiTitle': '忌',
   'detail.hardTitle': '硬性出局',
   'detail.hardBody': '该日触犯硬忌，不进入可用之日。硬忌包括：月破、日辰冲命、冲山、四离四绝、妨夫月。',
   'detail.reportTitle': '择吉报告',
-  'detail.reportBody': '九章完整报告，含推演依据、当事人四柱、逐层取用与三宗派对照。',
+  'detail.reportBody': '九章完整报告，含推演依据、当事人四柱、逐层取用与多口径参考。',
   'detail.fav': '收藏',
   'detail.faved': '已收藏',
   'detail.favAdded': '已加入收藏',
@@ -273,7 +273,7 @@ export const zh = {
 
   // ---------- 支付 pay ----------
   'pay.title': '解锁完整报告',
-  'pay.sub': '单次报告含九章详解与三宗派对照',
+  'pay.sub': '单次报告含九章详解与多口径参考',
   'pay.sku.once': '单次报告',
   'pay.sku.onceDesc': '一次完整九章报告',
   'pay.sku.ai10': 'AI 解读 10 次',
@@ -300,8 +300,8 @@ export const zh = {
   'pay.paid': '已解锁',
   'pay.linkOpening': '正在打开支付页面',
   'pay.linkFail': '支付链接暂不可用，请改用兑换码',
-  'pay.privacy': '支付由 Stripe 处理，本机不接触卡号',
-  'pay.offlineNote': '离线兑换码经本机校验；联网校验为上线升级项',
+  'pay.privacy': '支付由 Creem 处理（Merchant of Record），本机不接触卡号',
+  'pay.offlineNote': '兑换码经服务端核验，一码一用',
   'pay.choose': '选择套餐',
 
   // ---------- 报告列表 reports ----------
@@ -323,7 +323,7 @@ export const zh = {
   'report.ch4': '四、日课四柱与节气月',
   'report.ch5': '五、八重取用逐层疏释',
   'report.ch6': '六、吉凶时辰',
-  'report.ch7': '七、三宗派对照',
+  'report.ch7': '七、多口径对照',
   'report.ch8': '八、宜忌与行动建议',
   'report.ch9': '九、附则与版本',
   'report.copy': '复制全文',
@@ -460,7 +460,7 @@ export const zh = {
 
   // ---------- 关于 about ----------
   'about.title': '关于择吉',
-  'about.body': '择吉依中国传统择日之法，以当事人四柱为体、用事为用，按八重取用逐日演算，并附三宗派对照。全部推演在本地完成。',
+  'about.body': '择吉依中国传统择日之法，以当事人四柱为体、用事为用，按八重取用逐日演算，并附多口径参考。全部推演在本地完成。',
   'about.rules': '推演规则为团队整理版本，随研究进展滚动修订。',
   'about.privacy': '隐私：档案、报告与收藏仅存本机；AI 解读默认本地生成，不上传任何信息。',
   'about.feedback': '意见反馈',
@@ -471,7 +471,7 @@ export const zh = {
   'grade.zhongji': '中吉',
   'grade.keyong': '可用',
   'grade.buyong': '不用',
-  'grade.shangjiDesc': '三派同过，课格上乘',
+  'grade.shangjiDesc': '多口径同过，课格上乘',
   'grade.zhongjiDesc': '取用相济，可放心用之',
   'grade.keyongDesc': '过阈值，属可用',
   'grade.buyongDesc': '触硬忌或评分不足，不宜',

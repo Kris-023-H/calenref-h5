@@ -150,7 +150,7 @@ export function InfoScreen(): JSX.Element {
           <div className="pn">{tx('派', 'S', lang)}</div>
           <div className="pt">
             {t('school.title', lang)}
-            <small>{tx('宗派不同，结论会不同——报告给出三派对照', 'schools differ — the report gives all three', lang)}</small>
+            <small>{tx('口径不同，结论会不同——报告给出多口径对照', 'approaches differ — the report gives a multi-approach comparison', lang)}</small>
           </div>
         </div>
         <Seg options={schoolOptions} value={draft.school} onChange={(v) => setDraft({ school: v })} />

@@ -15,7 +15,7 @@ compatibility_date = "2026-10-01"
 directory = "./dist-test"
 binding = "ASSETS"
 not_found_handling = "single-page-application"
-run_worker_first = ["/api/*"]
+run_worker_first = true
 
 [[kv_namespaces]]
 binding = "ORDERS"

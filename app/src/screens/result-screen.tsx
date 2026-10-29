@@ -132,7 +132,7 @@ export function ResultScreen(): JSX.Element {
                   {tx('改课期条件', 'Change conditions', lang)}
                 </Btn>
                 <Btn variant="ghost" onClick={() => setDraftGeneric()}>
-                  {tx('换宗派再看', 'Try generic', lang)}
+                  {tx('换口径再看', 'Try generic', lang)}
                 </Btn>
               </>
             }

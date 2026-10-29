@@ -172,11 +172,11 @@ export const en = {
   'sit.zhiLabel': 'Sitting branch',
 
   // ---------- 宗派 school ----------
-  'school.title': 'Three schools compared',
-  'school.adviceConsistent': 'All three schools clear the bar — the day is sound',
-  'school.adviceConservative': 'The schools differ — take the overlap and look again',
-  'school.adviceAggressive': 'No school clears the bar — not this day',
-  'school.defaultHint': 'Default school: marriage-month for weddings, Jian-chu for business and engineering',
+  'school.title': 'Multiple approaches compared',
+  'school.adviceConsistent': 'All approaches clear the bar — the day is sound',
+  'school.adviceConservative': 'Approaches differ — take the overlap and look again',
+  'school.adviceAggressive': 'No approach clears the bar — not this day',
+  'school.defaultHint': 'Primary approach: marriage-month for weddings, Jian-chu for business and engineering; others are reference adjustments',
   'school.scoreOf': '{school}: {score} pts',
 
   // ---------- 推演设置 scan ----------
@@ -196,7 +196,7 @@ export const en = {
   'calc.step2': 'Checking the twelve value spirits',
   'calc.step3': 'Weighing the five-phase reading',
   'calc.step4': 'Avoiding Tai Sui, mountain clash, break days',
-  'calc.step5': 'Matching auspicious hours · three schools',
+  'calc.step5': 'Matching auspicious hours · approaches',
   'calc.step6': 'Totaling the usable days',
   'calc.done': 'Reading complete',
   'calc.elapsed': '{ms} ms elapsed',
@@ -241,7 +241,7 @@ export const en = {
   'detail.layerDelta': '{delta} pts',
   'detail.hoursTitle': 'Hours',
   'detail.hoursHint': 'Hours run on true solar time, quoted in UTC+8 (convert to your zone if abroad); the day favors, the hour decides — both together are best.',
-  'detail.schoolsTitle': 'Three schools compared',
+  'detail.schoolsTitle': 'Multiple approaches compared',
   'detail.yiTitle': 'Favors',
   'detail.jiTitle': 'Avoids',
   'detail.hardTitle': 'Hard exclusion',
@@ -301,8 +301,8 @@ export const en = {
   'pay.paid': 'Unlocked',
   'pay.linkOpening': 'Opening the payment page',
   'pay.linkFail': 'Payment link unavailable — use a redeem code',
-  'pay.privacy': 'Payments run through Stripe; card numbers never touch this device',
-  'pay.offlineNote': 'Redeem codes are verified on-device; online verification is a launch upgrade',
+  'pay.privacy': 'Payments run through Creem (Merchant of Record); card numbers never touch this device',
+  'pay.offlineNote': 'Redeem codes are verified server-side, one use per code',
   'pay.choose': 'Choose a plan',
 
   // ---------- 报告列表 reports ----------
@@ -324,7 +324,7 @@ export const en = {
   'report.ch4': 'IV. The day pillars and solar month',
   'report.ch5': 'V. The eight layers, explained',
   'report.ch6': 'VI. Auspicious hours',
-  'report.ch7': 'VII. Three schools compared',
+  'report.ch7': 'VII. Multiple approaches compared',
   'report.ch8': 'VIII. Favors, avoids, and next steps',
   'report.ch9': 'IX. Notes and version',
   'report.copy': 'Copy all',
@@ -472,7 +472,7 @@ export const en = {
   'grade.zhongji': 'Middle',
   'grade.keyong': 'Usable',
   'grade.buyong': 'Avoid',
-  'grade.shangjiDesc': 'All three schools clear the bar — a top reading',
+  'grade.shangjiDesc': 'All approaches clear the bar — a top reading',
   'grade.zhongjiDesc': 'Layers balance out — safe to use',
   'grade.keyongDesc': 'Clears the bar — usable',
   'grade.buyongDesc': 'Breaks a hard taboo or scores too low',

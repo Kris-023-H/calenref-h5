@@ -145,6 +145,7 @@ export function PayScreen(): JSX.Element {
       {SKUS.map((k) => (
         <div key={k} className={`plan${sku === k ? ' on' : ''}`} role="button" tabIndex={0} onClick={() => setSku(k)} onKeyDown={(e) => e.key === 'Enter' && setSku(k)}>
           {k === 'ai10' && <div className="badge">{tx('新', 'NEW', lang)}</div>}
+          {k === 'year' && <div className="badge">{tx('最超值', 'BEST', lang)}</div>}
           <div className="pt">
             <b>{t(`sku.${k}` as 'sku.once', lang)}</b>
             <span className="pp">
