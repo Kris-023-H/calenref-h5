@@ -42,7 +42,7 @@ src/
                  site.ts（域名·邮箱·主体）· legal.ts（法务四页三语正文）
   i18n/          zh.ts 为唯一事实源；en / zh-Hant 由测试保障对齐
   db/            IndexedDB 仓库层（八实体）+ 备份导出导入
-  services/      AI 解读（缓存→配额→生成）/ Creem 支付 / 兑换码 / 分享 / 埋点 / consent（Cookie 同意）
+  services/      AI 解读（缓存→配额→生成）/ 支付通道 / 兑换码 / 分享 / 埋点 / consent（Cookie 同意）
   store/         app / settings / ui 三套 Zustand store
   router/        自研屏幕栈（push/pop/replace/switchTab/resetTo + 方向感知动画）
   screens/       22 屏（screen-router.tsx 注册，含 legal 法务屏）
@@ -159,9 +159,20 @@ curl -s -o /dev/null -w '%{http_code}\n' $B/og-1200x630.png
 GitHub Actions（`.github/workflows/ci.yml`）只做 CI（typecheck + test + build），
 **不负责部署**——部署由上面那条 `wrangler deploy` 完成。
 
-## 支付（Creem，Merchant of Record）
+## 支付（通道迁移中）
 
-通道是 **Creem**。它和 Stripe 不是一类东西：Stripe 只是收单，税费申报与拒付要自己扛；
+> **当前状态（2026-11）**：上一版通道 **Creem 已弃用** —— 类目审核被拒且无申诉机会，
+> 产品已换到 **Gumroad**，Worker 上已配好 `GUMROAD_ACCESS_TOKEN` / `GUMROAD_PING_SECRET`。
+> 术语口径也已回退为专业表述（择日 / 课期 / 当事人档案 / 择日宗派），不再触发当初的类目红线。
+>
+> 但 **Gumroad 的服务端接入代码尚未落地**：Worker 的 `/api/checkout` 仍走 Creem，
+> `src/data/prices.ts` 的 `CREEM_PRODUCTS` 仍是 `REPLACE_WITH_` 占位，
+> 所以 `/api/checkout` 目前返回 503、付费墙按钮提示「链接暂不可用」——不会把用户送去死链。
+> 接入步骤见下方「支付通道迁移：Gumroad 接入清单」。
+
+### 历史通道：Creem（Merchant of Record）
+
+Creem 和 Stripe 不是一类东西：Stripe 只是收单，税费申报与拒付要自己扛；
 Creem 是记录商户，由它作为卖家承担各国税费与拒付。
 
 ### 为什么必须有一个 Worker
@@ -192,7 +203,7 @@ Creem 的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，
 不一致（跨境场景退款争议的头号来源），故收敛为 USD 单币种：页面标 USD，买家在 Creem
 结账页看到按其所在地折算后的本币。要加 EUR 只需扩 `Currency` 联合类型并补一列价格。
 
-### 上线前要做的三件事
+### 上线前要做的三件事（Creem 时代，已完成）
 
 1. **Creem Dashboard → Products** 建 4 个 USD 产品（once 6.9 / ai10 4.9 / pair 11.9 / year 39.9），
    把 `product_id` 填进 `src/data/prices.ts` 的 `CREEM_PRODUCTS`。仍是 `REPLACE_WITH_` 占位时，
@@ -201,6 +212,26 @@ Creem 的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，
    测试环境同时把 `wrangler.toml` 的 `CREEM_API_BASE` 改成 `https://test-api.creem.io/v1`，
    测试卡 `4111 1111 1111 1111` 可模拟成功付款。
 3. **KV 命名空间**：`wrangler kv namespace create ORDERS`，id 填进 `wrangler.toml`（已建好）。
+
+### 支付通道迁移：Gumroad 接入清单
+
+服务端代码尚未落地，需一次性补齐以下四步（每步都可独立验证）：
+
+1. **Gumroad 后台建 4 个 USD 产品**（once 6.9 / ai10 4.9 / pair 11.9 / year 39.9），
+   记下每个 `product_id`。
+2. **Worker 建单**：在 `worker/index.ts` 加 `gumroadFetch()`（Basic auth = Access Token，
+   空密码），用 `POST https://api.gumroad.com/v2/products/{product_id}/sales` 换 checkout URL，
+   沿用现有 KV `order:{ref}` 落单映射与 `?paid=1&sku=&ref=` 回跳协议。
+3. **核验与 webhook**：回跳后的 `GET /api/verify` 用 Gumroad 侧查询该 sale 的 `status`；
+   Gumroad Ping 目标地址指向 `POST /api/webhook/gumroad`，
+   签名校验用 `GUMROAD_PING_SECRET` 做 HMAC-SHA256（`X-Gumroad-Signature` 头，
+   或 body 里的 `secret` 字段），校验通过才写 `paid:{ref}`。
+4. **恢复上架 SKU**：`src/data/prices.ts` 的 `OFFERED_SKUS` 加回 `ai10` 与 `pair` ——
+   这两个当初就是因为 Creem 的「Generative AI = Restricted」与类目红线才收缩的，
+   新通道 + 专业术语口径下应可同时上架。
+
+> 注意：`GUMROAD_ACCESS_TOKEN` 是 Cloudflare secret，明文不可读，
+> 因此本地无法直接调 Gumroad API 列举产品 —— `product_id` 需从 Gumroad 后台取。
 
 ## 上线前部署项（按优先级）
 
@@ -221,7 +252,7 @@ Creem 的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，
 - 知库 24 篇：标题 / 导语 / 出处 / 时长齐全；长文正文已收录 3 篇（id 1–3，三语），
   其余篇目以「导语 + 出处 + 试排入口」呈现，正文按内容排期补齐（`KbArticle.body?: L10n`）。
 - 分享二维码为样式占位（`qrcode-generator` 已依赖，真实二维码渲染为 P1）；
-  支付隐私口径：卡号由 Creem 处理，本机不接触、不传输、不存储。
+  支付隐私口径：卡号由支付服务商（Merchant of Record）处理，本机不接触、不传输、不存储。
 
 ## 架构与合规
 

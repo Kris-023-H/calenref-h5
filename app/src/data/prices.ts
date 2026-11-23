@@ -32,16 +32,22 @@ export const CURRENCY_META: Record<Currency, { symbol: string; decimals: number 
 export const SKUS: Sku[] = ['once', 'ai10', 'pair', 'year'];
 
 /**
- * 首审上架的商品面（Creem 首次提交只报这两个）。
+ * 当前上架的商品面。
  *
- * 为什么收缩：ai10（AI 解读次数包）会直接触发支付通道的
- * 「Generative AI = Restricted」审查项 —— 需要提供前服务商记录、拒付率与
- * track record，而我们是首次提交，这三样都拿不出来，等于自己给自己加一道
- * 必不过的门。pair（双人对照）则容易被读成「替两个人算合不合」，与
- * 「Metaphysical / fortune-telling」类目只差一层解释。
+ * 背景：上一版支付通道（Creem）首次提交只通过这两个，其余两个被拒：
+ *   · ai10（AI 解读次数包）触发「Generative AI = Restricted」审查项，
+ *     需提供前服务商记录、拒付率与 track record，首次提交拿不出来；
+ *   · pair（双人对照）易被读成「替两个人算合不合」，
+ *     与「fortune-telling」类目只差一层解释。
  *
- * 两个 SKU 的定义、价格、Creem 产品 ID 全部保留（SKUS / CREEM_PRODUCTS 不动），
- * 只是不在界面上卖 —— 审核通过后再把 ai10 / pair 加回本数组即可上架。
+ * 现状：Creem 已弃用（被拒且无申诉机会），产品已换支付通道，
+ * Worker 上已配好新通道凭据（GUMROAD_ACCESS_TOKEN / GUMROAD_PING_SECRET）。
+ * 术语口径也已回退为专业表述（择日 / 课期 / 当事人档案 / 择日宗派），
+ * 不再触发当初的类目红线。
+ *
+ * 因此本数组是**新通道接入完成前的临时收缩**：SKU 定义、价格与产品 ID
+ * 全部保留（SKUS / CREEM_PRODUCTS 不动），新通道跑通后把 ai10 / pair
+ * 加回本数组即可同时上架，无需改动其它代码。
  */
 export const OFFERED_SKUS: Sku[] = ['once', 'year'];
 
