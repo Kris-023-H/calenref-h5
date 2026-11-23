@@ -173,5 +173,9 @@ export function termText(key: string, lang: Lang): string {
   if (!entry) return key;
   if (lang === 'en') return entry.en;
   if (lang === 'zh-Hant') return entry.zhHant;
+  // 出海四语：如语言包补了对应译名则用之，否则回退英文（专业术语不落回中文原貌）。
+  if (lang === 'ko' || lang === 'ja' || lang === 'th' || lang === 'vi') {
+    return (entry as GlossaryEntry & Partial<Record<Lang, string>>)[lang] || entry.en;
+  }
   return entry.zh;
 }

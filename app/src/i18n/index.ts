@@ -28,18 +28,22 @@ export {
 
 import type { Lang } from '../engine/types';
 
-/** 可用语言（界面顺序） */
-export const LANGS: Lang[] = ['zh', 'en', 'zh-Hant'];
+/** 可用语言（界面顺序）：出海 6 语 + 历史繁体 */
+export const LANGS: Lang[] = ['zh', 'en', 'ko', 'ja', 'th', 'vi', 'zh-Hant'];
 
 /** 语言守卫 */
 export function isLang(v: unknown): v is Lang {
-  return v === 'zh' || v === 'en' || v === 'zh-Hant';
+  return v === 'zh' || v === 'en' || v === 'zh-Hant' || v === 'ko' || v === 'ja' || v === 'th' || v === 'vi';
 }
 
 /** 语言显示名（用各语言自称） */
 export const LANG_SELF_NAME: Record<Lang, string> = {
   zh: '简体中文',
   en: 'English',
+  ko: '한국어',
+  ja: '日本語',
+  th: 'ไทย',
+  vi: 'Tiếng Việt',
   'zh-Hant': '繁體中文',
 };
 
@@ -53,6 +57,10 @@ export function detectLang(navigatorLanguages: readonly string[]): Lang {
       return 'zh-Hant'; //  bare zh：繁体优先（出海口径，大马港澳台）
     }
     if (tag.startsWith('en')) return 'en';
+    if (tag.startsWith('ko')) return 'ko';
+    if (tag.startsWith('ja')) return 'ja';
+    if (tag.startsWith('th')) return 'th';
+    if (tag.startsWith('vi')) return 'vi';
   }
   return 'zh';
 }

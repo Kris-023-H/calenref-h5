@@ -163,6 +163,42 @@ export function ResultScreen(): JSX.Element {
         />
       )}
 
+      {/* 信息差付费墙（PRD §12.8）：通书口径 vs 专属课格，仅已录四柱时展示 */}
+      {!s.generic && (
+        <div
+          className="card flat"
+          role="button"
+          tabIndex={0}
+          onClick={() => push('pay')}
+          onKeyDown={(e) => e.key === 'Enter' && push('pay')}
+          style={{ marginBottom: 12, cursor: 'pointer', borderColor: 'var(--gold)' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+            <span style={{ fontSize: 10, color: 'var(--gold)', letterSpacing: '.1em', fontWeight: 700 }}>
+              {tx('为何差这么多', 'Why the difference', lang)}
+            </span>
+            <Icon name="right" size={13} />
+          </div>
+          <div style={{ display: 'flex', gap: 8, textAlign: 'center', marginBottom: 10 }}>
+            <div style={{ flex: 1, padding: '10px 6px', borderRadius: 8, background: 'var(--surface-2)' }}>
+              <b className="serif" style={{ fontSize: 22, color: 'var(--muted)', lineHeight: 1 }}>{s.total}</b>
+              <span style={{ display: 'block', fontSize: 10, marginTop: 5 }}>{tx('日 · 通书口径', 'days · almanac', lang)}</span>
+              <small style={{ fontSize: 9, color: 'var(--muted)' }}>{tx('人人相同，只按建除值神', 'Same for all, by jianchu only', lang)}</small>
+            </div>
+            <div style={{ flex: 1, padding: '10px 6px', borderRadius: 8, background: 'rgba(216,188,120,.14)' }}>
+              <b className="serif" style={{ fontSize: 22, color: 'var(--gold)', lineHeight: 1 }}>{s.usable.length}</b>
+              <span style={{ display: 'block', fontSize: 10, marginTop: 5 }}>{tx('日 · 你的课格', 'days · your course', lang)}</span>
+              <small style={{ fontSize: 9, color: 'var(--muted)' }}>{tx('加了四柱、业态与坐向', 'With pillars, trade & facing', lang)}</small>
+            </div>
+          </div>
+          <div style={{ fontSize: 10, color: 'var(--muted-2)', lineHeight: 1.7 }}>
+            {tx('差异出在「日辰冲命」与「业态五行」两重。出具报告，逐层看它们怎样把', 'The gap comes from day-pillar clash and trade-phase rules. Get the report to see how', lang)}{' '}
+            <b style={{ color: 'var(--gold)' }}>{s.total}</b> {tx('日收窄到', 'days narrow to', lang)}{' '}
+            <b style={{ color: 'var(--gold)' }}>{s.usable.length}</b> {tx('日。', 'days.', lang)}
+          </div>
+        </div>
+      )}
+
       <div className="ctabar">
         <div className="btn-row">
           <Btn variant="ghost" style={{ flex: '0 0 40%' }} onClick={() => push('info')}>

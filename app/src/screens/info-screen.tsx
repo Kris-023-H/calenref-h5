@@ -280,7 +280,7 @@ function PersonSlot({
   onPick,
   onClear,
 }: {
-  lang: 'zh' | 'en' | 'zh-Hant';
+  lang: Lang;
   person: Person | undefined;
   title: string;
   tag: string;

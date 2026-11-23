@@ -20,6 +20,10 @@ const STEP_LABELS: Record<Lang, string[]> = {
   zh: ['典籍索引', '场景检索', '交付物', '业态'],
   en: ['Sources', 'Scenario lookup', 'Deliverables', 'Industry'],
   'zh-Hant': ['典籍索引', '場景檢索', '交付物', '業態'],
+  ko: ['고전 색인', '시나리오 검색', '산출물', '업종'],
+  ja: ['典籍索引', 'シナリオ検索', '成果物', '業態'],
+  th: ['ดัชนีตำรา', 'ค้นหาสถานการณ์', 'สิ่งที่ส่งมอบ', 'ประเภทธุรกิจ'],
+  vi: ['Chỉ sách cổ', 'Tìm tình huống', 'Sản phẩm', 'Ngành nghề'],
 };
 
 export function OnboardScreen(): JSX.Element {
@@ -74,7 +78,7 @@ export function OnboardScreen(): JSX.Element {
         <span>{tx('五版式 · 可传', '5 themes', lang)}</span>
       </div>
       <div>
-        <b>{tx('知识库', 'Library', lang)}</b>
+        <b>{tx('知库', 'Library', lang)}</b>
         <span>{tx('典籍与规则', 'Rules & books', lang)}</span>
       </div>
     </div>,
@@ -113,9 +117,9 @@ export function OnboardScreen(): JSX.Element {
     {
       h: tx('交付的是一份<br>可回溯的查询报告', 'A traceable report,\nnot one line', lang),
       p:
-        tx('我们出具<b>九章查询报告</b>：逐层列出应用的规则与依据，每一条都可回溯。另有当日参考卡可分享、知识库可核对。', 'A nine-chapter query report lists the rules applied at every layer, each traceable — plus a shareable day card and a verifiable knowledge base.', lang),
+        tx('我们出具<b>九章查询报告</b>：逐层列出应用的规则与依据，每一条都可回溯。另有当日参考卡可分享、知库可核对。', 'A nine-chapter query report lists the rules applied at every layer, each traceable — plus a shareable day card and a verifiable knowledge base.', lang),
       n:
-        tx('报告九章 · 当日卡五版式 · 知识库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
+        tx('报告九章 · 当日卡五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
     },
     {
       h: tx('先定你的业态', 'Pick your trade', lang),

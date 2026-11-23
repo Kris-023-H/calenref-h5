@@ -9,13 +9,24 @@ import { ZHI, MONTH_NAME } from '../engine/calendar/sexagenary';
 import { jianchuName, monthName, gradeText } from '../i18n';
 
 /** 行业属性标签（0 木 1 火 2 土 3 金 4 水） */
-export const WX_LABEL: Record<number, Record<Lang, string>> = {
+export const WX_LABEL: Record<number, Record<string, string>> = {
   0: { zh: '木', en: 'Wood', 'zh-Hant': '木' },
   1: { zh: '火', en: 'Fire', 'zh-Hant': '火' },
   2: { zh: '土', en: 'Earth', 'zh-Hant': '土' },
   3: { zh: '金', en: 'Metal', 'zh-Hant': '金' },
   4: { zh: '水', en: 'Water', 'zh-Hant': '水' },
 };
+// 为出海四语补五行译名（就地扩展 WX_LABEL）
+for (const k of Object.keys(WX_LABEL)) {
+  const n = Number(k);
+  const enName = WX_LABEL[n].en;
+  const map: Record<string, [string, string, string, string]> = {
+    Wood: ['목', '木', 'ไม้', 'Mộc'], Fire: ['화', '火', 'ไฟ', 'Hỏa'],
+    Earth: ['토', '土', 'ดิน', 'Thổ'], Metal: ['금', '金', 'เหล็ก', 'Kim'], Water: ['수', '水', 'น้ำ', 'Thủy'],
+  };
+  const v = map[enName];
+  if (v) Object.assign(WX_LABEL[n], { ko: v[0], ja: v[1], th: v[2], vi: v[3] });
+}
 
 /** 12.08 形如 2026.12.08 */
 export function dottedDate(d: CalDate): string {
@@ -83,12 +94,24 @@ export function usableStat(day: DayResult, lang: Lang): string {
 }
 
 /** 起课偏移选项 */
-export const START_OFFSETS: Array<{ value: number; label: Record<Lang, string> }> = [
+export const START_OFFSETS: Array<{ value: number; label: Record<string, string> }> = [
   { value: 0, label: { zh: '今日', en: 'Today', 'zh-Hant': '今日' } },
   { value: 3, label: { zh: '三日后', en: 'In 3 days', 'zh-Hant': '三日後' } },
   { value: 7, label: { zh: '七日后', en: 'In 7 days', 'zh-Hant': '七日後' } },
   { value: 30, label: { zh: '三十日后', en: 'In 30 days', 'zh-Hant': '三十日後' } },
 ];
+// 出海四语补齐起始偏移标签
+for (const o of START_OFFSETS) {
+  const en = o.label.en;
+  const map: Record<string, [string, string, string, string]> = {
+    'Today': ['오늘', '今日', 'วันนี้', 'Hôm nay'],
+    'In 3 days': ['3일 후', '3日後', 'อีก 3 วัน', 'Sau 3 ngày'],
+    'In 7 days': ['7일 후', '7日後', 'อีก 7 วัน', 'Sau 7 ngày'],
+    'In 30 days': ['30일 후', '30日後', 'อีก 30 วัน', 'Sau 30 ngày'],
+  };
+  const v = map[en];
+  if (v) Object.assign(o.label, { ko: v[0], ja: v[1], th: v[2], vi: v[3] });
+}
 
 /** 推演天数选项 */
 export const SPANS: number[] = [30, 60, 90, 120];

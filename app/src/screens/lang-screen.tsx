@@ -15,23 +15,31 @@ import { useNav } from './types';
 import type { Lang } from '../engine/types';
 
 /**
- * 常用时区（覆盖北美 / 南美 / 欧洲 / 中东 / 南亚 / 东亚 / 大洋洲）。
- * 时区数学按小时偏移计算（services/timezone.ts），支持 0.5 步长，故含 UTC+5:30。
+ * 全球时区（v3.7 出海版）：覆盖北美 / 南美 / 欧洲 / 中东 / 南亚 / 东亚 / 大洋洲共 18 区。
+ * 时区以数字偏移为基准（services/timezone.ts），支持 0.5 / 0.75 步长（故含 UTC+5:45 尼泊尔、
+ * UTC+5:30 印度）；欧美夏令时由 TZ_IANA + Intl 自动修正，冬夏「今日」与配额重置都准确。
+ * label 带代表城市，让海外用户一眼找到自己所在区。
+ * 四柱与真太阳时按出生地经度校正，与时区设置是两个维度（架构 §1.5）。
  */
 const TZ_OPTIONS: Array<{ value: number; label: string }> = [
-  { value: -8, label: 'UTC-8' },
-  { value: -5, label: 'UTC-5' },
-  { value: -3, label: 'UTC-3' },
-  { value: 0, label: 'UTC+0' },
-  { value: 1, label: 'UTC+1' },
-  { value: 2, label: 'UTC+2' },
-  { value: 3, label: 'UTC+3' },
-  { value: 5.5, label: 'UTC+5:30' },
-  { value: 7, label: 'UTC+7' },
-  { value: 8, label: 'UTC+8' },
-  { value: 9, label: 'UTC+9' },
-  { value: 10, label: 'UTC+10' },
-  { value: 12, label: 'UTC+12' },
+  { value: -10, label: 'UTC−10 Honolulu' },
+  { value: -8, label: 'UTC−8 Los Angeles / Vancouver' },
+  { value: -7, label: 'UTC−7 Denver' },
+  { value: -6, label: 'UTC−6 Chicago / Mexico City' },
+  { value: -5, label: 'UTC−5 New York / Toronto' },
+  { value: -3, label: 'UTC−3 São Paulo / Buenos Aires' },
+  { value: 0, label: 'UTC±0 London / Dublin' },
+  { value: 1, label: 'UTC+1 Paris / Berlin / Rome' },
+  { value: 2, label: 'UTC+2 Cairo / Athens' },
+  { value: 3, label: 'UTC+3 Moscow / Dubai' },
+  { value: 5.5, label: 'UTC+5:30 New Delhi / Mumbai' },
+  { value: 5.75, label: 'UTC+5:45 Kathmandu' },
+  { value: 7, label: 'UTC+7 Bangkok / Jakarta' },
+  { value: 8, label: 'UTC+8 Beijing / Singapore' },
+  { value: 9, label: 'UTC+9 Seoul / Tokyo' },
+  { value: 10, label: 'UTC+10 Sydney / Melbourne' },
+  { value: 11, label: 'UTC+11 Nouméa / Solomon Is.' },
+  { value: 12, label: 'UTC+12 Auckland' },
 ];
 
 export function LangScreen(): JSX.Element {
@@ -112,7 +120,7 @@ export function LangScreen(): JSX.Element {
       </div>
       {/* 时区项较多，横向滚动而非挤压；当前时区不在表内时补一项，保证选中态可见 */}
       <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', margin: '0 -2px', padding: '0 2px' }}>
-        <div style={{ minWidth: 620 }}>
+        <div style={{ minWidth: 1100 }}>
           <Seg
             options={(TZ_OPTIONS.some((o) => o.value === tz) ? TZ_OPTIONS : [...TZ_OPTIONS, { value: tz, label: `UTC${tz >= 0 ? '+' : '−'}${tz}` }].sort((a, b) => a.value - b.value)).map((o) => ({ value: String(o.value), label: o.label }))}
             value={String(tz)}

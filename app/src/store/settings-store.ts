@@ -31,6 +31,10 @@ export interface SettingsState {
   currency: Currency;
   analyticsOn: boolean;
   onboarded: boolean;
+  /** v3.7 邮件提醒（PRD §12.7） */
+  email: string;
+  emailOn: boolean;
+  emailItems: string[];
   /** 是否已从 db 恢复（防首屏闪烁） */
   hydrated: boolean;
   hydrate: () => Promise<void>;
@@ -38,6 +42,8 @@ export interface SettingsState {
   setCal: (cal: CalPref) => Promise<void>;
   setTz: (tz: number) => Promise<void>;
   setCurrency: (c: SettingsState['currency']) => Promise<void>;
+  /** 更新邮件提醒配置（邮箱 / 开关 / 提醒项） */
+  setEmailPref: (patch: Partial<Pick<SettingsState, 'email' | 'emailOn' | 'emailItems'>>) => Promise<void>;
   setAnalytics: (on: boolean) => Promise<void>;
   setOnboarded: (v: boolean) => Promise<void>;
   /** 便捷取文案 */
@@ -51,6 +57,9 @@ export const useSettings = create<SettingsState>((set, get) => ({
   currency: 'USD',
   analyticsOn: true,
   onboarded: false,
+  email: '',
+  emailOn: false,
+  emailItems: ['course', 'hour', 'todo'],
   hydrated: false,
 
   hydrate: async () => {
@@ -66,6 +75,9 @@ export const useSettings = create<SettingsState>((set, get) => ({
       currency: normalizeCurrency(rec.currency),
       analyticsOn: rec.analytics,
       onboarded: rec.onboarded,
+      email: rec.email ?? '',
+      emailOn: rec.emailOn ?? false,
+      emailItems: rec.emailItems ?? ['course', 'hour', 'todo'],
       hydrated: true,
     });
     // 探测结果落库：之后以用户显式选择为准，不再被浏览器语言覆盖。
@@ -91,6 +103,15 @@ export const useSettings = create<SettingsState>((set, get) => ({
   setCurrency: async (currency) => {
     set({ currency });
     await settingsRepo.save({ currency });
+  },
+
+  setEmailPref: async (patch) => {
+    set(patch);
+    await settingsRepo.save({
+      ...(patch.email !== undefined ? { email: patch.email } : {}),
+      ...(patch.emailOn !== undefined ? { emailOn: patch.emailOn } : {}),
+      ...(patch.emailItems !== undefined ? { emailItems: patch.emailItems } : {}),
+    });
   },
 
   setAnalytics: async (analyticsOn) => {

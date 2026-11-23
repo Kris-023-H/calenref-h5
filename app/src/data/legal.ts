@@ -87,7 +87,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         h: '3. 出生资料的处理位置',
         p: [
           '全部历法计算在你的设备本地完成，出生资料不经过网络传输，我们无法读取、也无法导出。',
-          '默认的白话释义同样在本机用模板生成，不联网。如未来提供云端释义，我们会在使用前单独征求你的同意，并先更新本政策。',
+          '默认的AI 解读同样在本机用模板生成，不联网。如未来提供云端释义，我们会在使用前单独征求你的同意，并先更新本政策。',
           '因此，清除浏览器数据、更换设备或卸载应用，都会导致本机资料与购买凭证消失。请用「我的 → 导出备份」自行留存。',
         ],
       },
@@ -102,7 +102,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
       {
         h: '5. 支付',
         p: [
-          '支付由第三方支付服务商（Merchant of Record，如 Creem、Stripe）处理。银行卡号、账单地址等信息直接提交给支付服务商，我们不接触、不传输、不存储任何卡数据。',
+          '支付由第三方支付服务商（Merchant of Record，如 Stripe）处理。银行卡号、账单地址等信息直接提交给支付服务商，我们不接触、不传输、不存储任何卡数据。',
           '我们仅从支付服务商处收到订单结果（是否成功、购买了哪个套餐、订单号），用于在本机写入解锁凭证。',
           '支付服务商对信息的处理适用其自身隐私政策。',
         ],
@@ -226,12 +226,12 @@ const ZH: Record<LegalPage, LegalDoc> = {
   refund: {
     title: '退款政策',
     updated: UPDATED,
-    lead: '本服务为数字产品，一次性交付、即时生效。未使用的订单可在 7 日内退款；已经生成并查看报告、或已消耗释义摘要次数的订单不予退款。',
+    lead: '本服务为数字产品，一次性交付、即时生效。未使用的订单可在 7 日内退款；已经生成并查看报告、或已消耗AI 解读次数的订单不予退款。',
     sections: [
       {
         h: '1. 适用范围',
         p: [
-          '本政策适用于通过本服务完成的全部一次性购买（单次报告、释义摘要次数包、双人对照、年度不限次）。',
+          '本政策适用于通过本服务完成的全部一次性购买（单次课期报告、AI 解读次数包、双人对照、年度不限次）。',
           '本服务不含订阅与自动续费，因此不存在「忘记取消」类争议。',
         ],
       },
@@ -239,7 +239,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         h: '2. 可以退款的情形',
         p: ['符合下列任一情形，请在购买后 7 日内提出，我们核实后退款：'],
         list: [
-          '付费后未生成、未查看任何报告，且未消耗白话释义次数',
+          '付费后未生成、未查看任何报告，且未消耗AI 解读次数',
           '同一订单被重复扣款（含网络重试导致的重复支付）',
           '因我们的技术故障导致已付费内容无法打开，且我们在 7 日内无法修复',
           '你所在法域的消费者保护法强制赋予的退款权利',
@@ -252,7 +252,7 @@ const ZH: Record<LegalPage, LegalDoc> = {
         ],
         list: [
           '报告已生成并可查看（无论是否实际阅读）',
-          '释义摘要次数已部分或全部消耗',
+          'AI 解读次数已部分或全部消耗',
           '已使用兑换码完成解锁',
           '以「历法参考结果不符合预期」「事后认为不准确」为由——本服务是文化参考工具，不承诺结果（见《服务条款》第 2 条）',
           '因你自行清除浏览器数据、更换设备或卸载应用导致凭证丢失（可用订单号申请补发，无需重新付费）',
@@ -391,7 +391,7 @@ const EN: Record<LegalPage, LegalDoc> = {
       {
         h: '5. Payments',
         p: [
-          'Payments are handled by third-party payment providers acting as Merchant of Record (such as Creem or Stripe). Card numbers and billing details go directly to the provider — we do not touch, transmit or store any card data.',
+          'Payments are handled by third-party payment providers acting as Merchant of Record (such as Stripe). Card numbers and billing details go directly to the provider — we do not touch, transmit or store any card data.',
           'We only receive the order outcome (success or failure, which package, order reference) in order to write the unlock credential on your device.',
           'The provider processes that information under its own privacy policy.',
         ],
@@ -535,7 +535,7 @@ const EN: Record<LegalPage, LegalDoc> = {
         p: ['The Service delivers digital content instantly. Refunds are not available in these cases:'],
         list: [
           'A report has been generated and is viewable, whether or not you read it',
-          'Summary credits have been partly or fully consumed',
+          'Reading credits have been partly or fully consumed',
           'A redemption code has already been used to unlock content',
           'The request is based on "the reading did not match my expectations" or a later view that it was inaccurate — the Service is a cultural reference tool and promises no outcome (see Terms, section 2)',
           'Credentials were lost because you cleared browser data, changed device or uninstalled the app (we will reissue with your order reference at no charge)',
@@ -652,6 +652,8 @@ export const LEGAL_DOCS: Record<Lang, Record<LegalPage, LegalDoc>> = {
   zh: ZH,
   en: EN,
   'zh-Hant': hantPack(),
+  // 出海四语：法务正文暂以英文版承载（法务措辞须逐字审定，不机翻），后续由法务补译。
+  ko: EN, ja: EN, th: EN, vi: EN,
 };
 
 /** 取一篇法务文档 */

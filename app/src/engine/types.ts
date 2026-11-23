@@ -34,7 +34,7 @@ export interface FourPillars {
   hour: string;
 }
 
-export type Lang = 'zh' | 'en' | 'zh-Hant';
+export type Lang = 'zh' | 'en' | 'zh-Hant' | 'ko' | 'ja' | 'th' | 'vi';
 
 // ============ 当事人档案 Person（db/types.ts 同源定义） ============
 

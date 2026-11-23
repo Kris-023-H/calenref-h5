@@ -12,7 +12,7 @@ export interface CityDef {
   lon: number;
   /** 时区（小时） */
   tz: number;
-  region: 'cn' | 'ea' | 'sea' | 'na' | 'eu' | 'oceania' | 'me';
+  region: 'cn' | 'ea' | 'sea' | 'na' | 'sa' | 'eu' | 'oceania' | 'me';
 }
 
 export const CITIES: CityDef[] = [
@@ -73,10 +73,36 @@ export const CITIES: CityDef[] = [
   { id: 'boston', zh: '波士顿', en: 'Boston', lon: -71.06, tz: -5, region: 'na' },
   { id: 'chicago', zh: '芝加哥', en: 'Chicago', lon: -87.63, tz: -6, region: 'na' },
   { id: 'houston', zh: '休斯顿', en: 'Houston', lon: -95.37, tz: -6, region: 'na' },
+  { id: 'dallas', zh: '达拉斯', en: 'Dallas', lon: -96.8, tz: -6, region: 'na' },
+  { id: 'miami', zh: '迈阿密', en: 'Miami', lon: -80.19, tz: -5, region: 'na' },
+  { id: 'washington', zh: '华盛顿', en: 'Washington DC', lon: -77.04, tz: -5, region: 'na' },
+  { id: 'philadelphia', zh: '费城', en: 'Philadelphia', lon: -75.17, tz: -5, region: 'na' },
+  { id: 'atlanta', zh: '亚特兰大', en: 'Atlanta', lon: -84.39, tz: -5, region: 'na' },
+  { id: 'montreal', zh: '蒙特利尔', en: 'Montreal', lon: -73.57, tz: -5, region: 'na' },
+  { id: 'mexicocity', zh: '墨西哥城', en: 'Mexico City', lon: -99.13, tz: -6, region: 'na' },
+  { id: 'denver', zh: '丹佛', en: 'Denver', lon: -104.99, tz: -7, region: 'na' },
+  // 南美
+  { id: 'saopaulo', zh: '圣保罗', en: 'São Paulo', lon: -46.63, tz: -3, region: 'sa' },
+  { id: 'riodejaneiro', zh: '里约热内卢', en: 'Rio de Janeiro', lon: -43.17, tz: -3, region: 'sa' },
+  { id: 'buenosaires', zh: '布宜诺斯艾利斯', en: 'Buenos Aires', lon: -58.38, tz: -3, region: 'sa' },
+  { id: 'lima', zh: '利马', en: 'Lima', lon: -77.04, tz: -5, region: 'sa' },
+  { id: 'santiago', zh: '圣地亚哥', en: 'Santiago', lon: -70.67, tz: -4, region: 'sa' },
+  { id: 'bogota', zh: '波哥大', en: 'Bogotá', lon: -74.07, tz: -5, region: 'sa' },
   // 欧洲
   { id: 'london', zh: '伦敦', en: 'London', lon: -0.13, tz: 0, region: 'eu' },
   { id: 'manchester', zh: '曼彻斯特', en: 'Manchester', lon: -2.24, tz: 0, region: 'eu' },
+  { id: 'dublin', zh: '都柏林', en: 'Dublin', lon: -6.26, tz: 0, region: 'eu' },
+  { id: 'lisbon', zh: '里斯本', en: 'Lisbon', lon: -9.14, tz: 0, region: 'eu' },
   { id: 'paris', zh: '巴黎', en: 'Paris', lon: 2.35, tz: 1, region: 'eu' },
+  { id: 'berlin', zh: '柏林', en: 'Berlin', lon: 13.4, tz: 1, region: 'eu' },
+  { id: 'rome', zh: '罗马', en: 'Rome', lon: 12.5, tz: 1, region: 'eu' },
+  { id: 'madrid', zh: '马德里', en: 'Madrid', lon: -3.7, tz: 1, region: 'eu' },
+  { id: 'amsterdam', zh: '阿姆斯特丹', en: 'Amsterdam', lon: 4.9, tz: 1, region: 'eu' },
+  { id: 'frankfurt', zh: '法兰克福', en: 'Frankfurt', lon: 8.68, tz: 1, region: 'eu' },
+  { id: 'zurich', zh: '苏黎世', en: 'Zurich', lon: 8.54, tz: 1, region: 'eu' },
+  { id: 'vienna', zh: '维也纳', en: 'Vienna', lon: 16.37, tz: 1, region: 'eu' },
+  { id: 'stockholm', zh: '斯德哥尔摩', en: 'Stockholm', lon: 18.07, tz: 1, region: 'eu' },
+  { id: 'istanbul', zh: '伊斯坦布尔', en: 'Istanbul', lon: 28.98, tz: 3, region: 'eu' },
   // 大洋洲
   { id: 'sydney', zh: '悉尼', en: 'Sydney', lon: 151.21, tz: 10, region: 'oceania' },
   { id: 'melbourne', zh: '墨尔本', en: 'Melbourne', lon: 144.96, tz: 10, region: 'oceania' },
@@ -99,6 +125,7 @@ export const CITY_REGION_ORDER: Array<{ region: CityDef['region']; labelZh: stri
   { region: 'sea', labelZh: '东南亚', labelEn: 'Southeast Asia' },
   { region: 'ea', labelZh: '东亚', labelEn: 'East Asia' },
   { region: 'na', labelZh: '北美', labelEn: 'North America' },
+  { region: 'sa', labelZh: '南美', labelEn: 'South America' },
   { region: 'eu', labelZh: '欧洲', labelEn: 'Europe' },
   { region: 'oceania', labelZh: '大洋洲', labelEn: 'Oceania' },
   { region: 'me', labelZh: '中东', labelEn: 'Middle East' },

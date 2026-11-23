@@ -65,13 +65,17 @@ export interface QuotaRecord {
 export interface SettingsRecord {
   id: 'settings';
   schemaVersion: number;
-  lang: 'zh' | 'en' | 'zh-Hant';
+  lang: 'zh' | 'en' | 'zh-Hant' | 'ko' | 'ja' | 'th' | 'vi';
   cal: 'greg' | 'gan' | 'buddha';
   tz: number;
-  /** 仅 USD（Creem 只支持 USD/EUR）；读取时由 settings-store 归一化旧值 */
+  /** 结算币种；读取时由 settings-store 归一化到支持列表（默认 USD） */
   currency: Currency;
   analytics: boolean;
   onboarded: boolean;
+  /** v3.7 邮件提醒（PRD §12.7）：以下为可选字段，老数据缺失即视为未绑定 */
+  email?: string;
+  emailOn?: boolean;
+  emailItems?: string[];
 }
 
 export interface AiCacheRecord {

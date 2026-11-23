@@ -64,7 +64,7 @@ export function ReportsScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {quota.unlimited ? '∞' : quota.freeLeft}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('释义摘要余次', 'Summaries left', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('AI 解读余次', 'AI readings left', lang)}</div>
           </div>
         </div>
       </div>

@@ -40,6 +40,10 @@ const SKU_DESC: Record<Lang, Record<Sku, string>> = {
     pair: '雙方出生資料對照一報',
     year: '全年不限次報告',
   },
+  ko: { once: '9장 전체 보고서 1회', ai10: '쉬운 해석 10회', pair: '양측 비교 보고서', year: '연간 무제한' },
+  ja: { once: '9章フルレポート1回', ai10: 'やさしい解説10回', pair: '両者比較レポート', year: '年間無制限' },
+  th: { once: 'รายงาน9บท 1 ครั้ง', ai10: 'คำอ่านง่าย 10 ครั้ง', pair: 'รายงานเปรียบเทียบทั้งสอง', year: 'ไม่จำกัดทั้งปี' },
+  vi: { once: '1 báo cáo đầy đủ 9 chương', ai10: '10 lượt AI đọc', pair: 'Báo cáo so sánh hai bên', year: 'Không giới hạn cả năm' },
 };
 
 export function PayScreen(): JSX.Element {
@@ -130,7 +134,7 @@ export function PayScreen(): JSX.Element {
                 : t('ai.quotaLeft', lang, { n: quota.freeLeft })}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.6 }}>
-              {tx('免费额度：每月 3 次释义摘要。查询筛选不限次，报告与摘要须解锁。', 'Free quota: 3 summaries per month. Screening is unlimited; reports and summaries need unlocking.', lang)}
+              {tx('免费额度：每月 3 次AI 解读。课期筛选不限次，报告与解读须解锁。', 'Free quota: 3 AI readings per month. Screening is unlimited; reports and readings need unlocking.', lang)}
             </div>
           </div>
         </div>
@@ -158,7 +162,7 @@ export function PayScreen(): JSX.Element {
             <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
             <br />
             {k === 'year'
-              ? tx('所有场景不限次 · 释义摘要无限 · 知识库全解锁 · 当日帖去印记', 'Unlimited scenarios · unlimited summaries · full library · no card watermark', lang)
+              ? tx('所有场景不限次 · AI 解读无限 · 知库全解锁 · 当日帖去印记', 'Unlimited scenarios · unlimited AI readings · full library · no card watermark', lang)
               : k === 'ai10'
                 ? tx('次数不清零，随用随扣', 'Readings never expire; deduct as you go', lang)
                 : tx('含逐层依据、当日干支、出局归因、关键动作时点与传统条目边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}

@@ -1,5 +1,5 @@
 /**
- * screens/report-screen.tsx — 九章查询报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / 释义摘要 / 附则）。
+ * screens/report-screen.tsx — 九章查询报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI 解读 / 附则）。
  * 报告正文由 session.result 现场组装；未解锁时引导至 pay 屏（权益由 license.repo 判定）。
  */
 
@@ -342,8 +342,8 @@ export function ReportScreen(): JSX.Element {
           : `此为${termText(ind.name, lang)}的通行开市节奏，与当日无关，但同样影响「开市」这件事的完成度。`}
       </div>
 
-      {/* 八 释义摘要 */}
-      <SectionHead index="八" title={tx('释义摘要', 'Summary', lang)} note={tx('限次生成', 'limited', lang)} />
+      {/* 八 AI 解读 */}
+      <SectionHead index="八" title={tx('AI 解读', 'Summary', lang)} note={tx('限次生成', 'limited', lang)} />
       {aiSections.length === 4 ? (
         <>
           <div className="aicard">
@@ -364,13 +364,13 @@ export function ReportScreen(): JSX.Element {
               <Icon name="ai" size={14} />
             </div>
             <div className="ab-t">
-              <b>{tx('本次查询的释义摘要', 'Summary for this query', lang)}</b>
+              <b>{tx('本次查询的AI 解读', 'AI reading for this query', lang)}</b>
               <span>{tx('引规则出处 · 可追问 · 每月 3 次', 'cites rules · askable · 3/month', lang)}</span>
             </div>
             <div className="ab-q">{quotaLeft()}</div>
           </div>
           <Btn variant="gold" onClick={() => push('ai')}>
-            {tx('生成释义摘要', 'Generate summary', lang)}
+            {tx('生成AI 解读', 'Generate reading', lang)}
           </Btn>
         </>
       )}

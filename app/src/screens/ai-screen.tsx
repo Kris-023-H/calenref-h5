@@ -1,13 +1,14 @@
 /**
- * screens/ai-screen.tsx — 释义摘要页（配额条 + 四段拼装 + 追问 + 边界声明）。
+ * screens/ai-screen.tsx — AI 解读页（配额条 + 四段拼装 + 追问 + 边界声明）。
  *
  * 命名说明：这个功能由本地规则模板拼装，不调用任何生成式模型。
- * 界面与商品权益一律称「释义摘要」，不出现 AI —— 生成式 AI 在 Creem 属 Restricted 类目，
+ * 界面与商品权益一律称「AI 解读」，不出现 AI —— 生成式 AI 在 Creem 属 Restricted 类目，
  * 首审要求前服务商记录与拒付率，首次提交拿不出来。
  * 生成走 app-store.generateAi（runAiReading 编排：缓存 → 付费 → 免费 → 本地/远程生成）。
  */
 
 import { useState } from 'react';
+import type { Lang } from '../engine/types';
 import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
@@ -17,17 +18,20 @@ import { AppBar } from '../components/app-bar';
 import { Icon } from '../components/icons';
 import { useNav } from './types';
 
-const AI_QA: Record<'zh' | 'en' | 'zh-Hant', string[]> = {
+const AI_QA: Record<string, string[]> = {
   zh: ['这一天和我属相合吗？', '如果只能选一个时辰，选哪个？', '这个日子有什么需要避开的？'],
   en: ['Does this day suit my zodiac?', 'If only one hour, which?', 'What should be avoided?'],
   'zh-Hant': ['這一天和我屬相合嗎？', '如果只能選一個時辰，選哪個？', '這個日子有什麼需要避開的？'],
 };
+// 出海四语暂用英文问答（内容由本地模板生成，译名由术语表统一处理）
+Object.assign(AI_QA, { ko: AI_QA.en, ja: AI_QA.en, th: AI_QA.en, vi: AI_QA.en });
 
-const SECTION_TITLES: Record<'zh' | 'en' | 'zh-Hant', string[]> = {
+const SECTION_TITLES: Record<string, string[]> = {
   zh: ['一、这一日的基本盘', '二、八层规则说了什么', '三、对这件事的意味', '四、落地建议'],
   en: ['1. The day at a glance', '2. What the eight layers say', '3. What it means for this matter', '4. Practical advice'],
   'zh-Hant': ['一、這一日的基本盤', '二、八层规则說了什麼', '三、對這件事的意味', '四、落地建議'],
 };
+Object.assign(SECTION_TITLES, { ko: SECTION_TITLES.en, ja: SECTION_TITLES.en, th: SECTION_TITLES.en, vi: SECTION_TITLES.en });
 
 export function AiScreen(): JSX.Element {
   const lang = useSettings((s) => s.lang);
@@ -87,7 +91,7 @@ export function AiScreen(): JSX.Element {
           <div className="aicard" key={i}>
             <div className="ai-h">
               <b>{titles[i]}</b>
-              <span>{tx('白话释义', 'Summary', lang)}</span>
+              <span>{tx('AI 解读', 'Summary', lang)}</span>
             </div>
             <div className="ai-p" dangerouslySetInnerHTML={{ __html: sec }} />
           </div>
@@ -97,7 +101,7 @@ export function AiScreen(): JSX.Element {
       ) : left > 0 ? (
         <EmptyState
           mark="ai"
-          title={tx('尚未生成释义', 'No summary yet', lang)}
+          title={tx('尚未生成解读', 'No reading yet', lang)}
           body={
             tx('点下方生成，释义按「结论口径 → 业态适配 → 风险与调整 → 执行建议」四段展开，每段引规则出处。由本机模板按已算出的依据拼装。', 'Tap generate — the summary unfolds in four sections, each citing its rule source. Assembled on-device from the computed basis.', lang)
           }
@@ -114,7 +118,7 @@ export function AiScreen(): JSX.Element {
             className="ap-s"
             dangerouslySetInnerHTML={{
               __html: tx(
-                '释义摘要按次计。可购买摘要包（10 次不清零），或升级年卡享无限次。<br>查询筛选与逐层依据始终免费，不受影响。',
+                'AI 解读按次计。可购买解读包（10 次不清零），或升级年卡享无限次。<br>课期筛选与逐层依据始终免费，不受影响。',
                 'Readings count per use. Buy the 10-pack (never expires) or go yearly for unlimited.<br>Screening and per-layer basis stay free.',
                 lang,
               ),
@@ -211,7 +215,7 @@ export function AiScreen(): JSX.Element {
 }
 
 /** 追问的本地答复（依据本次已算出的层，不引入未纳入的传统条目） */
-function answerFor(q: string, lang: 'zh' | 'en' | 'zh-Hant'): string {
+function answerFor(q: string, lang: Lang): string {
   const session = useApp.getState().session;
   const day = session?.result.usable[session.cursor] ?? session?.result.days[0];
   if (!day) return t('err.notFound', lang);

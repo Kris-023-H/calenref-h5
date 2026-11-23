@@ -73,11 +73,11 @@ describe('overseas true-solar — 海外经度与跨日', () => {
     }
   });
 
-  it('海外城市数量记录（PRD 约 40；实测非国内条数）', () => {
+  it('海外城市数量记录（v3.7 扩欧美/南美后实测非国内条数）', () => {
     const overseas = CITIES.filter((c) => c.region !== 'cn');
-    // 说明：实测非国内 37 城（含日韩 ea 5），略低于 PRD「约 40」表述；
-    // 但 §7.2 点名城市已全部覆盖（见上条）。此处记录实际规模，不作硬性 40 断言。
+    // v3.7 出海版补齐欧美/南美主要城市：北美、南美、欧洲城市显著扩充。
+    // §7.2 点名城市仍全部覆盖（见上条）。此处记录实际规模，不作硬性等值断言。
     expect(overseas.length).toBeGreaterThanOrEqual(30);
-    expect(overseas.length).toBeLessThanOrEqual(45);
+    expect(overseas.length).toBeLessThanOrEqual(80);
   });
 });
