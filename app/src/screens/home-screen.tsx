@@ -97,7 +97,7 @@ export function HomeScreen(): JSX.Element {
         }
         actions={
           <>
-            <IconBtn name="grid" label={tx('场景导览', 'Guide', lang)} onClick={() => openSheet('guide')} />
+            <IconBtn name="grid" label={tx('用事导览', 'Guide', lang)} onClick={() => openSheet('guide')} />
             <IconBtn name="bell" label={tx('提醒', 'Reminders', lang)} onClick={() => push('remind')} />
           </>
         }
@@ -152,7 +152,7 @@ export function HomeScreen(): JSX.Element {
         <div
           dangerouslySetInnerHTML={{
             __html: tx(
-              '以上为<b>传统历法通用信息</b>，按建除十二值日排，对所有人一致，<b>不针对你的出生年</b>。具体场景的参考要看人·事·日三层。',
+              '以上为<b>传统历法通用信息</b>，按建除十二值日排，对所有人一致，<b>不针对你的出生年</b>。具体用事的参考要看人·事·日三层。',
               'Above is <b>general traditional calendar information</b> — same for everyone, <b>not tuned to your birth details</b>. A scenario query weighs person · matter · day.',
               lang,
             ),
@@ -206,7 +206,7 @@ export function HomeScreen(): JSX.Element {
       )}
 
       <div className="sect">
-        <h3>{tx('进行中的查询', 'Active queries', lang)}</h3>
+        <h3>{tx('进行中的课期', 'Active courses', lang)}</h3>
         <em>{tx('进行中', 'Active', lang)}</em>
         <a role="button" tabIndex={0} onClick={() => switchTab('reports')} onKeyDown={(e) => e.key === 'Enter' && switchTab('reports')}>
           {t('common.all', lang)}
@@ -224,7 +224,7 @@ export function HomeScreen(): JSX.Element {
             <div style={{ fontSize: 12.5, fontWeight: 700, marginBottom: 3 }}>
               {scans.length > 0
                 ? scans[0].title
-                : `${termText(ev.name, lang)} · ${tx('尚未查询', 'not queried yet', lang)}`}
+                : `${termText(ev.name, lang)} · ${tx('尚未起课', 'not started yet', lang)}`}
             </div>
             <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>
               {scans.length > 0
@@ -236,14 +236,14 @@ export function HomeScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 20, fontWeight: 700, color: 'var(--gold)' }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.08em' }}>{tx('份', 'reports', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.08em' }}>{tx('课期', 'courses', lang)}</div>
           </div>
         </div>
       </div>
 
       <div className="sect">
-        <h3>{tx('新建查询', 'New query', lang)}</h3>
-        <em>{tx('New Query', 'New Query', lang)}</em>
+        <h3>{tx('起一课', 'Start a course', lang)}</h3>
+        <em>{tx('新起', 'New', lang)}</em>
       </div>
       <div className="quick">
         {quick.map((x) => (

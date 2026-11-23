@@ -33,7 +33,7 @@ export function ReportsScreen(): JSX.Element {
       <AppBar title={t('reports.title', lang)} actions={<IconBtn name="grid" onClick={() => openSheet('guide')} />} />
       <h2 className="tt">
         {t('reports.title', lang)}
-        <small>{tx('每一次查询都留档——同一家店，明年扩店还会再用一次。', 'Every lesson is archived — next year’s expansion reuses it.', lang)}</small>
+        <small>{tx('课期里看中的日子，先收着。同一家店明年扩店，还能翻回来。', 'Save the days you like from a course. Reuse them when the same store expands next year.', lang)}</small>
       </h2>
 
       <Seg
@@ -52,13 +52,13 @@ export function ReportsScreen(): JSX.Element {
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.reduce((n, r) => n + r.result.usable.length, 0)}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('可用之日', 'usable days', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('可用日', 'usable days', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
               {scans.length}
             </div>
-            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史查询', 'readings', lang)}</div>
+            <div style={{ fontSize: 9, color: 'var(--muted)', letterSpacing: '.1em' }}>{tx('历史课期', 'Past courses', lang)}</div>
           </div>
           <div>
             <div className="serif" style={{ fontSize: 19, fontWeight: 700 }}>
@@ -76,7 +76,7 @@ export function ReportsScreen(): JSX.Element {
           body={t('reports.emptyHint', lang)}
           action={
             <Btn variant="gold" onClick={() => push('event')}>
-              {tx('开始第一次查询', 'Start first query', lang)}
+              {tx('开始第一次起课', 'Start your first course', lang)}
             </Btn>
           }
         />

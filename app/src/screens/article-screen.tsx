@@ -67,7 +67,7 @@ export function ArticleScreen(): JSX.Element {
           {tx('试推一次', 'TRY A READING', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>
-          {tx('录出生资料，查询一次看看', 'Enter birth details, run a reading', lang)}
+          {tx('录当事人四柱，起课一次看看', "Record a person's pillars, start one course", lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)' }}>
           {tx('90 天区间 · 逐层检索 · 约 3 秒', '90-day window · layer by layer · ~3s', lang)}

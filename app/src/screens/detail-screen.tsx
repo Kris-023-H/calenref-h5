@@ -234,7 +234,7 @@ export function DetailScreen(): JSX.Element {
             {t('detail.reportTitle', lang)}
           </Btn>
           <Btn variant="gold" onClick={() => push('card')}>
-            {tx('制作当日帖', 'Make day card', lang)}
+            {tx('制作课帖', 'Make auspicious-day card', lang)}
           </Btn>
         </div>
       </div>

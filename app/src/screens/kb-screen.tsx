@@ -37,7 +37,7 @@ export function KbScreen(): JSX.Element {
       />
       <h2 className="tt">
         {t('kb.title', lang)}
-        <small>{tx('按场景检索历法规则，按典籍立据。每一篇都对应一部可核的出处。', 'Look up calendar rules by scenario, with every article traceable to a classical text.', lang)}</small>
+        <small>{tx('按用事检索历法规则，按典籍立据。每一篇都对应一部可核的出处。', 'Look up almanac rules by purpose, grounded in the sources. Every article names a verifiable text.', lang)}</small>
       </h2>
 
       <div className="feat" role="button" tabIndex={0} onClick={() => push('article', { articleId: String(feat.id) })}>
@@ -46,7 +46,7 @@ export function KbScreen(): JSX.Element {
         </div>
         <div className="ft">{feat.title[lang === 'en' ? 'en' : lang === 'zh-Hant' ? 'zhHant' : 'zh']}</div>
         <div className="fs">
-          {t('kb.minutes', lang, { n: feat.minutes })} · {tx('对应：全部场景', 'traceable to every scenario', lang)}
+          {t('kb.minutes', lang, { n: feat.minutes })} · {tx('对应：全部用事', 'Covers: all purposes', lang)}
         </div>
       </div>
 
@@ -82,7 +82,7 @@ export function KbScreen(): JSX.Element {
           {BOOKS.length} {tx('部', '', lang)}
         </div>
         <div className="serif" style={{ fontSize: 14, fontWeight: 700, marginBottom: 5 }}>
-          {tx('本次查询参考的典籍与行业专书', 'Books behind these rules', lang)}
+          {tx('本次课期参考的典籍与行业专书', 'Sources and trade classics referenced by this course', lang)}
         </div>
         <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.7 }}>
           {tx('历法总纲 10 部、行业专书 15 部。每条规则都可回溯到具体书目与卷次。', '10 general calendar texts, 15 trade manuals — every rule traceable to a title and chapter.', lang)}

@@ -11,10 +11,10 @@ const l = (zh: string, en: string, zhHant: string): L10n => ({ zh, en, zhHant })
 export const EVENT_GROUPS: EventGroup[] = ['经营择日', '工程择日', '家庭择日', '生命礼'];
 
 export const GROUP_LABEL: Record<EventGroup, L10n> = {
-  经营择日: l('商业与工作场景', 'Business & work', '商業與工作場景'),
-  工程择日: l('建筑与装修场景', 'Building & renovation', '建築與裝修場景'),
-  家庭择日: l('家庭与生活场景', 'Family & life', '家庭與生活場景'),
-  生命礼: l('人生重要节点场景', 'Life milestones', '人生重要節點場景'),
+  经营择日: l('商业与工作用事', 'Business & work', '商業與工作用事'),
+  工程择日: l('建筑与装修用事', 'Building & renovation', '建築與裝修用事'),
+  家庭择日: l('家庭与生活用事', 'Family & life', '家庭與生活用事'),
+  生命礼: l('人生重要节点用事', 'Life milestones', '人生重要節點用事'),
 };
 
 /** 取分组显示名：EventGroup 内部 key 仅作标识符，界面一律走本表 */
@@ -26,19 +26,19 @@ export function groupText(group: EventGroup, lang: Lang): string {
 
 export const GROUP_DESC: Record<EventGroup, L10n> = {
   经营择日: l(
-    '输入当事人出生年份参考，系统检索传统历法中商业开业、签约等场景的对应规则',
+    '输入当事人出生年份参考，系统检索传统历法中商业开业、签约等用事的对应规则',
     "Enter the principal's birth year for reference; the system looks up traditional calendar rules for openings, signings and similar business scenarios.",
-    '輸入當事人出生年份參考，系統檢索傳統曆法中商業開業、簽約等場景的對應規則',
+    '輸入當事人出生年份參考，系統檢索傳統曆法中商業開業、簽約等用事的對應規則',
   ),
   工程择日: l(
-    '输入业主出生年份与建筑朝向，检索传统历法中破土、上梁、装修等场景的对应规则',
+    '输入业主出生年份与建筑朝向，检索传统历法中破土、上梁、装修等用事的对应规则',
     "Enter the owner's birth year and the building's orientation; the system looks up traditional calendar rules for groundbreaking, beam-setting and fit-out.",
-    '輸入業主出生年份與建築朝向，檢索傳統曆法中破土、上梁、裝修等場景的對應規則',
+    '輸入業主出生年份與建築朝向，檢索傳統曆法中破土、上梁、裝修等用事的對應規則',
   ),
   家庭择日: l(
-    '输入户主出生年份，检索传统历法中婚嫁、迁居等场景的对应规则',
+    '输入户主出生年份，检索传统历法中婚嫁、迁居等用事的对应规则',
     "Enter the household head's birth year; the system looks up traditional calendar rules for weddings and relocation.",
-    '輸入戶主出生年份，檢索傳統曆法中婚嫁、遷居等場景的對應規則',
+    '輸入戶主出生年份，檢索傳統曆法中婚嫁、遷居等用事的對應規則',
   ),
   生命礼: l(
     '输入母亲预产期与婴儿出生时刻，检索传统历法中生产择期相关的规则与医学安全窗提示',

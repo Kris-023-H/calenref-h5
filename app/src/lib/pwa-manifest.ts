@@ -27,9 +27,9 @@ export interface WebManifest {
 }
 
 const NAMES: Record<Lang, { name: string; short: string; desc: string }> = {
-  zh: { name: '历知 CalenRef', short: '历知', desc: '中国传统历法文化参考工具：按场景查阅历法规则与日期参考，全部计算在本机完成，不提供预测。' },
+  zh: { name: '历知 CalenRef', short: '历知', desc: '中国传统历法文化参考工具：按用事查阅历法规则与日期参考，全部计算在本机完成，不提供预测。' },
   en: { name: 'CalenRef', short: 'CalenRef', desc: 'A traditional Chinese almanac reference tool — cultural reference only, computed on device.' },
-  'zh-Hant': { name: '曆知 CalenRef', short: '曆知', desc: '中國傳統曆法文化參考工具：按場景查閱曆法規則與日期參考，全部計算在本機完成，不提供預測。' },
+  'zh-Hant': { name: '曆知 CalenRef', short: '曆知', desc: '中國傳統曆法文化參考工具：按用事查閱曆法規則與日期參考，全部計算在本機完成，不提供預測。' },
   ko: { name: 'CalenRef', short: 'CalenRef', desc: '전통 역법 문화 참고 도구 — 모든 계산은 기기에서 이루어지며 예측을 제공하지 않습니다.' },
   ja: { name: 'CalenRef', short: 'CalenRef', desc: '伝統暦法文化の参考ツール — すべての計算は端末内で行い、予測は提供しません。' },
   th: { name: 'CalenRef', short: 'CalenRef', desc: 'เครื่องมืออ้างอิงวัฒนธรรมปฏิทิน — คำนวณในอุปกรณ์ ไม่ให้คำทำนาย' },

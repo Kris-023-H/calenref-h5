@@ -1,5 +1,5 @@
 /**
- * engine/render/reading.ts — 引擎派生查询：「下一个可用日」等（首页 / 仪程用）。
+ * engine/render/reading.ts — 引擎派生筛选：「下一个可用日」等（首页 / 仪程用）。
  */
 
 import type { CalDate, DayResult, EventDef, Person } from '../types';

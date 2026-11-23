@@ -1,5 +1,5 @@
 /**
- * screens/report-screen.tsx — 九章查询报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI 解读 / 附则）。
+ * screens/report-screen.tsx — 九章课期报告（结论 / 取用 / 出生资料 / 可用清单 / 出局归因 / 动作时点 / 节奏 / AI 解读 / 附则）。
  * 报告正文由 session.result 现场组装；未解锁时引导至 pay 屏（权益由 license.repo 判定）。
  */
 
@@ -88,18 +88,18 @@ export function ReportScreen(): JSX.Element {
           </div>
           <div className="serif" style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.4, margin: '2px 0 4px' }}>
             {termText(ev.name, lang)}
-            {tx('查询报告', ' reading report', lang)}
+            {tx('课期报告', 'Course report', lang)}
           </div>
           <div style={{ fontSize: 11, color: 'var(--gold-2)', letterSpacing: '.1em', marginBottom: 10 }}>
             {termText(ind.name, lang)} ／ {termText(ind.category, lang)}
           </div>
           <div style={{ fontSize: 10.5, color: 'var(--on-lacquer-2)', lineHeight: 1.9 }}>
-            {tx('当事人', 'Subjects', lang)}　
+            {tx('当事人档案', 'Person profiles', lang)}　
             {readings.length > 0
               ? readings.map((r) => `${r.name}（${r.zodiac}${tx('年·', ' · ', lang)}${r.trueTime}）`).join('　')
               : `${t('scan.generic', lang)} · ${tx('未录出生资料', 'no birth details', lang)}`}
             <br />
-            {tx('查询区间', 'Window', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
+            {tx('课期区间', 'Course range', lang)}　　{startIso} — {endIso}（{s.total} {tx('天', 'days', lang)}）
             <br />
             {tx('坐向', 'Facing', lang)}　　{ZHI[sit.zhi]}
             {tx('方', ' bearing', lang)}
@@ -172,7 +172,7 @@ export function ReportScreen(): JSX.Element {
       <SectionHead index="二" title={t('report.ch3', lang)} note={tx('规则变量', 'variables', lang)} />
       <div className="rtab">
         <div className="rtab-row">
-          <div>{tx('场景', 'Scenario', lang)}</div>
+          <div>{tx('用事', 'Purpose', lang)}</div>
           <div>
             <b>{termText(ev.name, lang)}</b>（{groupText(ev.group, lang)}）
           </div>
@@ -364,7 +364,7 @@ export function ReportScreen(): JSX.Element {
               <Icon name="ai" size={14} />
             </div>
             <div className="ab-t">
-              <b>{tx('本次查询的AI 解读', 'AI reading for this query', lang)}</b>
+              <b>{tx('本次课期的AI 解读', 'AI reading for this course', lang)}</b>
               <span>{tx('引规则出处 · 可追问 · 每月 3 次', 'cites rules · askable · 3/month', lang)}</span>
             </div>
             <div className="ab-q">{quotaLeft()}</div>

@@ -68,7 +68,7 @@ export function PeopleScreen(): JSX.Element {
           actions={<Chip>{editing ? t('common.edit', lang) : t('common.add', lang)}</Chip>}
         />
         <h2 className="tt">
-          {editing ? (tx('修改这一位', 'Edit this person', lang)) : tx('录入一位当事人', 'Add a person', lang)}
+          {editing ? (tx('修改这一位', 'Edit this person', lang)) : tx('录入一位当事人四柱', "Record one person's pillars", lang)}
           <small>
             {tx('出生地与时刻决定真太阳时；时刻错一位，时柱即错。', 'Birthplace and time decide true solar time; one hour off and the hour pillar is wrong.', lang)}
           </small>
@@ -78,7 +78,7 @@ export function PeopleScreen(): JSX.Element {
           <div className="ph">
             <div className="pn">{editing ? (tx('改', 'E', lang)) : tx('新', 'N', lang)}</div>
             <div className="pt">
-              {tx('基本资料', 'Basics', lang)}
+              {tx('基本档案', 'Basic profile', lang)}
               <small>{tx('仅存本机', 'stored on this device only', lang)}</small>
             </div>
             <div className="pd">
@@ -237,7 +237,7 @@ export function PeopleScreen(): JSX.Element {
       />
       <h2 className="tt">
         {t('person.list', lang)}
-        <small>{tx('出生资料录一次，往后每次查询直接调用，不必重填。', 'Enter birth details once; reuse them in every reading.', lang)}</small>
+        <small>{tx('出生资料录一次，往后每次起课直接调用，不必重填。', 'Enter birth details once; reuse them in every course.', lang)}</small>
       </h2>
       {selectFor && (
         <div className="whybar" style={{ marginBottom: 12 }}>
@@ -261,7 +261,7 @@ export function PeopleScreen(): JSX.Element {
         </div>
         <div>
           <b>{people.filter(inUse).length}</b>
-          <span>{tx('本次查询在用', 'in this query', lang)}</span>
+          <span>{tx('本次课期在用', 'In use for this course', lang)}</span>
         </div>
         <div>
           <b>{people.filter((p) => p.sex === 'f').length}</b>
@@ -303,7 +303,7 @@ export function PeopleScreen(): JSX.Element {
                 <div className="pa-b">
                   <div className="pa-n">
                     {p.name || t('common.unknown', lang)}
-                    {use && <em>{tx('本次查询在用', 'in use', lang)}</em>}
+                    {use && <em>{tx('本次课期在用', 'In use for this course', lang)}</em>}
                   </div>
                   <div className="pa-m">
                     {p.sex === 'f' ? t('person.female', lang) : t('person.male', lang)} · {p.birthDate.replace(/-/g, '.')} {p.birthTime} ·{' '}

@@ -1,6 +1,6 @@
 /**
- * components/card-canvas.tsx — 吉当日帖（五版式）+ 3D 倾斜 + 打字机。
- * 当日帖内容：用事 / 出生资料 / 坐向 / 时辰，编号取日期；可存图与转发。
+ * components/card-canvas.tsx — 吉日课帖（五版式）+ 3D 倾斜 + 打字机。
+ * 课帖内容：用事 / 出生资料 / 坐向 / 时辰，编号取日期；可存图与转发。
  */
 
 import { useEffect, useRef, type ReactNode } from 'react';
@@ -32,12 +32,12 @@ export interface CardData {
   lang: Lang;
 }
 
-/** 当日帖本体（div 结构，供截图/分享复用） */
+/** 课帖本体（div 结构，供截图/分享复用） */
 export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme }): JSX.Element {
   const { lang } = data;
   const dateText = `${data.date.y}.${String(data.date.m).padStart(2, '0')}.${String(data.date.d).padStart(2, '0')}`;
   const rows: Array<[string, string]> = [
-    [tx('场景', 'Scenario', lang), `${data.eventName}（${data.industryName}）`],
+    [tx('用事', 'Purpose', lang), `${data.eventName}（${data.industryName}）`],
     [tx('出生资料', 'Birth details', lang), `${data.pillars.year} ${data.pillars.month} ${data.pillars.day} ${data.pillars.hour}`],
     [tx('坐向', 'Facing', lang), data.sitDeg],
     [tx('时辰', 'Hour', lang), `${data.hourName}（${data.hourRange}）`],
@@ -78,7 +78,7 @@ export function DayCardFace({ data, theme }: { data: CardData; theme: CardTheme 
   );
 }
 
-/** 当日帖舞台（3D 倾斜跟随指针） */
+/** 课帖舞台（3D 倾斜跟随指针） */
 export function CardStage({ children }: { children: ReactNode }): JSX.Element {
   const stageRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

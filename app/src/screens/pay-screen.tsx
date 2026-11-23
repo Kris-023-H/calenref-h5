@@ -162,7 +162,7 @@ export function PayScreen(): JSX.Element {
             <b style={{ color: 'var(--ink-2)' }}>{SKU_DESC[lang][k]}</b>
             <br />
             {k === 'year'
-              ? tx('所有场景不限次 · AI 解读无限 · 知库全解锁 · 当日帖去印记', 'Unlimited scenarios · unlimited AI readings · full library · no card watermark', lang)
+              ? tx('所有用事不限次 · AI 解读无限 · 知库全解锁 · 课帖去印记', 'All purposes unlimited · unlimited AI · full knowledge access · watermark-free cards', lang)
               : k === 'ai10'
                 ? tx('次数不清零，随用随扣', 'Readings never expire; deduct as you go', lang)
                 : tx('含逐层依据、当日干支、出局归因、关键动作时点与传统条目边界声明', 'Nine chapters with per-layer basis, clash attribution, action hours', lang)}

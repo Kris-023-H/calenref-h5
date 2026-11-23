@@ -1,5 +1,5 @@
 /**
- * screens/info-screen.tsx — 录出生资料（当事人 A/B + 时辰待核 + 查询区间 + 宗派 + 业态坐向）。
+ * screens/info-screen.tsx — 录出生资料（当事人 A/B + 时辰待核 + 课期区间 + 宗派 + 业态坐向）。
  * 当事人可「从档案选」跳 people 屏；档案数据来自 app-store。
  */
 
@@ -49,9 +49,9 @@ export function InfoScreen(): JSX.Element {
 
   return (
     <div className="screen">
-      <AppBar title={`${termText(ev.name, lang)} · ${tx('录出生资料', 'Birth details', lang)}`} onBack={() => pop()} actions={<Chip>{groupText(ev.group, lang)}</Chip>} />
+      <AppBar title={`${termText(ev.name, lang)} · ${tx('录当事人四柱', "Record person's pillars", lang)}`} onBack={() => pop()} actions={<Chip>{groupText(ev.group, lang)}</Chip>} />
       <h2 className="tt">
-        {two ? (tx('双方出生资料', 'Both profiles', lang)) : tx('当事人出生资料', 'Personal context (optional)', lang)}
+        {two ? (tx('双方当事人档案', "Both parties' profiles", lang)) : tx('当事人四柱', "Person's pillars", lang)}
         <small>
           {two
             ? tx('嫁娶以女方定婚月、以男方查日辰冲年，两造皆须。', 'Marriage reads the bride’s marriage months and checks the groom’s day clash — both required.', lang)
@@ -113,7 +113,7 @@ export function InfoScreen(): JSX.Element {
         <div className="ph">
           <div className="pn">{tx('期', 'P', lang)}</div>
           <div className="pt">
-            {tx('查询区间', 'Date range', lang)}
+            {tx('课期区间', 'Course range', lang)}
             <small>{tx('区间越宽，越可能撞上真正合的日子', 'a wider window meets more fitting days', lang)}</small>
           </div>
         </div>
@@ -131,7 +131,7 @@ export function InfoScreen(): JSX.Element {
             </div>
           </div>
           <div className="fld">
-            <label>{tx('查询天数', 'Window', lang)}</label>
+            <label>{tx('课期长度', 'Course length', lang)}</label>
             <div className="unit">
               <select value={String(draft.span)} onChange={(e) => setDraft({ span: Number(e.target.value) })}>
                 {SPANS.map((s) => (
@@ -150,7 +150,7 @@ export function InfoScreen(): JSX.Element {
           <div className="pn">{tx('派', 'S', lang)}</div>
           <div className="pt">
             {t('school.title', lang)}
-            <small>{tx('口径不同，结论会不同——报告给出多口径对照', 'approaches differ — the report gives a multi-approach comparison', lang)}</small>
+            <small>{tx('宗派不同，结论会不同——报告给出三派对照', 'Different schools, different conclusions — the report compares three', lang)}</small>
           </div>
         </div>
         <Seg options={schoolOptions} value={draft.school} onChange={(v) => setDraft({ school: v })} />
@@ -264,7 +264,7 @@ export function InfoScreen(): JSX.Element {
             void startScan().then(() => push('calc'));
           }}
         >
-          {tx('开始查询', 'Run query', lang)} · {tx(`检索 ${draft.span} 天`, `${draft.span} days`, lang)}
+          {tx('起课', 'Start a course', lang)} · {tx(`检索 ${draft.span} 天`, `${draft.span} days`, lang)}
         </Btn>
       </div>
     </div>

@@ -59,7 +59,7 @@ export function AiScreen(): JSX.Element {
       <h2 className="tt">
         {t('ai.title', lang)}
         <small>
-          {tx('解读不是重新算一遍，是把已算出的八重依据，按你的业态与场景串成可执行的一段话。每条都引规则出处。', 'A reading does not recompute — it strings the computed layers into actionable prose for your trade and matter. Every line cites its rule.', lang)}
+          {tx('解读不是重新算一遍，是把已算出的八重依据，按你的业态与用事串成可执行的一段话。每条都引规则出处。', 'A reading is not a recalculation: it weaves the eight computed grounds into an actionable paragraph for your trade and purpose, citing each source.', lang)}
         </small>
       </h2>
 
@@ -237,7 +237,7 @@ function answerFor(q: string, lang: Lang): string {
   if (q.includes('避') || q.includes('avoid') || q.includes('风险')) {
     const bad = day.layers.filter((l) => l.cls === 'warn' || l.cls === 'bad');
     if (bad.length === 0) {
-      return tx('本次查询无次级煞，唯一要注意的是「不要改时」。', 'No secondary sha — just do not move the hour.', lang);
+      return tx('本次课期无次级煞，唯一要注意的是「不要改时」。', 'This course has no secondary sha — the only caution is "do not change the hour".', lang);
     }
     return tx(
       `要避开的是：<b>${bad.map((b) => b.resultKey).join('、')}</b>。调整之法是把关键动作移入时辰、核心环节在室内完成。`,
@@ -246,7 +246,7 @@ function answerFor(q: string, lang: Lang): string {
     );
   }
   return tx(
-    '本次查询的可核依据已在报告第二至六章列出。若不在八重条目之内，不会替你补一层。',
+    '本次课期的可核依据已在报告第二至六章列出。若不在八重条目之内，不会替你补一层。',
     'Verifiable basis is listed in report chapters 2–6. Anything outside the eight layers is not invented.',
     lang,
   );

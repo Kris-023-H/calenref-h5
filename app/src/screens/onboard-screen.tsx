@@ -1,5 +1,5 @@
 /**
- * screens/onboard-screen.tsx — 首次引导（4 步：典籍索引 / 场景检索 / 交付物 / 业态）。
+ * screens/onboard-screen.tsx — 首次引导（4 步：典籍索引 / 用事检索 / 交付物 / 业态）。
  * 按第三轮定位重写：这一屏是新用户对产品的第一印象，必须读起来像知识工具，
  * 而不是「按出生年算命」的择日器。
  */
@@ -17,13 +17,13 @@ import { WX_LABEL } from './ui-helpers';
 import { useNav } from './types';
 
 const STEP_LABELS: Record<Lang, string[]> = {
-  zh: ['典籍索引', '场景检索', '交付物', '业态'],
-  en: ['Sources', 'Scenario lookup', 'Deliverables', 'Industry'],
-  'zh-Hant': ['典籍索引', '場景檢索', '交付物', '業態'],
-  ko: ['고전 색인', '시나리오 검색', '산출물', '업종'],
-  ja: ['典籍索引', 'シナリオ検索', '成果物', '業態'],
-  th: ['ดัชนีตำรา', 'ค้นหาสถานการณ์', 'สิ่งที่ส่งมอบ', 'ประเภทธุรกิจ'],
-  vi: ['Chỉ sách cổ', 'Tìm tình huống', 'Sản phẩm', 'Ngành nghề'],
+  zh: ['典籍索引', '用事检索', '交付物', '业态'],
+  en: ['Sources', 'Purpose lookup', 'Deliverables', 'Industry'],
+  'zh-Hant': ['典籍索引', '用事檢索', '交付物', '業態'],
+  ko: ['고전 색인', '용사 검색', '산출물', '업종'],
+  ja: ['典籍索引', '用事検索', '成果物', '業態'],
+  th: ['ดัชนีตำรา', 'ค้นหาวัตถุประสงค์', 'สิ่งที่ส่งมอบ', 'ประเภทธุรกิจ'],
+  vi: ['Chỉ sách cổ', 'Tra mục đích', 'Sản phẩm', 'Ngành nghề'],
 };
 
 export function OnboardScreen(): JSX.Element {
@@ -45,9 +45,9 @@ export function OnboardScreen(): JSX.Element {
         </div>
       </div>
       <div className="cmpv-row own">
-        <div className="cv-t">{tx('场景查询', 'YOUR QUERY', lang)}</div>
+        <div className="cv-t">{tx('用事检索', 'Purpose lookup', lang)}</div>
         <div className="cv-b">
-          <em>{tx('按场景检索规则', 'Rules by scenario', lang)}</em>
+          <em>{tx('按用事检索规则', 'Look up rules by purpose', lang)}</em>
           <span>{tx('结合你的出生年与条件', 'With your birth year and conditions', lang)}</span>
         </div>
       </div>
@@ -60,7 +60,7 @@ export function OnboardScreen(): JSX.Element {
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
         <b>{tx('事', 'Matter', lang)}</b>
-        <span>{tx('场景 / 业态', 'Scenario / trade', lang)}</span>
+        <span>{tx('用事 / 业态', 'Purpose / trade', lang)}</span>
       </div>
       <span className="tri-plus">＋</span>
       <div className="tri-cell">
@@ -70,7 +70,7 @@ export function OnboardScreen(): JSX.Element {
     </div>,
     <div className="deliv" key="a2">
       <div className="hi">
-        <b>{tx('查询报告', 'Report', lang)}</b>
+        <b>{tx('课期报告', 'Course report', lang)}</b>
         <span>{tx('九章 · 可导出', '9 chapters', lang)}</span>
       </div>
       <div>
@@ -108,25 +108,25 @@ export function OnboardScreen(): JSX.Element {
         tx('不是凭经验给答案，而是先把文献整理成结构。', 'Not experience-based guesswork — the texts come first.', lang),
     },
     {
-      h: tx('输入场景<br>检索对应规则', 'Enter a scenario,\nlook up the rules', lang),
+      h: tx('输入用事<br>检索对应规则', 'Enter the purpose<br>look up the rules', lang),
       p:
-        tx('开业、签约、上梁、嫁娶——不同场景对应不同的规则体系。系统按场景检索相关条目，再结合你填的出生年与场地条件给出日期参考。', 'Openings, signings, beam-settings, weddings — each scenario maps to its own rule set. The system retrieves matching entries, then weighs your birth year and site conditions.', lang),
+        tx('开业、签约、上梁、嫁娶——不同用事对应不同的规则体系。系统按用事检索相关条目，再结合你填的出生年与场地条件给出日期参考。', 'Openings, signings, beam-settings, weddings — each purpose draws on a different rule set. The system looks up the matching entries, then combines them with your birth year and site conditions.', lang),
       n:
         tx('同一天，开业与嫁娶适用的条目不同——这是传统历法文化的基本特点。', 'The same day applies different entries to an opening and a wedding — a defining feature of Chinese calendar culture.', lang),
     },
     {
-      h: tx('交付的是一份<br>可回溯的查询报告', 'A traceable report,\nnot one line', lang),
+      h: tx('交付的是课期，<br>不是一句吉凶', 'What you get is a course,<br>not a one-line verdict', lang),
       p:
-        tx('我们出具<b>九章查询报告</b>：逐层列出应用的规则与依据，每一条都可回溯。另有当日参考卡可分享、知库可核对。', 'A nine-chapter query report lists the rules applied at every layer, each traceable — plus a shareable day card and a verifiable knowledge base.', lang),
+        tx('我们出具<b>九章课期报告</b>：逐层列出应用的规则与依据，每一条都可回溯。另有当日参考卡可分享、知库可核对。', 'We issue a <b>nine-chapter course report</b>: each layer lists the rules applied and their grounds, every item traceable. A day card can be shared, and the knowledge base can be checked.', lang),
       n:
         tx('报告九章 · 当日卡五版式 · 知库 24 篇 + 25 部典籍索引，每条规则可回溯。', '9 chapters · 5 card themes · 24 articles + 25 books, every rule traceable.', lang),
     },
     {
       h: tx('先定你的业态', 'Pick your trade', lang),
       p:
-        tx('业态决定行业属性参考与关键动作时点。做餐饮与做珠宝，同一个日子的条目不同。<b>可跳过</b>，之后在资料页再选。', 'Your trade sets the industry-attribute reference and the key action hours. Catering and jewellery read differently on the same day. You can skip and pick later.', lang),
+        tx('业态决定行业属性参考与关键动作时点。做餐饮与做珠宝，同一个日子的条目不同。<b>可跳过</b>，之后在档案页再选。', 'The trade decides the industry reference and key action timings. The same day differs between catering and jewellery. <b>You may skip this</b> and set it later on the profile page.', lang),
       n:
-        tx('业态只影响商业与工程类场景。婚嫁、迁居不看行业属性，看的是传统婚月与朝向。', 'Trade affects business and engineering scenarios only. Weddings and relocation read the traditional marriage-month table and orientation instead.', lang),
+        tx('业态只影响营生与工程类用事。嫁娶、入宅不看业态五行，看的是女命行嫁月与坐向。', 'The trade only affects business and construction purposes. Weddings and moves do not follow industry phases — they follow the marrying month and the facing direction.', lang),
     },
   ];
 
