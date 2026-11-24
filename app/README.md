@@ -159,79 +159,98 @@ curl -s -o /dev/null -w '%{http_code}\n' $B/og-1200x630.png
 GitHub Actions（`.github/workflows/ci.yml`）只做 CI（typecheck + test + build），
 **不负责部署**——部署由上面那条 `wrangler deploy` 完成。
 
-## 支付（通道迁移中）
+## 支付（Gumroad，已接入）
 
-> **当前状态（2026-11）**：上一版通道 **Creem 已弃用** —— 类目审核被拒且无申诉机会，
-> 产品已换到 **Gumroad**，Worker 上已配好 `GUMROAD_ACCESS_TOKEN` / `GUMROAD_PING_SECRET`。
-> 术语口径也已回退为专业表述（择日 / 课期 / 当事人档案 / 择日宗派），不再触发当初的类目红线。
->
-> 但 **Gumroad 的服务端接入代码尚未落地**：Worker 的 `/api/checkout` 仍走 Creem，
-> `src/data/prices.ts` 的 `CREEM_PRODUCTS` 仍是 `REPLACE_WITH_` 占位，
-> 所以 `/api/checkout` 目前返回 503、付费墙按钮提示「链接暂不可用」——不会把用户送去死链。
-> 接入步骤见下方「支付通道迁移：Gumroad 接入清单」。
+> **当前状态（2026-11）**：通道已从 Creem 换到 **Gumroad**，服务端接入代码已落地。
+> 上一版 Creem 被拒且无申诉机会；术语口径也已回退为专业表述
+> （择日 / 课期 / 当事人档案 / 择日宗派），不再触发当初的类目红线。
 
-### 历史通道：Creem（Merchant of Record）
+### 通道模型：Gumroad 与 Creem 的关键差异
 
-Creem 和 Stripe 不是一类东西：Stripe 只是收单，税费申报与拒付要自己扛；
-Creem 是记录商户，由它作为卖家承担各国税费与拒付。
+| | Creem（已弃用） | Gumroad（当前） |
+|---|---|---|
+| 结账 URL | 服务端 `POST /v1/checkouts` 现开 | **托管页**，`/l/<permalink>?wanted=true` 直达 |
+| 服务端建单 | 必须 | **不需要**（Gumroad API v2 是只读的） |
+| 落账凭证 | checkout id | `ref` + product_id + license key |
 
-### 为什么必须有一个 Worker
+Gumroad 的结账是 Gumroad 自己托管的页面，`?wanted=true` 让用户从商品页直接进结账，
+省掉一次点击。**这也意味着服务端完全不需要 API 建单** —— 顺带绕开了 API 凭据依赖。
 
-Creem **没有静态 Payment Link**——必须由服务端调 `POST /v1/checkouts` 现开一次性
-`checkout_url`。所以 `worker/index.ts` 与静态资源部署在同一个 Worker 里，前端用相对路径
-`/api/checkout` 调用，同源、无 CORS、API key 永不出现在客户端。
+### 落账链路（三条通道互为冗余）
 
 ```
-前端 POST /api/checkout {sku,lang,clientRef}
-  → Worker 调 Creem 建单，拿 { id: chk_xxx, checkout_url }
-  → KV 存 ref → { sku, checkoutId }
-  → 返回 checkout_url，前端跳转
-用户在 Creem 页付款
-  → 回跳 /?paid=1&sku=xxx&ref=zj_xxx
-  → 前端轮询 GET /api/verify?ref=zj_xxx
-  → Worker 用 checkoutId 查 Creem，status === 'completed' 才回 {paid:true}
-  → 前端据此写本机凭证（按 ref 幂等）
+前端 POST /api/checkout {sku,lang,clientRef,email}
+  → Worker 记 ref → { sku, productId }，邮箱反查索引
+  → 返回 Gumroad 结账 URL，前端跳转
+用户在 Gumroad 结账页付款
+  → ① Gumroad Ping 回调 POST /api/webhook/gumroad
+       验签（HMAC-SHA256 / body secret）→ product_id→SKU → 写 paid:{ref}
+  → ② 回跳 /?pay=success&sku=&ref= → 前端轮询 GET /api/verify?ref=
+       Worker 查 KV 已付标记 → 前端写本机凭证（按 ref 幂等）
+  → ③ 买家拿 Gumroad 发到的 license key 回站 → GET /api/verify-license?key=
 ```
 
-关键一点：**`?paid=1` 不可信**，任何人都能手敲。v1 走 Stripe 时这里是个已知缺口，
-现在把「写凭证」的决定权完全交给服务端核验结果。
+关键一点：**`?pay=success` 不可信**，任何人都能手敲。写凭证的决定权完全交给服务端核验结果。
+这三条通道任一成功即可解锁 —— Ping 依赖后台配置（未配时靠 ②③），
+license key 依赖买家拿到 key（Ping 未到时的兜底）。
 
 ### 币种：只有 USD
 
-Creem 的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，没有多币种定价、也不做汇率换算。
-原先价格表的 CNY / SGD / MYR / THB 四列在 Creem 下无处落地，留着只会让页面标价与实付金额
-不一致（跨境场景退款争议的头号来源），故收敛为 USD 单币种：页面标 USD，买家在 Creem
-结账页看到按其所在地折算后的本币。要加 EUR 只需扩 `Currency` 联合类型并补一列价格。
+支付通道的产品在创建时锁定单一币种，官方仅支持 **USD / EUR**，没有多币种定价、也不做汇率换算。
+原先价格表的 CNY / SGD / MYR / THB 四列在此无处落地，留着只会让页面标价与实付金额
+不一致（跨境场景退款争议的头号来源），故收敛为 USD 单币种：页面标 USD，买家在结账页
+看到按其所在地折算后的本币。要加 EUR 只需扩 `Currency` 联合类型并补一列价格。
 
-### 上线前要做的三件事（Creem 时代，已完成）
+### 当前上架的 SKU
 
-1. **Creem Dashboard → Products** 建 4 个 USD 产品（once 6.9 / ai10 4.9 / pair 11.9 / year 39.9），
-   把 `product_id` 填进 `src/data/prices.ts` 的 `CREEM_PRODUCTS`。仍是 `REPLACE_WITH_` 占位时，
-   `/api/checkout` 会返回 503，页面提示「链接暂不可用」，不会把用户送去死链。
-2. **`wrangler secret put CREEM_API_KEY`**（不要写进 `.env`、不要提交仓库）。
-   测试环境同时把 `wrangler.toml` 的 `CREEM_API_BASE` 改成 `https://test-api.creem.io/v1`，
-   测试卡 `4111 1111 1111 1111` 可模拟成功付款。
-3. **KV 命名空间**：`wrangler kv namespace create ORDERS`，id 填进 `wrangler.toml`（已建好）。
+Gumroad 店铺 `kris188h.gumroad.com` 四个产品全部就位，与 `OFFERED_SKUS` 一一对应：
 
-### 支付通道迁移：Gumroad 接入清单
+| SKU | Gumroad 商品 | 价格 | product_id | permalink |
+|---|---|---|---|---|
+| `once` | CalenRef - Single Full Report | $6.9 | `3Ybkx6dkL5uP_9GvoHa2Aw==` | `calenref-once` |
+| `ai10` | CalenRef - AI Interpretations x10 | $4.9 | `8g-q5-8NYghlk6eqN19NTw==` | `calenref-ai10` |
+| `pair` | CalenRef - Two-Person Comparison Report | $11.9 | `ksHPQugNQLOqKC2I45Atrw==` | `calenref-pair` |
+| `year` | CalenRef - Annual Pass | $39.9 | `e_xdorNdo-iv83DchIBqgw==` | `calenref-year` |
 
-服务端代码尚未落地，需一次性补齐以下四步（每步都可独立验证）：
+四个 `/l/<permalink>?wanted=true` 均已验证可直达结账页（HTTP 200）。
+`ai10` / `pair` 当初因 Creem 的「Generative AI = Restricted」与类目红线收缩，
+换到 Gumroad 后通过 API 补建（`POST /v2/products` + `PATCH` 补描述与
+`custom_permalink`），描述已按专业口径改写，不再触发类目红线。
 
-1. **Gumroad 后台建 4 个 USD 产品**（once 6.9 / ai10 4.9 / pair 11.9 / year 39.9），
-   记下每个 `product_id`。
-2. **Worker 建单**：在 `worker/index.ts` 加 `gumroadFetch()`（Basic auth = Access Token，
-   空密码），用 `POST https://api.gumroad.com/v2/products/{product_id}/sales` 换 checkout URL，
-   沿用现有 KV `order:{ref}` 落单映射与 `?paid=1&sku=&ref=` 回跳协议。
-3. **核验与 webhook**：回跳后的 `GET /api/verify` 用 Gumroad 侧查询该 sale 的 `status`；
-   Gumroad Ping 目标地址指向 `POST /api/webhook/gumroad`，
-   签名校验用 `GUMROAD_PING_SECRET` 做 HMAC-SHA256（`X-Gumroad-Signature` 头，
-   或 body 里的 `secret` 字段），校验通过才写 `paid:{ref}`。
-4. **恢复上架 SKU**：`src/data/prices.ts` 的 `OFFERED_SKUS` 加回 `ai10` 与 `pair` ——
-   这两个当初就是因为 Creem 的「Generative AI = Restricted」与类目红线才收缩的，
-   新通道 + 专业术语口径下应可同时上架。
+> 改价要两边同步：改 Gumroad 后台价格后，这里也要改 `src/data/prices.ts` 的
+> `SKUS`，否则页面标价与实收金额不一致（跨境场景退款争议的头号来源）。
 
-> 注意：`GUMROAD_ACCESS_TOKEN` 是 Cloudflare secret，明文不可读，
-> 因此本地无法直接调 Gumroad API 列举产品 —— `product_id` 需从 Gumroad 后台取。
+> `product_id` 与 `permalink` 各有用途、不能互换：前者是 API 标识（核验时用），
+> 后者是 URL 短码（结账跳转用）。两者都写在 `src/data/prices.ts`。
+
+### 所需凭据（都是 Cloudflare secret，不进仓库）
+
+| Secret | 用途 | 取得方式 |
+|---|---|---|
+| `GUMROAD_ACCESS_TOKEN` | API 访问令牌（查销售、核销 license key） | Gumroad 后台 → Connect → Access Token |
+| `GUMROAD_PING_SECRET` | Ping 回调签名密钥 | Gumroad 后台 → 商品 → Integrations → Ping |
+| `REDEEM_SECRET` | 离线兑换码签名密钥 | 本地生成 |
+
+```bash
+wrangler secret put GUMROAD_ACCESS_TOKEN
+wrangler secret put GUMROAD_PING_SECRET
+wrangler secret put REDEEM_SECRET
+```
+
+> wrangler 4.x 的 deploy **不会**删除已存在的 secret（`--keep-vars` 只管 vars）。
+> `scripts/deploy-prod.sh` 仍会做一次「确保存在」的补挂，缺本机文件时保留线上已有的。
+
+### 接入与验收
+
+1. **Gumroad 后台配 Ping**：商品编辑页 → Integrations → Ping，
+   目标地址填 `https://calenref.com/api/webhook/gumroad`，secret 与 Worker 的
+   `GUMROAD_PING_SECRET` 一致。
+2. **商品配回跳**：买家付款后跳回 `https://calenref.com/?pay=success`，
+   前端会带 `ref` 轮询核验（Worker 在 `/api/checkout` 时已把 ref 交给前端）。
+3. **license key**：商品编辑页启用 License keys，买家付款后拿到 key，可回站核销。
+4. **验收**：`GET /api/healthz` 看 `checkout.provider === 'gumroad'` 与
+   `productIdsConfigured`；`POST /api/checkout` 看返回的 URL 是否指向
+   `kris188h.gumroad.com/l/...?wanted=true`。
 
 ## 上线前部署项（按优先级）
 

@@ -6,9 +6,9 @@
  *   PRICE_TABLE / SKU_LEFT 与 PRD §4.1 逐值一致（验收 #5）；
  *   createCheckout 对下单失败的契约（pay-screen 依赖其返回 '' 走 linkFail 兜底）。
  */
-import 'fake-indexeddb/auto'; // creem.ts 传递依赖 license.repo → backend → idb，确保可导入
+import 'fake-indexeddb/auto'; // gumroad.ts 传递依赖 license.repo → backend → idb，确保可导入
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { parsePaymentReturn, createCheckout } from '../../src/services/pay/creem';
+import { parsePaymentReturn, createCheckout } from '../../src/services/pay/gumroad';
 import { parseShareUrl } from '../../src/services/share';
 import { PRICE_TABLE, SKU_LEFT, CURRENCIES, SKUS } from '../../src/data/prices';
 
@@ -77,7 +77,7 @@ describe('parseShareUrl — 分享落地参数（PRD §6.2）', () => {
 
 describe('PRICE_TABLE / SKU_LEFT — 与 PRD §4.1 逐值一致', () => {
   it('四 SKU 价格精确匹配（USD 单币种）', () => {
-    // Creem 只支持 USD/EUR 且单产品单币种，故收敛为 USD 一列。
+    // 支付通道只支持 USD/EUR 且单产品单币种，故收敛为 USD 一列。
     expect(PRICE_TABLE).toEqual({
       USD: { once: 6.9, ai10: 4.9, pair: 11.9, year: 39.9 },
     });
@@ -119,8 +119,11 @@ describe('createCheckout — 下单失败一律返回空串', () => {
   it('正常返回 https 结账地址 → 原样透出', async () => {
     vi.stubGlobal(
       'fetch',
-      async () => ({ ok: true, json: async () => ({ url: 'https://creem.io/checkout/chk_1' }) }) as Response,
+      async () =>
+        ({ ok: true, json: async () => ({ url: 'https://kris188h.gumroad.com/l/calenref-once?wanted=true' }) }) as Response,
     );
-    await expect(createCheckout(params)).resolves.toBe('https://creem.io/checkout/chk_1');
+    await expect(createCheckout(params)).resolves.toBe(
+      'https://kris188h.gumroad.com/l/calenref-once?wanted=true',
+    );
   });
 });

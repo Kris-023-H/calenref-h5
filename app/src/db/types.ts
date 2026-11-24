@@ -49,8 +49,8 @@ export interface LicenseRecord {
   /** 剩余次数（-1 不限） */
   left: number;
   boundAt: number;
-  /** 来源：离线兑换 / Creem 支付（'stripe' 为历史数据兼容，新写入不再产生） */
-  source: 'redeem' | 'creem' | 'stripe';
+  /** 来源：离线兑换 / Gumroad 支付（'stripe'、'creem' 为历史数据兼容，新写入不再产生） */
+  source: 'redeem' | 'gumroad' | 'stripe' | 'creem';
 }
 
 export interface QuotaRecord {

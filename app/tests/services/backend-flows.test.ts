@@ -11,7 +11,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getBackend, setBackendForTests, STORES } from '../../src/db/backend';
 import { licenseRepo } from '../../src/db/repos/license.repo';
 import { quotaRepo } from '../../src/db/repos/quota.repo';
-import { applyPaymentReturn } from '../../src/services/pay/creem';
+import { applyPaymentReturn } from '../../src/services/pay/gumroad';
 import { redeemCode } from '../../src/services/pay/redeem';
 import { generateCode, parseCode, verifyCode } from '../../src/services/pay/redeem-crypto';
 import { tzMonthKey } from '../../src/services/timezone';
@@ -56,7 +56,7 @@ describe('applyPaymentReturn — 核验后写凭证 + 防重放', () => {
     expect(rows).toHaveLength(1);
     expect(rows[0].sku).toBe('ai10');
     expect(rows[0].left).toBe(10);
-    expect(rows[0].source).toBe('creem');
+    expect(rows[0].source).toBe('gumroad');
   });
 
   it('cancel → 不写凭证，也不发核验请求', async () => {

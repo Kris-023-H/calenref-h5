@@ -8,7 +8,7 @@
 # 域名也会变成新的。
 
 name = "calenref"
-# Worker 入口：只处理 /api/*（Creem 下单与核验），其余全部交给静态资源
+# Worker 入口：只处理 /api/*（Gumroad 结账与核验），其余全部交给静态资源
 main = "./worker/index.ts"
 compatibility_date = "2026-10-01"
 
@@ -25,11 +25,12 @@ not_found_handling = "single-page-application"
 run_worker_first = true
 
 [[kv_namespaces]]
-# 存 ref → checkoutId 与已付标记
+# 存 ref → { sku, productId }、已付标记、license key 索引
 binding = "ORDERS"
 id = "c8c45809e3ab4817b1509bc94af2394b"
 
-[vars]
-# 生产：https://api.creem.io/v1
-# 测试：https://test-api.creem.io/v1（Creem 测试模式与生产数据完全隔离）
-CREEM_API_BASE = "https://api.creem.io/v1"
+# 注意：Gumroad 的凭据走 secret（wrangler secret put），不写在这里：
+#   GUMROAD_ACCESS_TOKEN —— API 访问令牌（查销售 / 核销 license key）
+#   GUMROAD_PING_SECRET  —— Ping 回调签名密钥
+#   REDEEM_SECRET        —— 离线兑换码签名密钥
+# wrangler 4.x 部署不会删除已存在的 secret（--keep-vars 只管 vars）。

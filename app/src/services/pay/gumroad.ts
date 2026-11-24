@@ -1,19 +1,24 @@
 /**
- * services/pay/creem.ts — Creem（Merchant of Record）支付通道。
+ * services/pay/gumroad.ts — Gumroad 支付通道。
  *
- * 与 Stripe 的关键差异：Creem 没有「静态 Payment Link」，必须由服务端调
- * `POST /v1/checkouts` 生成一次性 checkout_url。因此下单要经过同源的
- * Cloudflare Worker（worker/index.ts），API key 只存在于 Worker 的 secret 里，
- * 客户端永远看不到。
+ * 与上一版 Creem 的关键差异：Gumroad 的结账是**托管页面**，
+ * 服务端不需要建单，只要把结账 URL 给前端跳转即可：
+ *   `https://<店铺>.gumroad.com/l/<permalink>?wanted=true&email=...`
+ * `?wanted=true` 让用户从商品页直接进结账，省掉一次点击。
+ * （Gumroad API v2 是只读的 —— 只有 products / sales / payouts /
+ * resource_subscriptions，没有建单端点，所以「服务端建单」这条路不存在。）
  *
  * 落账链路（不信任回跳参数，只信任服务端核验结果）：
- *   ① 前端 POST /api/checkout  → Worker 调 Creem 建单，返回 checkout_url
- *   ② 用户在 Creem 结账页付款  → Creem 回调 Worker 的 webhook（checkout.completed）
- *   ③ 回跳本站 ?paid=1&sku&ref  → 前端拿 ref 轮询 /api/verify
+ *   ① 前端 POST /api/checkout → Worker 记 ref，返回 Gumroad 结账 URL
+ *   ② 用户在 Gumroad 结账页付款 → Gumroad Ping 回调 Worker 的 webhook
+ *   ③ 回跳本站 ?pay=success&sku&ref → 前端拿 ref 轮询 /api/verify
  *   ④ Worker 读 KV 里 webhook 写入的已付标记 → 前端据此写本机凭证
  *
- * 为什么不在回跳时直接写凭证：`?paid=1` 是纯客户端参数，任何人都能手敲。
- * v1 用 Stripe 时这里是个已知缺口（README 明示），改 Creem 后一并堵上。
+ * 为什么不在回跳时直接写凭证：`?pay=success` 是纯客户端参数，任何人都能手敲。
+ * 只有服务端核验通过才放行。
+ *
+ * 兜底通道：license key。买家在 Gumroad 拿到 key 后可回站核销
+ * （POST /api/verify-license），与 Ping 互为冗余。
  */
 
 import type { Sku } from '../../data/prices';
@@ -25,12 +30,14 @@ export interface CheckoutParams {
   lang: string;
   /** 本机客户端 id（回跳对齐用，非身份） */
   clientRef: string;
+  /** 买家邮箱（可选，预填 Gumroad 结账表单） */
+  email?: string;
 }
 
 export interface PaymentReturn {
   status: 'success' | 'cancel';
   sku?: Sku;
-  /** Worker 侧的订单号（request_id），核验凭据 */
+  /** Worker 侧的订单号，核验凭据 */
   ref?: string;
 }
 
@@ -41,7 +48,7 @@ function asSku(v: string | null | undefined): Sku | undefined {
 }
 
 /**
- * 下单：向同源 Worker 请求 checkout_url。
+ * 下单：向同源 Worker 请求结账 URL。
  * 契约：任何失败（未配置产品、网络错误、非 2xx）一律返回空串，
  * 由 pay-screen 走 `pay.linkFail` 兜底提示，不得抛错（PRD 验收 #5）。
  */
@@ -50,7 +57,12 @@ export async function createCheckout(p: CheckoutParams): Promise<string> {
     const res = await fetch('/api/checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sku: p.sku, lang: p.lang, clientRef: p.clientRef }),
+      body: JSON.stringify({
+        sku: p.sku,
+        lang: p.lang,
+        clientRef: p.clientRef,
+        email: p.email ?? '',
+      }),
     });
     if (!res.ok) return '';
     const data = (await res.json()) as { url?: unknown };
@@ -63,7 +75,7 @@ export async function createCheckout(p: CheckoutParams): Promise<string> {
   }
 }
 
-/** 解析回跳查询串（?paid=1&sku=ai10&ref=zj_xxx） */
+/** 解析回跳查询串（?pay=success&sku=ai10&ref=zj_xxx） */
 export function parsePaymentReturn(search: string): PaymentReturn | null {
   const q = new URLSearchParams(search);
   const pay = q.get('pay');
@@ -120,7 +132,7 @@ export async function applyPaymentReturn(ret: PaymentReturn): Promise<boolean> {
   }
   if (!sku) return false;
 
-  const id = `lic_creem_${ref}`;
+  const id = `lic_gumroad_${ref}`;
   const rows = await licenseRepo.list();
   if (rows.some((r) => r.id === id)) return false;
 
@@ -130,7 +142,40 @@ export async function applyPaymentReturn(ret: PaymentReturn): Promise<boolean> {
     sku,
     left: SKU_LEFT[sku],
     boundAt: Date.now(),
-    source: 'creem',
+    source: 'gumroad',
   });
   return true;
+}
+
+/**
+ * License key 核销：买家拿 Gumroad 发到的 key 回站兑换。
+ *
+ * 与 applyPaymentReturn 是两条独立通道 —— 后者依赖回跳 + Ping，
+ * 前者只依赖买家手里的 key。两者都成功才算解锁。
+ */
+export async function redeemLicenseKey(key: string): Promise<{ ok: boolean; sku?: Sku }> {
+  try {
+    const res = await fetch(`/api/verify-license?key=${encodeURIComponent(key.trim())}`);
+    if (!res.ok) return { ok: false };
+    const data = (await res.json()) as { valid?: unknown; sku?: unknown };
+    if (data.valid !== true) return { ok: false };
+    const sku = asSku(typeof data.sku === 'string' ? data.sku : undefined);
+    if (!sku) return { ok: false };
+
+    const id = `lic_gumroad_key_${key.trim().slice(0, 24)}`;
+    const rows = await licenseRepo.list();
+    if (!rows.some((r) => r.id === id)) {
+      await licenseRepo.save({
+        id,
+        code: id.slice(0, 12),
+        sku,
+        left: SKU_LEFT[sku],
+        boundAt: Date.now(),
+        source: 'gumroad',
+      });
+    }
+    return { ok: true, sku };
+  } catch {
+    return { ok: false };
+  }
 }

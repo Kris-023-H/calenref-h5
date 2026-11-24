@@ -19,7 +19,7 @@ import { useApp } from './store/app-store';
 import { useSettings } from './store/settings-store';
 import { useUi } from './store/ui-store';
 import { parseShareUrl } from './services/share';
-import { applyPaymentReturn, parsePaymentReturn } from './services/pay/creem';
+import { applyPaymentReturn, parsePaymentReturn } from './services/pay/gumroad';
 import { parseLegalParam, parseLegalPath } from './data/legal';
 import { legalPath } from './data/site';
 import { applyManifest } from './lib/pwa-manifest';
@@ -56,7 +56,7 @@ export default function App(): JSX.Element | null {
         resetTo('share', { ref: share.ref, kind: share.kind });
       }
 
-      // 支付回跳：向 Worker 核验订单已付后写本机凭证（见 services/pay/creem.ts）。
+      // 支付回跳：向 Worker 核验订单已付后写本机凭证（见 services/pay/gumroad.ts）。
       // 核验要走网络、且 webhook 与回跳之间有秒级时间差需要短暂轮询，所以
       // 不能在这里 await —— 否则首屏要等好几秒。改为后台跑，成功再水合与提示。
       const pay = parsePaymentReturn(search);

@@ -1,8 +1,9 @@
 /**
- * screens/pay-screen.tsx — 解锁页：上架 SKU（USD）+ Creem 结账 + 离线兑换码。
- * 上架清单见 prices.ts 的 OFFERED_SKUS（首审只报 once / year）。
- * 双路径（主理人拍板）：(a) 经 Worker 建 Creem checkout 后跳转，回跳由 App 核验落账；
+ * screens/pay-screen.tsx — 解锁页：上架 SKU（USD）+ Gumroad 结账 + 离线兑换码。
+ * 上架清单见 prices.ts 的 OFFERED_SKUS（四个 SKU 已全部在 Gumroad 上架）。
+ * 双路径（主理人拍板）：(a) 经 Worker 取 Gumroad 结账 URL 后跳转，回跳由 App 核验落账；
  * (b) 兑换码离线 HMAC 校验（services/pay/redeem.ts）。
+ * 另有 license key 核销（Gumroad 买家侧凭证），与 (a) 互为冗余。
  */
 
 import { useEffect, useState } from 'react';
@@ -10,7 +11,7 @@ import { useSettings } from '../store/settings-store';
 import { useApp } from '../store/app-store';
 import { useUi } from '../store/ui-store';
 import { CURRENCIES, OFFERED_SKUS, formatPrice, type Sku, type Currency } from '../data/prices';
-import { createCheckout } from '../services/pay/creem';
+import { createCheckout, redeemLicenseKey } from '../services/pay/gumroad';
 import { redeemCode } from '../services/pay/redeem';
 import { licenseRepo } from '../db/repos/license.repo';
 import { analytics, EVENTS } from '../services/analytics';
@@ -56,6 +57,7 @@ export function PayScreen(): JSX.Element {
   const { pop } = useNav();
   const [sku, setSku] = useState<Sku>('once');
   const [code, setCode] = useState('');
+  const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
 
   // 固定一次的客户端标识：每次渲染重算会让同一笔订单的 clientRef 前后不一致
@@ -69,14 +71,14 @@ export function PayScreen(): JSX.Element {
 
   const buy = (): void => {
     if (busy) return;
-    // 下单要等 Worker 调 Creem 建单，是异步的。而 window.open 一旦离开用户手势的
+    // 下单要等 Worker 返回结账 URL，是异步的。而 window.open 一旦离开用户手势的
     // 同步上下文就会被浏览器拦截，所以先同步开一个空白窗，拿到地址后再导航进去。
     // 注意不能用 noopener 特性——它会让 window.open 返回 null，就没法回填地址了。
     const win = window.open('about:blank', '_blank');
     if (win) win.opener = null;
     setBusy(true);
 
-    void createCheckout({ sku, lang, clientRef }).then((url) => {
+    void createCheckout({ sku, lang, clientRef, email: email.trim() }).then((url) => {
       setBusy(false);
       if (!url) {
         win?.close();
@@ -90,6 +92,16 @@ export function PayScreen(): JSX.Element {
     });
   };
 
+  /**
+   * 兑换：一个输入框两条通道，按顺序尝试。
+   *
+   * ① 离线兑换码（我们自己签发的 HMAC 码）；
+   * ② Gumroad license key（买家付款后在 Gumroad 拿到的凭证）。
+   *
+   * 为什么合并成一个按钮：两种码的形态用户分不清，分两个输入框反而更难用。
+   * 顺序固定（先离线后 Gumroad）—— 离线校验是纯本地运算，更快也更安全，
+   * 不会把无效输入发到服务端。
+   */
   const redeem = (): void => {
     if (!code.trim()) {
       showToast(t('pay.redeemEmpty', lang));
@@ -97,15 +109,28 @@ export function PayScreen(): JSX.Element {
     }
     setBusy(true);
     void redeemCode(code).then(async (res) => {
-      setBusy(false);
-      if (!res.ok) {
-        showToast(t('pay.redeemFail', lang));
+      if (res.ok) {
+        setBusy(false);
+        if (analytics.isEnabled()) analytics.track(EVENTS.payRedeem, { sku: res.value.sku });
+        showToast(t('pay.redeemOk', lang));
+        setCode('');
+        await refreshQuota();
         return;
       }
-      if (analytics.isEnabled()) analytics.track(EVENTS.payRedeem, { sku: res.value.sku });
-      showToast(t('pay.redeemOk', lang));
-      setCode('');
-      await refreshQuota();
+      // 离线码不匹配 → 退到 Gumroad license key 通道
+      void redeemLicenseKey(code).then(async (lic) => {
+        setBusy(false);
+        if (!lic.ok) {
+          showToast(t('pay.redeemFail', lang));
+          return;
+        }
+        if (analytics.isEnabled() && lic.sku) {
+          analytics.track(EVENTS.payRedeem, { sku: lic.sku });
+        }
+        showToast(t('pay.redeemOk', lang));
+        setCode('');
+        await refreshQuota();
+      });
     });
   };
 
@@ -172,7 +197,24 @@ export function PayScreen(): JSX.Element {
 
       <div className="card flat" style={{ marginTop: 12 }}>
         <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
-          {tx('兑换码', 'Redeem code', lang)}
+          {tx('邮箱（选填）', 'Email (optional)', lang)}
+        </div>
+        <input
+          className="input grow"
+          type="email"
+          value={email}
+          placeholder="you@example.com"
+          autoComplete="email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 8, lineHeight: 1.7 }}>
+          {tx('填了会在结账页自动预填；付款凭证与解锁通知都发到这个邮箱。', 'Filled in, this prefills the checkout page; receipts and unlock notices go to it.', lang)}
+        </div>
+      </div>
+
+      <div className="card flat" style={{ marginTop: 12 }}>
+        <div style={{ fontSize: 10.5, letterSpacing: '.16em', color: 'var(--muted)', fontWeight: 700, marginBottom: 8 }}>
+          {tx('兑换码 / License Key', 'Redeem code / License key', lang)}
         </div>
         <div style={{ display: 'flex', gap: 7 }}>
           <input
@@ -194,7 +236,7 @@ export function PayScreen(): JSX.Element {
           {tx('支付方式', 'Payment methods', lang)}
         </div>
         <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {/* 以 Creem 实际支持为准：卡、PayPal、Apple Pay、Google Pay、支付宝
+          {/* 以 Gumroad 实际支持为准：卡、PayPal、Apple Pay、Google Pay、支付宝
               （微信支付尚未上线；银行转账只是提现方式，非买家付款方式） */}
           {[
             ['信用卡 / 借记卡', 'Cards'],

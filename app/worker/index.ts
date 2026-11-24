@@ -1,19 +1,32 @@
 /**
- * worker/index.ts — 同源 API（Creem 下单/核验 + 兑换码核销）+ 静态资源 + 安全头。
+ * worker/index.ts — 同源 API（Gumroad 结账/核验 + 兑换码核销）+ 静态资源 + 安全头。
  *
  * 为什么要在同一个 Worker 里：前端用相对路径 `/api/*` 调用，同源就没有 CORS；
  * 静态资源由 [assets] 绑定接管。`run_worker_first = true` 让本 Worker 接管
  * 全部请求，从而能给 HTML / 静态资源也加上安全响应头与缓存策略。
  *
  * 安全边界：
- *   · CREEM_API_KEY / REDEEM_SECRET 只存在于 Worker secret，客户端永远看不到；
+ *   · GUMROAD_ACCESS_TOKEN / REDEEM_SECRET 只存在于 Worker secret，客户端永远看不到；
  *   · 回跳参数 `?paid=1` 不可信 —— 前端必须拿 ref 回来问本 Worker，
- *     由本 Worker 调 Creem 查单确认 status === 'completed' 才放行；
+ *     由本 Worker 查 Gumroad 订单确认已付才放行；
  *   · 兑换码服务端验签、SKU 以载荷首字母为准、KV 一次性核销；
  *   · ref / 兑换码有严格格式校验，避免被用来枚举 KV 键。
+ *
+ * 支付通道说明（Creem → Gumroad）：
+ *   上一版 Creem 被拒（类目红线）且无申诉机会，产品已换到 Gumroad。
+ *   Gumroad 的 checkout 是托管页面 —— `?wanted=true` 直接进结账，
+ *   不需要服务端建单（Gumroad API v2 是只读的，没有建单端点）。
+ *   落账仍走服务端核验：Gumroad Ping 回调写已付标记，
+ *   前端拿 ref 轮询 /api/verify 确认。
  */
 
-import { CREEM_PRODUCTS, OFFERED_SKUS, isPlaceholderProduct } from '../src/data/prices';
+import {
+  GUMROAD_PRODUCTS,
+  GUMROAD_PERMALINKS,
+  GUMROAD_STORE,
+  OFFERED_SKUS,
+  isPlaceholderProduct,
+} from '../src/data/prices';
 import { parseCode, verifyCode } from '../src/services/pay/redeem-crypto';
 
 /** 只声明用到的部分，避免为一个类型包引入整个 @cloudflare/workers-types */
@@ -28,24 +41,21 @@ interface Fetcher {
 
 export interface Env {
   ASSETS: Fetcher;
-  /** KV：ref → { sku, checkoutId }、已付标记、兑换码核销记录 */
+  /** KV：ref → { sku, orderId }、已付标记、兑换码核销记录 */
   ORDERS?: KVNamespace;
-  /** Creem API key（wrangler secret put CREEM_API_KEY） */
-  CREEM_API_KEY?: string;
-  /** https://api.creem.io/v1（测试环境为 https://test-api.creem.io/v1） */
-  CREEM_API_BASE?: string;
+  /** Gumroad API 访问令牌（wrangler secret put GUMROAD_ACCESS_TOKEN） */
+  GUMROAD_ACCESS_TOKEN?: string;
+  /** Gumroad Ping 目标地址附带的 secret（webhook 签名用） */
+  GUMROAD_PING_SECRET?: string;
   /** 站点根地址，用于拼 success_url；缺省取请求 origin */
   SITE_URL?: string;
   /** 兑换码签名密钥（wrangler secret put REDEEM_SECRET） */
   REDEEM_SECRET?: string;
-  /** Creem webhook 签名密钥（wrangler secret put CREEM_WEBHOOK_SECRET）。
-   *  未配置时 webhook 仍可用（按 checkout id 落账），但不校验签名。 */
-  CREEM_WEBHOOK_SECRET?: string;
   /** 可选的按环境覆盖产品 ID（测试 Worker 用 [vars] 指向测试产品） */
-  CREEM_PRODUCT_ONCE?: string;
-  CREEM_PRODUCT_AI10?: string;
-  CREEM_PRODUCT_PAIR?: string;
-  CREEM_PRODUCT_YEAR?: string;
+  GUMROAD_PRODUCT_ONCE?: string;
+  GUMROAD_PRODUCT_AI10?: string;
+  GUMROAD_PRODUCT_PAIR?: string;
+  GUMROAD_PRODUCT_YEAR?: string;
 }
 
 const SKU_SET = new Set<string>(['once', 'ai10', 'pair', 'year']);
@@ -93,33 +103,80 @@ function json(body: unknown, status = 200): Response {
 /** 产品 ID：环境变量优先（测试环境），否则用 prices.ts 里的生产默认值 */
 function productIdFor(env: Env, sku: string): string | undefined {
   const override: Record<string, string | undefined> = {
-    once: env.CREEM_PRODUCT_ONCE,
-    ai10: env.CREEM_PRODUCT_AI10,
-    pair: env.CREEM_PRODUCT_PAIR,
-    year: env.CREEM_PRODUCT_YEAR,
+    once: env.GUMROAD_PRODUCT_ONCE,
+    ai10: env.GUMROAD_PRODUCT_AI10,
+    pair: env.GUMROAD_PRODUCT_PAIR,
+    year: env.GUMROAD_PRODUCT_YEAR,
   };
-  return override[sku] || CREEM_PRODUCTS[sku as keyof typeof CREEM_PRODUCTS];
+  return override[sku] || GUMROAD_PRODUCTS[sku as keyof typeof GUMROAD_PRODUCTS];
 }
 
-function creemFetch(env: Env, path: string, init?: RequestInit): Promise<Response> {
-  const base = (env.CREEM_API_BASE || 'https://api.creem.io/v1').replace(/\/+$/, '');
+/** SKU → Gumroad 产品 ID（用于把 Ping 回调里的 product_id 映射回 SKU） */
+function skuForProductId(env: Env, productId: string): string | undefined {
+  for (const sku of Object.keys(GUMROAD_PRODUCTS) as (keyof typeof GUMROAD_PRODUCTS)[]) {
+    const id = productIdFor(env, sku);
+    if (id && id === productId) return sku;
+  }
+  return undefined;
+}
+
+/**
+ * Gumroad API 调用。
+ *
+ * 认证：Doorkeeper Bearer + access_token。Gumroad 官方文档给的写法是
+ * `curl https://api.gumroad.com/v2/products -d "access_token=TOKEN" -X GET`
+ * —— access_token 放 body。但**Cloudflare Workers 运行时不接受 GET 带 body**
+ * （直接抛 1101 Worker 异常），所以这里按 method 分流：
+ *   · GET  → access_token 拼进 query（实测 200，与 body 形式等价）
+ *   · POST → access_token 放 form body
+ * 两种都带上 Bearer 头，兼容 Gumroad 后续版本只认其中一种的情况。
+ */
+function gumroadFetch(env: Env, path: string, init?: RequestInit): Promise<Response> {
+  const token = env.GUMROAD_ACCESS_TOKEN ?? '';
+  const base = 'https://api.gumroad.com';
+  const method = (init?.method ?? 'GET').toUpperCase();
+
+  const headers = new Headers(init?.headers);
+  headers.set('accept', 'application/json');
+  if (token) headers.set('authorization', `Bearer ${token}`);
+
+  if (!token) return fetch(`${base}${path}`, { ...init, headers });
+
+  if (method === 'GET' || method === 'HEAD') {
+    // query 传参：保留 path 里已有的查询串
+    const [p, q = ''] = path.split('?');
+    const params = new URLSearchParams(q);
+    params.set('access_token', token);
+    return fetch(`${base}${p}?${params.toString()}`, { ...init, method, headers });
+  }
+
+  headers.set('content-type', 'application/x-www-form-urlencoded');
   return fetch(`${base}${path}`, {
     ...init,
-    headers: {
-      'x-api-key': env.CREEM_API_KEY ?? '',
-      'content-type': 'application/json',
-      ...(init?.headers ?? {}),
-    },
+    method,
+    headers,
+    body: `access_token=${encodeURIComponent(token)}`,
   });
 }
 
-/** 下单：POST /api/checkout { sku, lang, clientRef } → { url } */
+/**
+ * 下单：POST /api/checkout { sku, lang, clientRef, email? } → { url }
+ *
+ * 与 Creem 的关键差异：Gumroad 不需要服务端建单。
+ * 结账是 Gumroad 托管页面（`/l/<permalink>?wanted=true` 直达结账），
+ * 本接口只负责：
+ *   ① 校验 SKU 与产品是否就位；
+ *   ② 造一个 ref 记进 KV，供回跳后核验；
+ *   ③ 把 Gumroad 结账 URL 交给前端跳转。
+ *
+ * 回跳地址带 ref：Gumroad 支持在商品页设置 post-purchase 跳转，
+ * 也可用 license key 通道（买家拿到 key 后回站兑换）。
+ */
 async function handleCheckout(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
-  if (!env.CREEM_API_KEY) return json({ error: 'not_configured' }, 503);
   if (!env.ORDERS) return json({ error: 'not_configured' }, 503);
 
-  let body: { sku?: unknown; lang?: unknown; clientRef?: unknown };
+  let body: { sku?: unknown; lang?: unknown; clientRef?: unknown; email?: unknown };
   try {
     body = (await request.json()) as typeof body;
   } catch {
@@ -131,38 +188,30 @@ async function handleCheckout(request: Request, env: Env): Promise<Response> {
 
   const productId = productIdFor(env, sku);
   if (isPlaceholderProduct(productId)) return json({ error: 'product_not_configured' }, 503);
+  if (!GUMROAD_PERMALINKS[sku as keyof typeof GUMROAD_PERMALINKS]) {
+    return json({ error: 'product_not_configured' }, 503);
+  }
 
   const ref = `zj_${crypto.randomUUID().replace(/-/g, '').slice(0, 20)}`;
   const site = (env.SITE_URL || new URL(request.url).origin).replace(/\/+$/, '');
-  const successUrl = `${site}/?paid=1&sku=${sku}&ref=${ref}`;
 
-  const res = await creemFetch(env, '/checkouts', {
-    method: 'POST',
-    body: JSON.stringify({
-      product_id: productId,
-      request_id: ref,
-      success_url: successUrl,
-      metadata: {
-        sku,
-        clientRef: String(body.clientRef ?? '').slice(0, 64),
-        lang: String(body.lang ?? 'zh').slice(0, 8),
-      },
-    }),
-  });
-  if (!res.ok) return json({ error: 'creem_error' }, 502);
+  // Gumroad 结账 URL：直达结账页，并预填邮箱（买家少填一项）
+  const email = typeof body.email === 'string' ? body.email.slice(0, 120) : '';
+  const query = new URLSearchParams({ wanted: 'true' });
+  if (email) query.set('email', email);
+  const url = `https://${GUMROAD_STORE}/l/${GUMROAD_PERMALINKS[sku as keyof typeof GUMROAD_PERMALINKS]}?${query.toString()}`;
 
-  const data = (await res.json()) as { id?: unknown; checkout_url?: unknown };
-  if (typeof data.id !== 'string' || typeof data.checkout_url !== 'string') {
-    return json({ error: 'creem_bad_response' }, 502);
-  }
-
-  // 存 ref → checkoutId：回跳时只带 ref，靠这条映射反查 Creem 的真实单据
-  await env.ORDERS.put(`order:${ref}`, JSON.stringify({ sku, checkoutId: data.id }), {
+  // 记 ref → { sku, productId }：回跳与 Ping 回调都靠它把订单对上 SKU
+  await env.ORDERS.put(`order:${ref}`, JSON.stringify({ sku, productId, site }), {
     expirationTtl: ORDER_TTL,
   });
-  // 反向索引 checkoutId → ref：webhook 回调只带 checkout 对象，没有 ref
-  await env.ORDERS.put(`chk:${data.id}`, ref, { expirationTtl: ORDER_TTL });
-  return json({ url: data.checkout_url });
+  // 邮箱反查索引：Gumroad Ping 只带邮箱（没有我们的 ref），
+  // 靠它把回调对上具体订单。同一邮箱再次下单会覆盖为最新 ref。
+  if (email) {
+    await env.ORDERS.put(`email:${email.toLowerCase()}`, ref, { expirationTtl: ORDER_TTL });
+    await env.ORDERS.put(`email:${ref}`, email.toLowerCase(), { expirationTtl: ORDER_TTL });
+  }
+  return json({ url, ref });
 }
 
 /** 常数时间比较，避免签名比对被计时侧信道利用 */
@@ -173,8 +222,8 @@ function timingSafeEqual(a: string, b: string): boolean {
   return diff === 0;
 }
 
-/** 校验 Creem webhook 签名（HMAC-SHA256 hex，头名 creem-signature） */
-async function creemSignatureValid(raw: string, header: string, secret: string): Promise<boolean> {
+/** 校验 Gumroad Ping 签名（HMAC-SHA256 hex，头名 x-gumroad-signature） */
+async function gumroadSignatureValid(raw: string, header: string, secret: string): Promise<boolean> {
   const hex = header.trim().replace(/^sha256=/i, '');
   if (!/^[0-9a-f]{64}$/i.test(hex)) return false;
   const key = await crypto.subtle.importKey(
@@ -199,70 +248,160 @@ async function bumpWebhookCount(env: Env): Promise<number> {
 }
 
 /**
- * Webhook：POST /api/webhook/creem
+ * Webhook：POST /api/webhook/gumroad
  *
  * 为什么要有：`/api/verify` 是「用户回到站点后主动查单」，链路成立但依赖回跳；
  * 用户付完直接关页面就不会落账。webhook 是服务端到服务端的兜底，也是
  * 审核方实测下单时预期看到的履约痕迹。
  *
- * 落账规则：checkout.completed → 用 checkout id 反查 ref → 写 paid:<ref>。
- * 反查不到（老订单没有 chk 索引）时退化为 paidchk:<checkoutId>，verify 会兜住。
+ * Gumroad Ping 两种投递形态都要兼容：
+ *   ① 表单 POST —— 字段 product_id / product_name / price / currency /
+ *      quantity / email / sale_id / sale_timestamp / is_paid / test，
+ *      secret 放在 body 的 `secret` 字段；
+ *   ② JSON POST —— 同样字段，外加 x-gumroad-signature 头（HMAC-SHA256）。
+ *
+ * 落账规则：is_paid 为真 → 用 product_id 反查 SKU → 写 paid:<ref>。
+ * Ping 不带 ref（ref 是我们本地的），所以靠 email + 时间窗反查最近一笔
+ * 未落账订单；对不上就退化到 license key 通道（见 handleLicenseVerify）。
  */
-async function handleWebhook(request: Request, env: Env): Promise<Response> {
+async function handleGumroadWebhook(request: Request, env: Env): Promise<Response> {
   if (request.method !== 'POST') return json({ ok: false, error: 'method_not_allowed' }, 405);
   if (!env.ORDERS) return json({ ok: false, error: 'not_configured' }, 503);
 
   const raw = await request.text();
 
-  if (env.CREEM_WEBHOOK_SECRET) {
-    const sig = request.headers.get('creem-signature') ?? '';
-    if (!(await creemSignatureValid(raw, sig, env.CREEM_WEBHOOK_SECRET))) {
-      return json({ ok: false, error: 'bad_signature' }, 401);
+  // 验签：优先用 HMAC 头；没有则退到 body 的 secret 字段（Gumroad 传统 Ping 形态）
+  if (env.GUMROAD_PING_SECRET) {
+    const sig = request.headers.get('x-gumroad-signature') ?? '';
+    if (sig) {
+      if (!(await gumroadSignatureValid(raw, sig, env.GUMROAD_PING_SECRET))) {
+        return json({ ok: false, error: 'bad_signature' }, 401);
+      }
+    } else {
+      let secret = '';
+      try {
+        const parsed = JSON.parse(raw) as { secret?: unknown };
+        secret = typeof parsed.secret === 'string' ? parsed.secret : '';
+      } catch {
+        const form = new URLSearchParams(raw);
+        secret = form.get('secret') ?? '';
+      }
+      if (!secret || !timingSafeEqual(secret, env.GUMROAD_PING_SECRET)) {
+        return json({ ok: false, error: 'bad_signature' }, 401);
+      }
     }
   }
 
   let evt: {
-    eventType?: string;
-    event_type?: string;
-    object?: { id?: string; status?: string; metadata?: { sku?: string } };
+    product_id?: unknown;
+    product_name?: unknown;
+    price?: unknown;
+    currency?: unknown;
+    quantity?: unknown;
+    email?: unknown;
+    sale_id?: unknown;
+    sale_timestamp?: unknown;
+    is_paid?: unknown;
+    test?: unknown;
+    secret?: unknown;
   };
   try {
     evt = JSON.parse(raw) as typeof evt;
   } catch {
-    return json({ ok: false, error: 'bad_json' }, 400);
+    const form = new URLSearchParams(raw);
+    evt = Object.fromEntries(form.entries()) as typeof evt;
   }
 
   await bumpWebhookCount(env);
 
-  const type = evt.eventType ?? evt.event_type ?? '';
-  if (type !== 'checkout.completed') return json({ ok: true, ignored: type || 'unknown' });
-
-  const checkout = evt.object ?? {};
-  const checkoutId = typeof checkout.id === 'string' ? checkout.id : '';
-  if (!checkoutId) return json({ ok: true, ignored: 'no_checkout_id' });
-
-  const ref = await env.ORDERS.get(`chk:${checkoutId}`);
-  let sku = typeof checkout.metadata?.sku === 'string' ? checkout.metadata.sku : '';
-
-  if (ref) {
-    const rawOrder = await env.ORDERS.get(`order:${ref}`);
-    if (!sku && rawOrder) {
-      try {
-        sku = (JSON.parse(rawOrder) as { sku?: string }).sku ?? '';
-      } catch {
-        sku = '';
-      }
-    }
-    if (!SKU_SET.has(sku)) return json({ ok: true, ignored: 'unknown_sku' });
-    await env.ORDERS.put(`paid:${ref}`, sku, { expirationTtl: ORDER_TTL });
-    await env.ORDERS.put(`via:${ref}`, 'webhook', { expirationTtl: ORDER_TTL });
-    return json({ ok: true, ref, sku });
+  // 测试单不落账（Gumroad 后台「测试购买」不发货）
+  if (evt.test === true || evt.test === 'true') {
+    return json({ ok: true, ignored: 'test' });
   }
 
-  // 反查不到 ref：仍记下 checkout 级别的已付标记，verify 会按 checkoutId 兜住
-  if (!SKU_SET.has(sku)) return json({ ok: true, ignored: 'no_ref_no_sku' });
-  await env.ORDERS.put(`paidchk:${checkoutId}`, sku, { expirationTtl: ORDER_TTL });
-  return json({ ok: true, checkoutId, sku, degraded: true });
+  const isPaid = evt.is_paid === true || evt.is_paid === 'true';
+  if (!isPaid) return json({ ok: true, ignored: 'not_paid' });
+
+  const productId = typeof evt.product_id === 'string' ? evt.product_id : '';
+  const sku = productId ? skuForProductId(env, productId) : undefined;
+  if (!sku) return json({ ok: true, ignored: 'unknown_product' });
+
+  const email = typeof evt.email === 'string' ? evt.email.toLowerCase() : '';
+  const saleId = typeof evt.sale_id === 'string' ? evt.sale_id : '';
+
+  // 反查 ref：优先用 sale_id 索引；否则用 email 索引
+  let ref = '';
+  if (saleId) ref = (await env.ORDERS.get(`sale:${saleId}`)) ?? '';
+  if (!ref && email) ref = (await env.ORDERS.get(`email:${email}`)) ?? '';
+
+  if (!ref) {
+    // 对不上具体订单也先把 sale 记下来，license key 通道与人工核对都能用
+    if (saleId) {
+      await env.ORDERS.put(`sale:${saleId}`, JSON.stringify({ sku, email }), {
+        expirationTtl: ORDER_TTL,
+      });
+    }
+    return json({ ok: true, sku, saleId, degraded: true });
+  }
+
+  await env.ORDERS.put(`paid:${ref}`, sku, { expirationTtl: ORDER_TTL });
+  await env.ORDERS.put(`via:${ref}`, 'gumroad-webhook', { expirationTtl: ORDER_TTL });
+  if (saleId) {
+    await env.ORDERS.put(`sale:${saleId}`, JSON.stringify({ sku, email, ref }), {
+      expirationTtl: ORDER_TTL,
+    });
+  }
+  return json({ ok: true, ref, sku });
+}
+
+/**
+ * License key 核验：GET /api/verify-license?key=xxx → { valid, sku? }
+ *
+ * 为什么不只靠 webhook：Gumroad 的 Ping 需要在商品设置里配回调地址，
+ * 配置之前（或买家关页面早于回调）就收不到。License key 是买家侧凭证，
+ * 买家拿到 key 后可随时回来核销 —— 两条通道互为冗余。
+ *
+ * 核验方式：**Gumroad 没有 license 独立端点**（实测 /v2/licenses 与
+ * /v2/licenses/verify 都是 404）。license key 只出现在 /v2/sales 的
+ * 每条销售记录里，所以核验 = 拉销售列表、按 license_key 精确匹配。
+ * 匹配到再按 product_id 反查 SKU，两步都成立才算有效。
+ *
+ * 本地已落库的 license → sku 优先（Ping 到过时已记下，免一次远端调用）。
+ */
+async function handleLicenseVerify(url: URL, env: Env): Promise<Response> {
+  const key = (url.searchParams.get('key') ?? '').trim();
+  if (!key || key.length > 128) return json({ valid: false }, 400);
+  if (!env.ORDERS) return json({ valid: false }, 503);
+
+  // 本地已落库的 license → sku（Ping 或人工录入）
+  const local = await env.ORDERS.get(`lic:${key}`);
+  if (local) return json({ valid: true, sku: local, via: 'local' });
+
+  if (!env.GUMROAD_ACCESS_TOKEN) return json({ valid: false, reason: 'no_token' }, 503);
+
+  const res = await gumroadFetch(env, '/v2/sales');
+  if (!res.ok) return json({ valid: false, reason: 'verify_failed' }, 502);
+
+  const data = (await res.json()) as {
+    success?: unknown;
+    sales?: { license_key?: unknown; product_id?: unknown; refunded?: unknown }[];
+  };
+  if (data.success !== true || !Array.isArray(data.sales)) {
+    return json({ valid: false, reason: 'verify_failed' }, 502);
+  }
+
+  // license key 精确匹配（大小写敏感）；已退款的单不算有效
+  const hit = data.sales.find(
+    (s) => typeof s.license_key === 'string' && s.license_key === key && s.refunded !== true,
+  );
+  if (!hit) return json({ valid: false });
+
+  const productId = typeof hit.product_id === 'string' ? hit.product_id : '';
+  const sku = productId ? skuForProductId(env, productId) : undefined;
+  if (!sku) return json({ valid: false, reason: 'unknown_product' });
+
+  await env.ORDERS.put(`lic:${key}`, sku, { expirationTtl: REDEEM_TTL });
+  return json({ valid: true, sku, via: 'gumroad' });
 }
 
 /** 健康检查：GET /api/healthz —— 让远程排障不必猜配置 */
@@ -273,17 +412,25 @@ async function handleHealth(env: Env): Promise<Response> {
     service: 'calenref',
     time: Date.now(),
     checkout: {
-      configured: Boolean(env.CREEM_API_KEY && env.ORDERS),
-      apiBase: env.CREEM_API_BASE || 'https://api.creem.io/v1',
+      provider: 'gumroad',
+      store: GUMROAD_STORE,
+      configured: Boolean(env.ORDERS),
+      productIdsConfigured: Object.keys(GUMROAD_PRODUCTS).filter((s) =>
+        Boolean(productIdFor(env, s)),
+      ),
     },
     kv: { bound: Boolean(env.ORDERS) },
     redeem: { configured: Boolean(env.REDEEM_SECRET) },
     webhook: {
-      endpoint: '/api/webhook/creem',
-      signatureRequired: Boolean(env.CREEM_WEBHOOK_SECRET),
+      endpoint: '/api/webhook/gumroad',
+      signatureRequired: Boolean(env.GUMROAD_PING_SECRET),
       received,
     },
-    fulfillment: ['poll:/api/verify', 'webhook:/api/webhook/creem'],
+    fulfillment: [
+      'poll:/api/verify',
+      'webhook:/api/webhook/gumroad',
+      'license:/api/verify-license',
+    ],
     skus: [...SKU_SET],
     offeredSkus: OFFERED_SKUS,
   });
@@ -294,42 +441,60 @@ async function handleVerify(url: URL, env: Env): Promise<Response> {
   const serverNow = Date.now();
   const ref = url.searchParams.get('ref') ?? '';
   if (!REF_RE.test(ref)) return json({ paid: false, serverNow }, 404);
-  if (!env.CREEM_API_KEY || !env.ORDERS) return json({ paid: false, serverNow }, 503);
+  if (!env.ORDERS) return json({ paid: false, serverNow }, 503);
 
-  // 已付标记优先：一次确认后不必每次都打 Creem
+  // 已付标记优先：一次确认后不必每次都打 Gumroad
   const paidSku = await env.ORDERS.get(`paid:${ref}`);
   if (paidSku) {
     const via = await env.ORDERS.get(`via:${ref}`);
-    return json({ paid: true, sku: paidSku, fulfilledBy: via === 'webhook' ? 'webhook' : 'cached', serverNow });
+    return json({
+      paid: true,
+      sku: paidSku,
+      fulfilledBy: via === 'gumroad-webhook' ? 'webhook' : 'cached',
+      serverNow,
+    });
   }
 
   const raw = await env.ORDERS.get(`order:${ref}`);
   if (!raw) return json({ paid: false, serverNow }, 404);
 
-  let order: { sku?: string; checkoutId?: string };
+  let order: { sku?: string; productId?: string };
   try {
     order = JSON.parse(raw) as typeof order;
   } catch {
     return json({ paid: false, serverNow });
   }
-  if (!order.checkoutId) return json({ paid: false, serverNow }, 404);
-
-  // webhook 先到、ref 索引已过期时的兜底：checkout 级别已付标记
-  const paidByCheckout = await env.ORDERS.get(`paidchk:${order.checkoutId}`);
-  if (paidByCheckout) {
-    await env.ORDERS.put(`paid:${ref}`, paidByCheckout, { expirationTtl: ORDER_TTL });
-    return json({ paid: true, sku: paidByCheckout, fulfilledBy: 'webhook', serverNow });
-  }
-
-  const res = await creemFetch(env, `/checkouts?checkout_id=${encodeURIComponent(order.checkoutId)}`);
-  if (!res.ok) return json({ paid: false, serverNow }, 502);
-
-  const data = (await res.json()) as { status?: unknown };
-  if (data.status !== 'completed') return json({ paid: false, serverNow });
-
   const sku = order.sku ?? '';
   if (!SKU_SET.has(sku)) return json({ paid: false, serverNow });
+
+  // 没有令牌就无法主动查单：只能等 Ping 回调写标记。
+  // 这里如实返回「未确认」，不猜也不假装已付。
+  if (!env.GUMROAD_ACCESS_TOKEN || !order.productId) {
+    return json({ paid: false, sku, fulfilledBy: 'pending-webhook', serverNow });
+  }
+
+  // 主动查 Gumroad 订单列表：找该产品下匹配本 ref 记录邮箱的已付款
+  const res = await gumroadFetch(env, `/v2/sales?product_id=${encodeURIComponent(order.productId)}`);
+  if (!res.ok) return json({ paid: false, sku, fulfilledBy: 'pending-webhook', serverNow });
+
+  const data = (await res.json()) as { success?: unknown; sales?: unknown };
+  if (data.success !== true || !Array.isArray(data.sales)) {
+    return json({ paid: false, sku, fulfilledBy: 'pending-webhook', serverNow });
+  }
+
+  const email = (await env.ORDERS.get(`email:${ref}`)) ?? '';
+  const matched = data.sales.some((s) => {
+    const row = s as { email?: unknown; refunded?: unknown; sale_id?: unknown };
+    if (row.refunded === true) return false;
+    const mail = typeof row.email === 'string' ? row.email.toLowerCase() : '';
+    if (!email || !mail) return false;
+    if (mail !== email) return false;
+    return true;
+  });
+  if (!matched) return json({ paid: false, sku, fulfilledBy: 'pending-webhook', serverNow });
+
   await env.ORDERS.put(`paid:${ref}`, sku, { expirationTtl: ORDER_TTL });
+  await env.ORDERS.put(`via:${ref}`, 'poll', { expirationTtl: ORDER_TTL });
   return json({ paid: true, sku, fulfilledBy: 'poll', serverNow });
 }
 
@@ -375,11 +540,13 @@ export default {
           return handleCheckout(request, env);
         case '/api/verify':
           return handleVerify(url, env);
+        case '/api/verify-license':
+          return handleLicenseVerify(url, env);
         case '/api/redeem':
           return handleRedeem(request, env);
-        case '/api/webhook/creem':
+        case '/api/webhook/gumroad':
         case '/api/webhook':
-          return handleWebhook(request, env);
+          return handleGumroadWebhook(request, env);
         case '/api/healthz':
           return handleHealth(env);
         default:

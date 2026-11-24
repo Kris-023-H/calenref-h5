@@ -185,7 +185,7 @@ describe('settingsRepo', () => {
     expect(def).toEqual(DEFAULT_SETTINGS);
     expect(await settingsRepo.exists()).toBe(false);
 
-    // 币种已收敛为 USD 单币种（Creem 只支持 USD/EUR），此处只验证局部更新语义
+    // 币种已收敛为 USD 单币种（支付通道只支持 USD/EUR），此处只验证局部更新语义
     const saved = await settingsRepo.save({ lang: 'en', currency: 'USD' });
     expect(saved.ok && saved.value.lang).toBe('en');
     expect(await settingsRepo.exists()).toBe(true);

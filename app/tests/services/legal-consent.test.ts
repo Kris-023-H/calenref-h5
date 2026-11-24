@@ -61,7 +61,7 @@ describe('法务四页 — 结构与三语齐备', () => {
     const all = zh.sections.flatMap((s) => [...s.p, ...(s.list ?? [])]).join('\n');
     expect(all).toContain('本机');
     expect(all).toContain('出生资料');
-    expect(all).toMatch(/Creem|Stripe/);
+    expect(all).toMatch(/Gumroad|Creem|Stripe/);
     expect(all).toContain('Google Analytics');
   });
 
