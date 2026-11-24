@@ -2,13 +2,14 @@ name: Deploy
 
 # push 到 main 即部署到 Cloudflare Workers，部署完立刻跑自检。
 #
-# 凭据用 **Global API Key**（X-Auth-Email + X-Auth-Key），不是 API Token：
-# 本账号的密钥是 cfk_ 前缀的 Global API Key，走 apiToken 参数会被 API 拒掉。
+# 凭据用 **API Token**（Bearer），不是 Global API Key：
+# Global API Key 是账号级全量权限，泄一次等于交出整个 Cloudflare 账号
+# （其他 Worker、域名、DNS、账单全部沦陷）。CI 只配一个最小权限 Token：
+#   Workers Scripts Write / Workers KV Storage Read+Write / Account Settings Read
+# 本地生成：python app/scripts/cf-create-ci-token.py
 # 配置方式：仓库 Settings → Secrets and variables → Actions →
-#   Secrets:  CLOUDFLARE_API_KEY   （Global API Key）
-#   Variables: CLOUDFLARE_EMAIL     （账号邮箱）
-#   Variables: CLOUDFLARE_ACCOUNT_ID（账号 ID）
-#   Variables: ENABLE_DEPLOY        （'true' 才在 push 时自动部署）
+#   Secrets:  CLOUDFLARE_API_TOKEN（CI 专用 Token）
+#   Variables: CLOUDFLARE_EMAIL、CLOUDFLARE_ACCOUNT_ID、ENABLE_DEPLOY、VITE_GA4_ID
 #
 # 【关键】job 级 `if` 里**不能用 secrets 上下文**。
 # GitHub 在 `jobs.<job_id>.if` 只提供 github / needs / vars / inputs；
@@ -36,7 +37,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # wrangler 4.x 要求 Node >= 22，用 20 会在部署那步直接报
+          # "Wrangler requires at least Node.js v22.0.0" 而失败。
+          node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
 
@@ -56,9 +59,9 @@ jobs:
       - name: Deploy to Cloudflare Workers
         working-directory: app
         env:
-          # Global API Key 认证：wrangler 读 CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL，
-          # 目标账号由 CLOUDFLARE_ACCOUNT_ID 指定。
-          CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
+          # API Token 认证：wrangler 读 CLOUDFLARE_API_TOKEN，目标账号由
+          # CLOUDFLARE_ACCOUNT_ID 指定。
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_EMAIL: ${{ vars.CLOUDFLARE_EMAIL }}
           CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy

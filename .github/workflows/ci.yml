@@ -22,7 +22,8 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 与 deploy.yml 保持一致（wrangler 4.x 要求 Node >= 22）
+          node-version: 22
           cache: npm
           cache-dependency-path: app/package-lock.json
 
