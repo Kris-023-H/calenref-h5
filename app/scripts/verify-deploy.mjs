@@ -47,6 +47,15 @@ ok(
   home.text.includes('__SITE_URL__') ? '仍有 __SITE_URL__' : 'OK',
 );
 
+// canonical 必须指向生产域名。写成 workers.dev 会让已收录的链接集体失效，
+// 这类错误接口全 200、页面也正常渲染，只有看 canonical 才能发现。
+const canonical = home.text.match(/<link[^>]*rel="canonical"[^>]*href="([^"]+)"/)?.[1] ?? '';
+ok(
+  'canonical 指向生产域名',
+  canonical === `${base}/` || canonical === base,
+  canonical || '未找到 canonical',
+);
+
 for (const p of ['/robots.txt', '/sitemap.xml', '/og-1200x630.png', '/manifest.webmanifest']) {
   const r = await get(p);
   ok(`${p} 可访问`, r.status === 200, `HTTP ${r.status}`);

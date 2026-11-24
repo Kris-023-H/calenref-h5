@@ -11,7 +11,15 @@ cd "$(dirname "$0")/.."
 
 TOKEN_FILE="${CF_TOKEN_FILE:-$HOME/.cf-calenref-token}"
 ACCOUNT_ID="${CLOUDFLARE_ACCOUNT_ID:-bbd93e37b6abc18544496250c33bfde7}"
-SITE_URL="https://calenref.kris-188h.workers.dev"
+# 必须是生产域名。写 workers.dev 会让 canonical / og:url / sitemap 全部指向
+# 临时域名，线上已被收录的链接会集体失效（SEO 直接受损），不能图省事。
+SITE_URL="${SITE_URL:-https://calenref.com}"
+# GA4 衡量 ID：本机文件优先，其次环境变量；都没有就留空（留空 = 完全不启用 GA4）
+GA4_FILE="${GA4_FILE:-$HOME/.calenref-ga4-id}"
+GA4_ID="${VITE_GA4_ID:-}"
+if [ -z "$GA4_ID" ] && [ -f "$GA4_FILE" ]; then
+  GA4_ID="$(tr -d '\r\n ' < "$GA4_FILE")"
+fi
 
 if [ ! -f "$TOKEN_FILE" ]; then
   echo "缺少令牌文件：$TOKEN_FILE"
@@ -36,7 +44,7 @@ case "$CF_TOKEN" in
 esac
 
 echo "==> 1/3 构建（VITE_SITE_URL=$SITE_URL）"
-VITE_SITE_URL="$SITE_URL" npm run build
+VITE_SITE_URL="$SITE_URL" VITE_GA4_ID="$GA4_ID" npm run build
 
 echo "==> 2/3 部署到 Cloudflare Workers"
 CLOUDFLARE_ACCOUNT_ID="$ACCOUNT_ID" npx wrangler deploy

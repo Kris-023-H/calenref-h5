@@ -5,23 +5,32 @@ name: Deploy
 # 凭据用 **Global API Key**（X-Auth-Email + X-Auth-Key），不是 API Token：
 # 本账号的密钥是 cfk_ 前缀的 Global API Key，走 apiToken 参数会被 API 拒掉。
 # 配置方式：仓库 Settings → Secrets and variables → Actions →
-#   CLOUDFLARE_API_KEY   （Global API Key）
-#   CLOUDFLARE_EMAIL     （账号邮箱）
-#   CLOUDFLARE_ACCOUNT_ID（账号 ID）
-# 三个都配齐才部署，否则整个 job 跳过（纯 CI 场景不受影响）。
+#   Secrets:  CLOUDFLARE_API_KEY   （Global API Key）
+#   Variables: CLOUDFLARE_EMAIL     （账号邮箱）
+#   Variables: CLOUDFLARE_ACCOUNT_ID（账号 ID）
+#   Variables: ENABLE_DEPLOY        （'true' 才在 push 时自动部署）
+#
+# 【关键】job 级 `if` 里**不能用 secrets 上下文**。
+# GitHub 在 `jobs.<job_id>.if` 只提供 github / needs / vars / inputs；
+# 一旦引用 secrets，整个 workflow 文件校验就会失败 → run 直接 0 job 报错，
+# 而且 workflow 名称会退化成文件路径（"Deploy" 变成 ".github/workflows/deploy.yml"）。
+# 本仓库 2026-10-29 起就是这么坏的：每次 push 都红，从没部署成功过一次。
+# 所以：job 级判断只用 vars，secrets 一律放到 step 的 env 里用。
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: >-
-      ${{ secrets.CLOUDFLARE_API_KEY != '' &&
-          secrets.CLOUDFLARE_EMAIL != '' &&
-          secrets.CLOUDFLARE_ACCOUNT_ID != '' }}
+    # 只用 vars（github 上下文允许的），绝不碰 secrets。
+    # workflow_dispatch 手动触发时无条件执行，方便补一次部署。
+    if: ${{ vars.ENABLE_DEPLOY == 'true' || github.event_name == 'workflow_dispatch' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -47,9 +56,11 @@ jobs:
       - name: Deploy to Cloudflare Workers
         working-directory: app
         env:
+          # Global API Key 认证：wrangler 读 CLOUDFLARE_API_KEY + CLOUDFLARE_EMAIL，
+          # 目标账号由 CLOUDFLARE_ACCOUNT_ID 指定。
           CLOUDFLARE_API_KEY: ${{ secrets.CLOUDFLARE_API_KEY }}
-          CLOUDFLARE_EMAIL: ${{ secrets.CLOUDFLARE_EMAIL }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_EMAIL: ${{ vars.CLOUDFLARE_EMAIL }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
         run: npx wrangler deploy
 
       # 部署完等边缘节点传播，再自检；失败就是红 X，不允许「接口 200 就收工」
